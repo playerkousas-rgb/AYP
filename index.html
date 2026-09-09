@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a5c36">
+<title>AYP 童軍接駁指南</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/logo-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AYP童軍">
+<meta name="description" content="非官方指南：童軍 ↔ AYP 同步完成／直接對應、轉執行處／升支部接駁、各支部正常流程。">
+<style>
+:root{
+  --scout-green:#0a5c36; --scout-green-dark:#064020;
+  --bronze:#b87333; --silver:#8a9199; --gold:#d4af37;
+  --text:#222; --muted:#777; --bg:#f5f5f3; --card:#fff; --line:#e8e4dc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans HK","PingFang HK","Microsoft JhengHei",Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+a{color:#0a5c36;font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+
+header{background:linear-gradient(135deg,#0a5c36,#064020);color:#fff;padding:1.3rem 1rem 1.6rem;text-align:center;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--bronze) 0 33%,var(--silver) 33% 66%,var(--gold) 66% 100%)}
+.brand{display:flex;align-items:center;justify-content:center;gap:.8rem}
+.brand img{width:54px;height:54px;border-radius:14px;background:#fff;padding:3px}
+.brand h1{font-size:1.3rem;margin:0;line-height:1.2}
+.brand .tag{margin:.3rem 0 0;font-size:.85rem;opacity:.92}
+.badge-base{display:inline-block;margin-top:.6rem;background:rgba(255,255,255,.16);padding:.15rem .7rem;border-radius:20px;font-size:.74rem}
+
+nav.toc{position:sticky;top:0;z-index:60;background:rgba(245,245,243,.97);border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:.1rem;padding:.3rem .5rem;backdrop-filter:blur(4px)}
+nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.84rem;text-decoration:none}
+nav.toc a:hover{background:#e4ece6}
+nav.toc a.hot{color:#8a5a00}
+
+main{max-width:880px;margin:0 auto;padding:.3rem .9rem 3rem}
+.hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
+
+h2.sec{display:flex;align-items:center;gap:.6rem;color:#0a5c36;margin:2.1rem 0 .5rem;padding-left:.6rem;border-left:5px solid var(--scout-green);font-size:1.22rem}
+h2.sec .n{background:#0a5c36;color:#fff;min-width:27px;height:27px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.95rem;flex:none}
+h2.sec .hot{background:var(--gold);color:#5a4300}
+h2.sec small{font-size:.78rem;color:var(--muted);font-weight:400}
+
+/* 開合卡 */
+.part{border:1px solid var(--line);background:var(--card);border-radius:12px;margin:.6rem 0;overflow:hidden}
+.part>summary{list-style:none;display:flex;align-items:center;gap:.7rem;padding:.8rem .9rem;cursor:pointer;font-weight:600;user-select:none}
+.part>summary::-webkit-details-marker{display:none}
+.part>summary .chev{transition:transform .2s;margin-left:auto;color:var(--muted);flex:none}
+.part[open]>summary .chev{transform:rotate(180deg)}
+.part>summary .ico{font-size:1.25rem;flex:none}
+.part .sum-text{display:flex;flex-direction:column}
+.part .sum-text small{font-weight:400;color:var(--muted);font-size:.85rem}
+.part .part-body{padding:.2rem .9rem .9rem;border-top:1px dashed var(--line)}
+.part-body h4{margin:.7rem 0 .3rem;color:#0a5c36}
+.part-body p{margin:.5rem 0}
+.tip{background:#eaf4ee;border-left:4px solid #2f9e63;padding:.5rem .7rem;border-radius:6px;margin:.5rem 0}
+.warn{background:#fdecec;border-left:4px solid #d64541;padding:.5rem .7rem;border-radius:6px;margin:.6rem 0;font-size:.9rem}
+.ok-box{background:#eaf7ec;border-left:4px solid #2f9e63;padding:.6rem .8rem;border-radius:6px;margin:.6rem 0}
+ol.steps{padding-left:1.35rem;margin:.5rem 0}
+ol.steps li{margin:.35rem 0}
+
+/* chips */
+.chips{display:flex;gap:.45rem;flex-wrap:wrap;margin:.5rem 0}
+.chip{border:2px solid #ddd;border-radius:24px;padding:.42rem .8rem;font-size:.88rem;cursor:pointer;background:#fff;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.chip.active{border-color:var(--c,#0a5c36);background:color-mix(in srgb,var(--c,#0a5c36) 12%,#fff)}
+.chip.tick.active{background:#e7f3ea;border-color:#0a5c36}
+
+/* ── 功能 1 轉入互動 ── */
+.ti{display:flex;flex-direction:column;gap:.8rem}
+.ti-tools b{color:#0a5c36}
+.ti .hint{font-size:.78rem;color:var(--muted)}
+.ri-head{font-weight:800;font-size:1.02rem;padding:.5rem .2rem;color:var(--c)}
+.gap{display:flex;gap:.6rem;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem;margin:.4rem 0;background:#fbfbf9}
+.gap .gap-sec{display:flex;gap:.4rem;align-items:center;min-width:110px}
+.gap .sec-ico{font-size:1.3rem}
+.gap .gap-scout{margin:.2rem 0 0;color:#333;font-size:.9rem}
+
+/* ── 功能2 兌換 ── */
+.sync-stage{margin:.7rem 0}
+.sync-row{display:flex;align-items:stretch;gap:.5rem;flex-wrap:wrap}
+.sync-box{flex:1 1 180px;border:2px solid #d9d9d9;border-radius:12px;padding:.6rem;text-align:center;background:#fff}
+.sync-box small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.03em}
+.sync-box b{display:block;font-size:.98rem}
+.sync-box .src{display:block;font-size:.72rem;color:#555;margin-top:.25rem}
+.sync-box.to{border-color:var(--c);background:color-mix(in srgb,var(--c) 9%,#fff)}
+.sync-arrow-c{display:flex;align-items:center;justify-content:center;font-weight:700;color:#0a5c36;white-space:nowrap;padding:.2rem}
+table.map{width:100%;border-collapse:collapse;margin:.6rem 0}
+table.map td{border-bottom:1px solid var(--line);padding:.6rem .5rem;vertical-align:top}
+table.map tr:last-child td{border-bottom:none}
+table.map td.ayp{width:34%;}
+table.map td.ayp small{display:block;color:var(--muted);font-size:.75rem;margin-top:.15rem}
+@media(max-width:520px){table.map td.ayp{width:44%}}
+
+/* ── 功能3 升團 flow ── */
+.path-flow{display:flex;flex-direction:column;gap:.3rem}
+.path-node{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.pn-head{padding:.55rem .8rem;background:#f6f7f4;border-left:6px solid #ccc;display:flex;justify-content:space-between;align-items:center}
+.pn-head small{color:var(--muted)}
+.pn-body{padding:.4rem .8rem .6rem}
+.pn-body .row{display:flex;gap:.6rem;margin:.35rem 0;align-items:flex-start}
+.pn-body .row p{margin:0}
+.pn-body .row.next{border-top:1px dashed var(--line);padding-top:.5rem}
+.pn-body .lbl{flex:none;min-width:88px;font-weight:700;font-size:.82rem;color:#0a5c36;background:#eef3ef;border-radius:6px;text-align:center;padding:.1rem .3rem;align-self:flex-start}
+.flow-arrow{text-align:center;color:var(--muted);font-size:.8rem;padding:.15rem 0;font-weight:700;letter-spacing:.05em}
+
+/* ── 功能4 流程 ── */
+.joinrow{display:flex;gap:.6rem;align-items:flex-start;border-bottom:1px dashed var(--line);padding:.4rem 0}
+.joinrow b{min-width:110px}
+.joinrow p{margin:0;color:#333}
+
+/* forms / glossary / timeline / faq */
+table.forms{width:100%;border-collapse:collapse;margin:.4rem 0}
+table.forms td{border-bottom:1px solid var(--line);padding:.55rem .4rem;vertical-align:top}
+table.forms .no{white-space:nowrap;font-weight:700;color:#0a5c36;width:120px}
+table.forms small{display:block;color:var(--muted)}
+.q-ico{background:var(--bronze);color:#fff;border-radius:8px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex:none}
+#timeline{border-left:3px solid var(--scout-green);margin:.8rem 1rem;padding-left:1.2rem}
+.tl{position:relative;padding:.3rem 0}
+.tl::before{content:"";position:absolute;left:-1.63rem;top:.78rem;width:11px;height:11px;border-radius:50%;background:var(--gold);border:2px solid #fff;box-shadow:0 0 0 2px var(--gold)}
+.tl-age{font-weight:700;color:#0a5c36;background:#eaf4ee;border-radius:6px;padding:0 .45rem;font-size:.8rem}
+.tl p{margin:.2rem 0}
+
+.disclaimer{background:#f5f2ea;border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;margin-top:2rem;font-size:.85rem;color:#555}
+.disclaimer h3{margin:.2rem 0 .3rem;color:#7a1f2b}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:1rem .8rem 2.5rem}
+.source-list{font-size:.85rem;color:#444;margin:.4rem 0;padding-left:1.2rem}
+.source-list li{margin:.25rem 0}
+@media print{nav.toc,header::after{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="assets/logo-192.png" alt="標誌">
+    <div><h1>AYP 童軍接駁指南</h1>
+      <p class="tag">情況主導：同步／兌換・轉處接駁・升團・正常流程</p></div>
+  </div>
+  <span class="badge-base" id="baseline-foot"></span>
+</header>
+
+<nav class="toc">
+  <a href="#f1">① 轉入童軍</a>
+  <a href="#f2">② 兌換</a>
+  <a href="#f3">③ 升團接駁</a>
+  <a href="#f4">④ 正常流程</a>
+  <a href="#f5" class="hot">⑤ 其他情況</a>
+  <a href="#res">時間表/表格/辭典</a>
+  <a href="#comp">完成後</a>
+</nav>
+
+<main>
+
+  <!-- 指引開場 -->
+  <div class="hero-note">
+    🎯 呢個指南圍繞 5 個「情況」嚟答你：<b>由其他執行處轉入童軍後仲欠咩</b>・<b>兌換</b>・<b>升團接駁</b>・<b>各支部正常流程</b>・<b>其他情況</b>。撳上面導覽或直接睇下面。
+  </div>
+
+  <!-- ══ 功能1：轉入童軍 ══ -->
+  <section id="f1">
+    <h2 class="sec"><span class="n hot">1</span> 由其他執行處轉入童軍 → 仲有咩要考 <small>(功能①)</small></h2>
+    <p>撳「① 揀章級」＋「② 剔已批核嘅科」，即時睇你轉入童軍執行處後<b>仲欠邊啲科</b>，同埋可以點用童軍活動補返。</p>
+    <div class="part" data-key="ti-1" open>
+      <summary><span class="ico">🧮</span> 我轉入後仲欠咩？<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="ti-inner"></div></div>
+    </div>
+    <div class="part" data-key="ti-2">
+      <summary><span class="ico">🧾</span> 轉入童軍執行處嘅行政手續<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="ti-steps"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 功能2：兌換 ══ -->
+  <section id="f2">
+    <h2 class="sec"><span class="n hot">2</span> 兌換情況 <small>(功能②)</small></h2>
+    <p>兌換分兩層：<b>成個章兌換</b>（同步完成，官方試行）＋ <b>單科對應</b>（用童軍活動申報某一科，需核實）。</p>
+
+    <div class="part" data-key="c2a">
+      <summary><span class="ico">🏅</span> 成個章兌換：童軍進度性獎章 同步完成 AYP<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="convert-sync"></div></div>
+    </div>
+    <div class="part" data-key="c2b">
+      <summary><span class="ico">🧩</span> 單科對應參考：童軍活動 / 徽章 → AYP 各科<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="convert-map"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 功能3：升團接駁 ══ -->
+  <section id="f3">
+    <h2 class="sec"><span class="n hot">3</span> 邊個支部考到咩・升團後要點做 <small>(功能③)</small></h2>
+    <div class="part" data-key="f3-1">
+      <summary><span class="ico">🪜</span> 童軍 → 深資 → 樂行：每階段 AYP 點跟進<span class="chev">▾</span></summary>
+      <div class="part-body">
+        <p>逐格睇：喺每個童軍支部<b>可考咩</b>、有咩<b>同步／對應</b>、<b>升團後</b> AYP 點處理。</p>
+        <div id="paths"></div>
+        <div class="warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 你升團唔會令 AYP 進度清零，但記得更新所屬執行處支部資料。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 功能4：正常流程 ══ -->
+  <section id="f4">
+    <h2 class="sec"><span class="n hot">4</span> 各支部正常開始 AYP 嘅流程 <small>(功能④)</small></h2>
+    <div class="part" data-key="f4-1">
+      <summary><span class="ico">🚪</span> 由頭開始：通用步驟 ＋ 各支部可考咩<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="join-flow"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 功能5：其他情況 ══ -->
+  <section id="f5">
+    <h2 class="sec"><span class="n hot">5</span> 其他可能情況 <small>(功能⑤)</small></h2>
+    <p>除咗上面，仲有呢啲情況都有可能遇到 —— 撳開睇。</p>
+    <div id="extra-list"></div>
+
+    <h3 style="margin-top:1.2rem;color:#0a5c36">反方向／補充情況</h3>
+    <div id="extra-list-2"></div>
+  </section>
+
+  <!-- ══ 資源 ══ -->
+  <section id="res">
+    <h2 class="sec"><span class="n">＋</span> 幾時起步・表格・辭典・FAQ</h2>
+
+    <div class="part" data-key="res-tl">
+      <summary><span class="ico">⏱️</span> 幾時起步時間表<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="timeline"></div></div>
+    </div>
+    <div class="part" data-key="res-fm">
+      <summary><span class="ico">📄</span> 常用表格一覽<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="forms-list"></div>
+        <p style="font-size:.82rem;color:var(--muted)">實際表格以童軍執行處網頁及青少年活動署最新版本為準。</p></div>
+    </div>
+    <div class="part" data-key="res-gl">
+      <summary><span class="ico">📖</span> 術語小辭典<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="glossary-list"></div></div>
+    </div>
+    <div class="part" data-key="res-faq">
+      <summary><span class="ico">❓</span> 常見問題 FAQ<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="faq-list"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 完成之後 ══ -->
+  <section id="comp">
+    <h2 class="sec"><span class="n">✔</span> 完成之後：領獎／證書</h2>
+    <div class="part" data-key="comp">
+      <summary><span class="ico">🏆</span> 完成章級後點領獎？<span class="chev">▾</span></summary>
+      <div class="part-body"><div id="complete-steps"></div></div>
+    </div>
+  </section>
+
+  <!-- 來源 -->
+  <section>
+    <h2 class="sec"><span class="n">📌</span> 官方資料來源</h2>
+    <div id="sources"></div>
+  </section>
+
+  <div class="disclaimer" id="disclaimer"></div>
+</main>
+
+<footer>
+  <p>AYP 童軍接駁指南 · <span id="baseline-foot2"></span></p>
+  <p style="font-size:.72rem">© 2026 非官方輔助工具 · 資料版權屬相關機構</p>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {})); }
+</script>
+</body>
+</html>
