@@ -9,6 +9,8 @@
 
   function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
   function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
+  function smoothTo(el, block) { if (!el) return; try { if (typeof el.scrollIntoView === "function") el.scrollIntoView({ behavior: "smooth", block: block || "start" }); } catch (e) {} }
+  function smoothTop() { try { if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {} }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
   // 建立一個 <details class="part"> 開合卡
@@ -35,7 +37,7 @@
     $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
       const id = a.getAttribute("href").slice(1);
       const el = document.getElementById(id);
-      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      if (el) { e.preventDefault(); smoothTo(el); }
     }));
   }
 
@@ -168,6 +170,134 @@
     ).join("");
   }
 
+  /* ════════════════════════════════════════════
+     ⚡ 5 分鐘精靈：身份 × 情況 → 行動卡
+     ════════════════════════════════════════════ */
+  let wzRole = null, wzStatus = null;
+  const TODO_KEY = "ayp-guide-todo-v1";
+  function loadTodo() { try { return JSON.parse(localStorage.getItem(TODO_KEY)) || {}; } catch (e) { return {}; } }
+  function saveTodo(o) { try { localStorage.setItem(TODO_KEY, JSON.stringify(o)); } catch (e) {} }
+
+  function renderWizard() {
+    const c = $("#wizard"); if (!c) return;
+    const stepDone = (wzRole ? 1 : 0) + (wzStatus ? 1 : 0);
+    c.innerHTML = `
+      <div class="wz-progress"><div class="wz-bar" style="width:${stepDone / 2 * 100}%"></div></div>
+      <p class="wz-step-label">${stepDone === 2 ? "✅ 搞掂！你嘅行動卡出咗——" : `第 ${stepDone + 1} 步 / 共 2 步：${!wzRole ? "你係邊個？" : "你 AYP 去到邊？"}`}</p>
+      <div class="wz-group">
+        <b>① 你係邊個？（撳一個）</b>
+        <div class="wz-grid">${WIZARD.roles.map(r =>
+          `<button class="wz-opt ${wzRole === r.id ? "active" : ""}" data-wz-role="${r.id}">
+            <span class="wz-ico">${r.icon}</span><span class="wz-t">${esc(r.label)}</span><small>${esc(r.desc)}</small>
+          </button>`).join("")}</div>
+      </div>
+      <div class="wz-group">
+        <b>② 你 AYP 去到邊？（撳一個）</b>
+        <div class="wz-grid">${WIZARD.statuses.map(s =>
+          `<button class="wz-opt ${wzStatus === s.id ? "active" : ""}" data-wz-status="${s.id}">
+            <span class="wz-ico">${s.icon}</span><span class="wz-t">${esc(s.label)}</span><small>${esc(s.desc)}</small>
+          </button>`).join("")}</div>
+      </div>
+      <div id="wz-result">${wzStatus ? wizardResultHtml() : `<div class="wz-empty">👆 上面各撳一個，3 秒即出你嘅「行動卡」：而家咩位置、行邊條路、下一步做咩。</div>`}</div>`;
+
+    $$("[data-wz-role]", c).forEach(b => b.addEventListener("click", () => {
+      wzRole = b.dataset.wzRole; renderWizard();
+      if (wzStatus) smoothTo($("#wz-result"), "nearest");
+    }));
+    $$("[data-wz-status]", c).forEach(b => b.addEventListener("click", () => {
+      wzStatus = b.dataset.wzStatus; renderWizard();
+      smoothTo($("#wz-result"), "nearest");
+    }));
+    bindTodo(c);
+    const reset = $("#wz-reset", c);
+    if (reset) reset.addEventListener("click", () => { wzRole = null; wzStatus = null; renderWizard(); });
+  }
+
+  function wizardResultHtml() {
+    const p = PLANS[wzStatus]; if (!p) return "";
+    const todo = loadTodo();
+    const key = "wz-" + wzStatus;
+    const checked = todo[key] || [];
+    const doneCount = p.steps.filter((_, i) => checked[i]).length;
+    return `<div class="plan-card">
+      <div class="plan-head"><span class="plan-ico">${p.icon}</span>
+        <div><b>📍 ${esc(p.pos)}</b><div class="plan-route">🎯 建議路線：${esc(p.route)}</div></div></div>
+      ${wzRole && WIZARD.roleNote[wzRole] ? `<div class="tip">${esc(WIZARD.roleNote[wzRole])}</div>` : ""}
+      <div class="plan-progress">已完成 ${doneCount}/${p.steps.length} 步</div>
+      <ol class="todo">${p.steps.map((s, i) => `
+        <li class="${checked[i] ? "done" : ""}"><label>
+          <input type="checkbox" data-todo="${key}:${i}" ${checked[i] ? "checked" : ""}>
+          <span class="todo-n">${i + 1}</span><span>${esc(s)}</span>
+        </label></li>`).join("")}</ol>
+      <div class="plan-meta">
+        <div><small>🧑‍🏫 搵邊個</small><b>${esc(p.who)}</b></div>
+        <div><small>📄 表格</small><b>${esc(p.forms)}</b></div>
+        <div><small>⏱️ 需時</small><b>${esc(p.time)}</b></div>
+      </div>
+      <div class="warn">⚠️ ${esc(p.warn)}</div>
+      <div class="plan-actions">
+        <a class="btn primary" href="${esc(p.link)}">${esc(p.linkLabel)} →</a>
+        <button class="btn ghost" id="wz-reset">↺ 重揀</button>
+      </div>
+    </div>`;
+  }
+
+  function bindTodo(root) {
+    $$("[data-todo]", root).forEach(box => box.addEventListener("change", () => {
+      const [key, idx] = box.dataset.todo.split(":");
+      const todo = loadTodo();
+      todo[key] = todo[key] || [];
+      todo[key][+idx] = box.checked;
+      saveTodo(todo);
+      renderWizard();
+    }));
+    // 令行動卡內嘅連結都 smooth scroll
+    $$("#wz-result a[href^='#']", root).forEach(a => a.addEventListener("click", e => {
+      const el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) { e.preventDefault(); smoothTo(el); }
+    }));
+  }
+
+  /* ════════════════════════════════════════════
+     🌱 零基礎 3 個 Check
+     ════════════════════════════════════════════ */
+  function renderBeginner() {
+    const c = $("#beginner-list"); if (!c) return;
+    c.innerHTML = BEGINNER_CHECKS.map((b, i) => part("beg-" + b.id,
+      `<span class="ico">${b.icon}</span><span class="sum-text"><b>${esc(b.title)}</b><small>${esc(b.why)}</small></span>`,
+      `<h4>🔍 點查？（3 個方法）</h4>
+       <ol class="steps">${b.how.map(h => `<li>${h}</li>`).join("")}</ol>
+       <div class="say"><b>💬 照讀對白問：</b><br>「${esc(b.ask)}」</div>
+       <div class="tip">🆘 如果結果係「冇／唔係」：${esc(b.ifNot)}</div>`,
+      i === 0)).join("");
+  }
+
+  /* ═══════════ 30 秒睇懂 ＋ 版權 ＋ 浮動掣 ═══════════ */
+  function renderTldr() {
+    $$("[data-tldr]").forEach(el => {
+      const t = SECTION_TLDR[el.dataset.tldr];
+      if (t) el.innerHTML = `<span class="tldr-tag">⚡ 30 秒睇懂</span> ${esc(t)}`;
+    });
+  }
+  function renderCopyright() {
+    const l1 = $("#copyright-line"); if (l1) l1.textContent = COPYRIGHT.appLine;
+    const l2 = $("#copyright-data"); if (l2) l2.textContent = COPYRIGHT.dataLine;
+    const l3 = $("#copyright-edu"); if (l3) l3.textContent = COPYRIGHT.eduLine;
+  }
+  function bindFloatBtns() {
+    const top = $("#fab-top");
+    if (top) {
+      const onScroll = () => top.classList.toggle("show", window.scrollY > 600);
+      window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+      top.addEventListener("click", smoothTop);
+    }
+    const wiz = $("#fab-wizard");
+    if (wiz) wiz.addEventListener("click", () => {
+      const el = document.getElementById("quick");
+      smoothTo(el);
+    });
+  }
+
   /* ═══════════ 常規區塊 ═══════════ */
   function renderCommon() {
     const secPart = (key, ico, title, body, def) => part(key, `<span class="ico">${ico}</span><b>${esc(title)}</b>`, body, def);
@@ -209,6 +339,11 @@
 
   /* ═══════════ 初始 ═══════════ */
   document.addEventListener("DOMContentLoaded", () => {
+    renderWizard();
+    renderBeginner();
+    renderTldr();
+    renderCopyright();
+    bindFloatBtns();
     renderTransferIn();
     renderTransferInSteps();
     renderConvertSync();
