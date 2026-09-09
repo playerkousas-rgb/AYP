@@ -63,6 +63,36 @@ ok("complete 有內容", innerLen("complete-steps") > 40);
 ok("sources 有內容", innerLen("sources") > 40);
 ok("baseline", window.document.getElementById("baseline-foot").textContent.length > 0);
 
+// ⚡ 5分鐘精靈
+ok("精靈 6 身份", window.document.querySelectorAll("#wizard [data-wz-role]").length === 6);
+ok("精靈 6 情況", window.document.querySelectorAll("#wizard [data-wz-status]").length === 6);
+
+// 🌱 零基礎 3 Check
+ok("零基礎 3 卡", window.document.querySelectorAll("#beginner-list .part").length === 3);
+ok("零基礎有對白", /照讀對白/.test(window.document.getElementById("beginner-list").textContent));
+ok("零基礎教查支部", /AYP\/10/.test(window.document.getElementById("beginner-list").textContent));
+ok("零基礎教查組長", /AYP\/14/.test(window.document.getElementById("beginner-list").textContent));
+
+// 30秒睇懂 + 版權
+ok("TLDR 5 段有內容", window.document.querySelectorAll("[data-tldr]").length === 5 &&
+  Array.from(window.document.querySelectorAll("[data-tldr]")).every(el => el.textContent.length > 10));
+ok("版權 Scout System", /Scout System/.test(window.document.getElementById("copyright-line").textContent));
+ok("浮動掣存在", has("fab-wizard") && has("fab-top"));
+
+// 互動：精靈揀身份+情況 → 出行動卡
+{
+  window.document.querySelector("#wizard [data-wz-role='scout']").click();
+  window.document.querySelector("#wizard [data-wz-status='doing']").click();
+  const res = window.document.getElementById("wz-result");
+  ok("行動卡出現", !!res.querySelector(".plan-card"));
+  ok("行動卡 3 步待辦", res.querySelectorAll(".todo li").length === 3);
+  ok("行動卡有搵邊個", /搵邊個/.test(res.textContent));
+  const box = res.querySelector("[data-todo]");
+  box.checked = true;
+  box.dispatchEvent(new window.Event("change", { bubbles: true }));
+  ok("剔待辦後行動卡仍在", !!window.document.getElementById("wz-result").querySelector(".plan-card"));
+}
+
 let pass = 0, fail = 0;
 checks.forEach(([c, n]) => { if (c) pass++; else { fail++; console.log("✗ FAIL:", n); } });
 console.log(`\n${pass} 通過 / ${fail} 失敗`);
