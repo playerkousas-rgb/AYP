@@ -1,191 +1,226 @@
 /* ===========================================================
-   AYP 童軍接駁指南 — 主程式
+   AYP 童軍接駁指南 — 主程式（情況主導版）
    =========================================================== */
 "use strict";
-
 (function () {
   const $ = (s, p) => (p || document).querySelector(s);
   const $$ = (s, p) => Array.from((p || document).querySelectorAll(s));
+  const OPEN_KEY = "ayp-guide-open-v2";
 
-  // 開合狀態儲存 (localStorage)
-  const KEY = "ayp-guide-open";
-  function loadOpen() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-  function saveOpen(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
+  function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  /* ── 共用：HTML 跳脫 ── */
-  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  // 建立一個 <details class="part"> 開合卡
+  function part(key, summaryHtml, bodyHtml, defaultOpen) {
+    const state = loadOpen();
+    if (state[key] === undefined) state[key] = !!defaultOpen;
+    return `<details class="part" data-key="${esc(key)}" ${state[key] ? "open" : ""}>
+      <summary>${summaryHtml}<span class="chev">▾</span></summary>
+      <div class="part-body">${bodyHtml}</div></details>`;
+  }
 
-  /* ═══════════════ 3) 五科速查 ═══════════════ */
-  function renderLevelChooser() {
-    const wrap = $("#level-chooser"); if (!wrap) return;
-    const levels = ["bronze", "silver", "gold"];
-    wrap.innerHTML = levels.map(l => {
-      const L = LEVELS[l];
-      return `<button class="chip ${l === "bronze" ? "active" : ""}" data-level="${l}"
-                style="--c:${L.color}"><span>${L.icon}</span>${L.name}</button>`;
-    }).join("");
-    renderRequirementTable("bronze");
-    wrap.addEventListener("click", e => {
-      const b = e.target.closest("[data-level]"); if (!b) return;
-      $$(".chip", wrap).forEach(c => c.classList.remove("active"));
-      b.classList.add("active");
-      renderRequirementTable(b.dataset.level);
+  // 開合狀態事件綁定
+  function bindPartToggles() {
+    $$("details.part").forEach(d => {
+      const k = d.dataset.key; const state = loadOpen();
+      if (state[k] === undefined) state[k] = d.hasAttribute("open");
+      d.addEventListener("toggle", () => { state[k] = d.open; saveOpen(state); });
     });
   }
 
-  function sectionInfo(key) {
-    const s = FIVE_SECTIONS.find(x => x.key === key);
-    return s || { name:key, icon:"", intro:"" };
+  /* ═══════════ 頂層 TOC 導航 ═══════════ */
+  function bindToc() {
+    // smooth scroll
+    $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
+      const id = a.getAttribute("href").slice(1);
+      const el = document.getElementById(id);
+      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    }));
   }
 
-  function renderRequirementTable(level) {
-    const box = $("#req-table"); if (!box) return;
-    const L = LEVELS[level];
-    const rows = LEVEL_REQUIREMENTS[level];
-    box.innerHTML = `
-      <div class="lv-head" style="--c:${L.color}">
-        <span class="lv-icon">${L.icon}</span>
-        <div><h3 style="color:${L.color}">${L.name} · 要求</h3>
-          <p class="lv-meta">開始：${L.age} ｜ 獲章：${L.minAwardAge} ｜ 需於 25 歲生日前完成</p>
-        </div>
-      </div>
-      <table class="req">
-        <tbody>
-          ${rows.map(r => {
-            const s = sectionInfo(r.section);
-            return `<tr>
-              <td class="sec"><span class="sec-ico">${s.icon}</span><div><b>${s.name}</b><small>${s.intro}</small></div></td>
-              <td class="val">${r.value}</td></tr>`;
-          }).join("")}
-        </tbody>
-      </table>
-      <div class="note-box"><b>ℹ️ 新制（2022-04-01 後）備註</b><p>${esc(NEW_SYSTEM_NOTE.explain)}</p></div>
-      <div class="sub-items">${NEW_SYSTEM_NOTE.items.map(i =>
-        `<div class="sub-item"><b>${esc(i.label)}</b>
-           ${i.main ? `<span>${esc(i.main)}</span>` : ""}${i.sub ? `<span class="sub">${esc(i.sub)}</span>` : ""}${i.all ? `<span>${esc(i.all)}</span>` : ""}
-         </div>`).join("")}</div>
-      <div class="detail-cols">
-        ${rows.filter(r => r.section !== "expedition").map(r => {
-           const s = sectionInfo(r.section);
-           return `<div class="dcol"><b>${s.icon} ${s.name}</b><p>${esc(s.note)}</p></div>`;
-        }).join("")}
-      </div>`;
-  }
-
-  /* ═══════════════ 4) 同步／直接對應 ═══════════════ */
-  function renderSync() {
-    const c = $("#sync-plan"); if (!c) return;
-    c.innerHTML = `<p class="lead">${esc(SYNC_PLAN.intro)}</p>
-      ${SYNC_PLAN.stages.map((s,i) => `
-        <div class="sync-stage">
-          <div class="sync-arrow">童軍支部進度性獎章${i===0?"":"（先完成 AYP 銅章）"}</div>
-          <div class="sync-row">
-            <div class="sync-box from"><small>童軍獎章</small><b>${esc(s.badge)}</b></div>
-            <div class="sync-arrow-c">➜ 同步完成 ➜</div>
-            <div class="sync-box to" style="--c:${LEVELS[i===0?"bronze":"silver"].color}"><small>AYP</small><b>${esc(s.toAyp)}</b></div>
+  /* ════════════════════════════════════════════
+     功能 1：由其他執行處轉入童軍（互動決策）
+     ════════════════════════════════════════════ */
+  let inLevel = "bronze", inDone = { service: false, skill: false, physical: false, expedition: false, residential: false };
+  function renderTransferIn() {
+    const step = $("#ti-inner"); if (!step) return;
+    const lv = LEVELS[inLevel];
+    const must = LEVEL_SECTIONS[inLevel];
+    const missing = must.filter(k => !inDone[k]);
+    const secName = k => FIVE_SECTIONS[k].name;
+    step.innerHTML = `
+      <div class="ti">
+        <div class="ti-tools">
+          <div class="ti-lev">
+            <b>① 揀你而家想完成嘅章級</b>
+            <div class="chips">${Object.keys(LEVELS).map(k =>
+              `<button class="chip ${k === inLevel ? "active" : ""}" data-lv="${k}" style="--c:${LEVELS[k].color}">${LEVELS[k].icon} ${LEVELS[k].name}</button>`).join("")}</div>
           </div>
-        </div>`).join("")}
-      <div class="warn"><b>⚠️ 試行安排</b><p>${esc(SYNC_PLAN.caveat)}</p></div>`;
-
-    // 成員路徑
-    const mp = $("#member-paths"); if (mp) {
-      const levelColor = (lv) => {
-        const m = { "銅章":"bronze", "銀章":"silver", "金章（直接）":"gold", "視年齡":"silver" };
-        return (LEVELS[m[lv]] || { color:"#8a9199" }).color;
-      };
-      mp.innerHTML = MEMBER_PATHS.map(p => `<div class="mp">
-        <b>${esc(p.branch)}</b><span class="tag" style="--c:${levelColor(p.level)}">${esc(p.level)}</span>
-        <p>${esc(p.note)}</p></div>`).join("");
-    }
-  }
-
-  /* ═══════════════ 6) 接駁指南 ═══════════════ */
-  function renderTransfers() {
-    const list = $("#transfer-list"); if (!list) return;
-    list.innerHTML = TRANSFER_SCENARIOS.map(t => `
-      <details class="part transfer" data-key="tf-${t.id}">
-        <summary><span class="t-ico">${t.icon}</span>
-          <div class="sum-text"><b>${esc(t.title)}</b><small>${esc(t.q)}</small></div>
-          <span class="chev">▾</span></summary>
-        <div class="part-body">
-          <ol class="steps">${t.steps.map(s => `<li>${s}</li>`).join("")}</ol>
-          ${t.caveat ? `<div class="warn">${esc(t.caveat)}</div>` : ""}
+          <div class="ti-done">
+            <b>② 剔返你「已經喺原執行處批核」咗嘅科</b>
+            <div class="chips">${must.map(k =>
+              `<button class="chip tick ${inDone[k] ? "active" : ""}" data-sec="${k}" style="--c:#0a5c36">${FIVE_SECTIONS[k].icon} ${secName(k)}${inDone[k] ? " ✓" : ""}</button>`).join("")}</div>
+            <p class="hint">* 預設全部未剔。已批核科係指喺原執行處已經由導師／評核員簽署、登記喺紀錄簿嘅科。</p>
+          </div>
         </div>
-      </details>`).join("");
+        <div class="ti-result">
+          <div class="ri-head" style="--c:${lv.color}">${lv.icon} ${lv.name} — 轉入童軍執行處後你仲要完成</div>
+          ${missing.length === 0
+            ? `<div class="ok-box">🎉 你已批核晒 ${lv.name} 全部科！轉入童軍後原則上只需完成行政銜接，即可申領該章級。（銀／金章需遞交完成通知書）</div>`
+            : missing.map(k => {
+                const s = FIVE_SECTIONS[k];
+                return `<div class="gap">
+                  <div class="gap-sec"><span class="sec-ico">${s.icon}</span><b>${s.name}</b></div>
+                  <p class="gap-scout">🏕️ 喺童軍點補：${esc(s.scout)}</p>
+                </div>`;
+              }).join("")}
+          <div class="warn">⚠️ ${esc(TRANSFER_IN.caveat)}</div>
+        </div>
+      </div>`;
+
+    // 事件
+    $$("[data-lv]", step).forEach(b => b.addEventListener("click", () => {
+      inLevel = b.dataset.lv; renderTransferIn();
+    }));
+    $$("[data-sec]", step).forEach(b => b.addEventListener("click", () => {
+      const k = b.dataset.sec; inDone[k] = !inDone[k]; renderTransferIn();
+    }));
   }
 
-  /* ═══════════════ 通用 PART 開合 ═══════════════ */
-  function initStaticParts() {
-    const open = loadOpen();
-    $$("details.part[data-key]").forEach(d => {
-      const k = d.dataset.key;
-      // 初次開啟：預設只開 steps ① ②（用 defaultOpen）
-      if (open[k] === undefined) {
-        open[k] = (d.dataset.defaultOpen === "1");
-      }
-      d.open = open[k];
-      d.addEventListener("toggle", () => { open[k] = d.open; saveOpen(open); });
-    });
-    // 開合所有
-    const btn = $("#toggle-all"); if (btn) {
-      btn.addEventListener("click", () => {
-        const all = $$("details.part");
-        const anyOpen = all.some(d => d.open);
-        all.forEach(d => { d.open = !anyOpen; open[d.dataset.key] = !anyOpen; });
-        saveOpen(open);
-        btn.textContent = anyOpen ? "展開全部" : "收合全部";
-      });
-    }
+  function renderTransferInSteps() {
+    const c = $("#ti-steps"); if (!c) return;
+    c.innerHTML = `<ol class="steps">${TRANSFER_IN.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+      <div class="warn">${esc(TRANSFER_IN.caveat)}</div>`;
   }
 
-  /* ═══════════════ 表格 / 辭典 / FAQ ═══════════════ */
-  function renderForms() {
-    const c = $("#forms-list"); if (!c) return;
-    c.innerHTML = FORMS.map(f => `<tr><td class="no">${esc(f.no)}</td><td><b>${esc(f.name)}</b><small>${esc(f.note)}</small></td></tr>`).join("");
+  /* ════════════════════════════════════════════
+     功能 2：兌換
+     ════════════════════════════════════════════ */
+  function renderConvertSync() {
+    const c = $("#convert-sync"); if (!c) return;
+    c.innerHTML = `<p class="lead">${esc(SYNC_CONVERT.intro)}</p>
+      ${SYNC_CONVERT.stages.map((s, i) => {
+        const lvC = LEVELS[s.toAypLv].color;
+        return `<div class="sync-stage">
+          <div class="sync-row">
+            <div class="sync-box from"><small>童軍獎章</small><b>${esc(s.scoutBadge)}</b><span class="src">${esc(s.scoutInfo)}</span></div>
+            <div class="sync-arrow-c">➜ 同步完成 ➜</div>
+            <div class="sync-box to" style="--c:${lvC}"><small>AYP</small><b>${esc(s.toAyp)}</b><span class="src">${esc(s.note)}</span></div>
+          </div>
+        </div>`;
+      }).join("")}
+      <div class="warn">⚠️ ${esc(SYNC_CONVERT.caveat)}</div>`;
   }
-  function renderGlossary() {
-    const c = $("#glossary-list"); if (!c) return;
-    c.innerHTML = GLOSSARY.map(g => `<details class="part glossary" data-key="gl-${esc(g.term)}">
-      <summary><b>${esc(g.term)}</b><span class="chev">▾</span></summary>
-      <div class="part-body"><p>${esc(g.def)}</p></div></details>`).join("");
-  }
-  function renderFaq() {
-    const c = $("#faq-list"); if (!c) return;
-    c.innerHTML = FAQ.map((f,i) => `<details class="part faq" data-key="faq-${i}">
-      <summary><span class="q-ico">Q</span><b>${esc(f.q)}</b><span class="chev">▾</span></summary>
-      <div class="part-body"><p><b>A：</b>${f.a}</p></div></details>`).join("");
-  }
-
-  /* ═══════════════ 時間表 ═══════════════ */
-  function renderTimeline() {
-    const c = $("#timeline"); if (!c) return;
-    c.innerHTML = TIMELINE.map(t => `<div class="tl"><span class="tl-age">${esc(t.age)}</span><p>${esc(t.text)}</p></div>`).join("");
-  }
-
-  /* ═══════════════ 免責 ═══════════════ */
-  function renderDisclaimer() {
-    const c = $("#disclaimer"); if (!c) return;
-    c.innerHTML = `<h3>${esc(DISCLAIMER.title)}</h3><p>${DISCLAIMER.body}</p>`;
-  }
-
-  /* ═══════════════ 年份（頁尾基準日） ═══════════════ */
-  function footer() {
-    const f = $("#baseline-foot"); if (f) f.textContent = APP.baseline;
-    const f2 = $("#baseline-foot2"); if (f2) f2.textContent = APP.baseline;
+  function renderConvertMap() {
+    const c = $("#convert-map"); if (!c) return;
+    c.innerHTML = `<p>${esc(SECTION_MAP.header)}</p>
+      <table class="map"><tbody>
+        ${SECTION_MAP.rows.map(r => `<tr>
+          <td class="ayp"><b>${esc(r.ayp)}</b><small>適用：${esc(r.lv)}</small></td>
+          <td class="sc">${esc(r.scout)}</td></tr>`).join("")}
+      </tbody></table>
+      <div class="warn">⚠️ ${esc(SECTION_MAP.caveat)}</div>`;
   }
 
-  /* ═══════════════ 初始化 ═══════════════ */
+  /* ════════════════════════════════════════════
+     功能 3：升團接駁（按支部）
+     ════════════════════════════════════════════ */
+  function renderSectionPaths() {
+    const c = $("#paths"); if (!c) return;
+    const order = ["scout", "venture", "rover"];
+    c.innerHTML = `<div class="path-flow">` + order.map((k, i) => {
+      const p = SECTION_PATHS[k];
+      const flow = k === "rover" ? "" : `<div class="flow-arrow">⬆ 升團</div>`;
+      return `<div class="path-node" style="--c:${p.color}">
+        <div class="pn-head" style="border-color:${p.color}">
+          <b style="color:${p.color}">${esc(p.name)}</b><small>${esc(p.age)}</small></div>
+        <div class="pn-body">
+          <div class="row"><span class="lbl">🎯 可考</span><p>${esc(p.aypStart)}</p></div>
+          <div class="row"><span class="lbl">🔗 同步/對應</span><p>${esc(p.sync)}</p></div>
+          <div class="row next"><span class="lbl">⬆ 升團後</span><p>${esc(p.toNext)}</p></div>
+        </div></div>${flow}`;
+    }).join("") + `</div>`;
+  }
+
+  /* ════════════════════════════════════════════
+     功能 4：正常開始 AYP 流程
+     ════════════════════════════════════════════ */
+  function renderJoinFlow() {
+    const c = $("#join-flow"); if (!c) return;
+    c.innerHTML = `<ol class="steps">${JOIN_FLOW.commonSteps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+      <div class="tip">💡 ${esc(JOIN_FLOW.note)}</div>
+      <p><b>邊個支部可考咩？</b></p>
+      ${Object.keys(SECTION_PATHS).map(k => {
+        const p = SECTION_PATHS[k];
+        return `<div class="joinrow"><b style="color:${p.color}">${esc(p.name)}</b><p>${esc(p.aypStart)}</p></div>`;
+      }).join("")}`;
+  }
+
+  /* ════════════════════════════════════════════
+     功能 5：其他情況
+     ════════════════════════════════════════════ */
+  function renderExtras(listSel, cases) {
+    const c = $(listSel); if (!c) return;
+    c.innerHTML = cases.map(x => part("x-" + x.id,
+      `<span class="ico">${x.icon}</span><span class="sum-text"><b>${esc(x.title)}</b><small>${esc(x.q)}</small></span>`,
+      `<p>${esc(x.body)}</p>${x.caveat ? `<div class="warn">${esc(x.caveat)}</div>` : ""}`)
+    ).join("");
+  }
+
+  /* ═══════════ 常規區塊 ═══════════ */
+  function renderCommon() {
+    const secPart = (key, ico, title, body, def) => part(key, `<span class="ico">${ico}</span><b>${esc(title)}</b>`, body, def);
+
+    // FAQ
+    const faq = $("#faq-list");
+    if (faq) faq.innerHTML = FAQ.map((f, i) => part("faq-" + i,
+      `<span class="q-ico">Q</span><span class="sum-text"><b>${esc(f.q)}</b></span>`,
+      `<p><b>A：</b>${f.a}</p>`)).join("");
+
+    // 辭典
+    const gl = $("#glossary-list");
+    if (gl) gl.innerHTML = GLOSSARY.map((g, i) => part("gl-" + i,
+      `<b>${esc(g.term)}</b>`, `<p>${esc(g.def)}</p>`)).join("");
+
+    // 表格
+    const forms = $("#forms-list");
+    if (forms) forms.innerHTML = `<table class="forms"><tbody>` + FORMS.map(f =>
+      `<tr><td class="no">${esc(f.no)}</td><td><b>${esc(f.name)}</b><small>${esc(f.note)}</small></td></tr>`).join("") + `</tbody></table>`;
+
+    // 完成之後
+    const comp = $("#complete-steps");
+    if (comp) comp.innerHTML = `<ol class="steps">${COMPLETE.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+      <div class="tip">💡 ${esc(COMPLETE.tip)}</div>`;
+
+    // 時間表
+    const tl = $("#timeline");
+    if (tl) tl.innerHTML = TIMELINE.map(t => `<div class="tl"><span class="tl-age">${esc(t.age)}</span><p>${esc(t.text)}</p></div>`).join("");
+
+    // 免責
+    const disc = $("#disclaimer");
+    if (disc) disc.innerHTML = `<h3>免責聲明</h3><p>${esc(DISCLAIMER)}</p>`;
+
+    // 來源
+    const src = $("#sources");
+    if (src) src.innerHTML = `<ul class="source-list">${SOURCES.map(s =>
+      `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join("")}</ul>`;
+  }
+
+  /* ═══════════ 初始 ═══════════ */
   document.addEventListener("DOMContentLoaded", () => {
-    renderLevelChooser();
-    renderSync();
-    renderTransfers();
-    renderForms();
-    renderGlossary();
-    renderFaq();
-    renderTimeline();
-    renderDisclaimer();
-    initStaticParts();
-    footer();
+    renderTransferIn();
+    renderTransferInSteps();
+    renderConvertSync();
+    renderConvertMap();
+    renderSectionPaths();
+    renderJoinFlow();
+    renderExtras("#extra-list", EXTRA_CASES);
+    renderExtras("#extra-list-2", EXTRA_CASES_2);
+    renderCommon();
+    bindPartToggles();
+    bindToc();
+    const b = $("#baseline-foot"); if (b) b.textContent = APP.baseline;
+    const b2 = $("#baseline-foot2"); if (b2) b2.textContent = APP.baseline;
   });
-
 })();

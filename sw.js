@@ -1,5 +1,5 @@
 /* Service Worker — AYP 童軍接駁指南（離線可用） */
-const CACHE = "ayp-guide-v1";
+const CACHE = "ayp-guide-v2";
 const ASSETS = [
   "./",
   "./index.html",

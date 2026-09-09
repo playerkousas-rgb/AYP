@@ -10,21 +10,9 @@ const appJs = fs.readFileSync(path.join(root, "app.js"), "utf8");
 
 const dom = new JSDOM(html, { runScripts: "outside-only", pretendToBeVisual: true });
 const { window } = dom;
-
-// 避免 location.origin 問題唔影響（唔用 fetch）
-window.addEventListener = window.addEventListener.bind(window);
-
 let errors = [];
 window.addEventListener("error", (e) => errors.push(e.message));
-
-try {
-  // 同一 eval scope 內合併執行（模擬瀏覽器共享 global lexical scope）
-  window.eval(dataJs + "\n;" + appJs);
-} catch (e) {
-  errors.push("eval error: " + e.message);
-}
-
-// 觸發 DOMContentLoaded
+try { window.eval(dataJs + "\n;" + appJs); } catch (e) { errors.push("eval error: " + e.message); }
 window.document.dispatchEvent(new window.Event("DOMContentLoaded", { bubbles: true }));
 
 function has(id) { return !!window.document.getElementById(id); }
@@ -33,33 +21,50 @@ function innerLen(id) { const el = window.document.getElementById(id); return el
 const checks = [];
 function ok(name, cond) { checks.push([!!cond, name]); }
 
-ok("level chooser", has("level-chooser") && innerLen("level-chooser") > 0);
-ok("req table 有內容", innerLen("req-table") > 200);
-ok("sync plan 有內容", innerLen("sync-plan") > 50);
-ok("member paths 有內容", innerLen("member-paths") > 50);
-ok("transfer list 有 5 場景", (window.document.querySelectorAll("#transfer-list .transfer").length) === 5);
-ok("forms 有內容", innerLen("forms-list") > 50);
-ok("glossary 有內容", innerLen("glossary-list") > 50);
-ok("faq 有內容", innerLen("faq-list") > 50);
-ok("timeline 有內容", innerLen("timeline") > 50);
-ok("disclaimer 有內容", innerLen("disclaimer") > 50);
-ok("baseline foot 有字", window.document.getElementById("baseline-foot").textContent.length > 0);
+// 功能1 轉入
+ok("TI 有內容", innerLen("ti-inner") > 150);
+ok("TI 3 級別 chip", window.document.querySelectorAll("#ti-inner [data-lv]").length === 3);
+ok("TI 剔科 chip >=4", window.document.querySelectorAll("#ti-inner [data-sec]").length >= 4);
+ok("TI 顯示缺失科", /仲要完成/.test(window.document.getElementById("ti-inner").textContent));
+ok("TI steps 有內容", innerLen("ti-steps") > 40);
 
-// 切換級別測試
-const chips = window.document.querySelectorAll("#level-chooser .chip");
-ok("有 3 個級別 chip", chips.length === 3);
-if (chips.length === 3) {
-  chips[1].click();
-  const t = window.document.getElementById("req-table").textContent;
-  ok("切到銀章顯示銀", /銀章級/.test(t));
-  chips[2].click();
-  const t2 = window.document.getElementById("req-table").textContent;
-  ok("切到金章含團體生活", /團體生活科/.test(t2));
+// 功能2 兌換
+ok("sync 有內容", innerLen("convert-sync") > 60);
+ok("sync 含高級獎章", /童軍高級獎章/.test(window.document.getElementById("convert-sync").textContent));
+ok("map 有內容", innerLen("convert-map") > 60);
+ok("map 含服務科", /服務科/.test(window.document.getElementById("convert-map").textContent));
+
+// 功能3 升團
+ok("paths 有內容", innerLen("paths") > 60);
+ok("paths 含童軍深資樂行", /深資童軍/.test(window.document.getElementById("paths").textContent) && /樂行童軍/.test(window.document.getElementById("paths").textContent));
+
+// 功能4 流程
+ok("join flow 有內容", innerLen("join-flow") > 60);
+
+// 功能5 其他
+ok("extra-list 有 6+ 卡", window.document.querySelectorAll("#extra-list .part").length >= 5);
+ok("extra-list-2 有卡", window.document.querySelectorAll("#extra-list-2 .part").length >= 2);
+
+// 互動：剔一科後缺失數減少
+{
+  const secs = window.document.querySelectorAll("#ti-inner [data-sec]");
+  const before = (window.document.getElementById("ti-inner").querySelectorAll(".gap").length);
+  secs[0].click();
+  const after = (window.document.getElementById("ti-inner").querySelectorAll(".gap").length);
+  ok("剔一科後缺失減少", after < before);
 }
 
-// 輸出
+// 其他區塊
+ok("faq 有內容", innerLen("faq-list") > 50);
+ok("glossary 有內容", innerLen("glossary-list") > 50);
+ok("timeline 有內容", innerLen("timeline") > 50);
+ok("disclaimer 有內容", innerLen("disclaimer") > 50);
+ok("complete 有內容", innerLen("complete-steps") > 40);
+ok("sources 有內容", innerLen("sources") > 40);
+ok("baseline", window.document.getElementById("baseline-foot").textContent.length > 0);
+
 let pass = 0, fail = 0;
-checks.forEach(([c, n]) => { if (c) { pass++; } else { fail++; console.log("✗ FAIL:", n); } });
+checks.forEach(([c, n]) => { if (c) pass++; else { fail++; console.log("✗ FAIL:", n); } });
 console.log(`\n${pass} 通過 / ${fail} 失敗`);
-if (errors.length) { console.log("JS 錯誤:", errors); }
+if (errors.length) console.log("JS 錯誤:", errors);
 process.exit(fail === 0 && errors.length === 0 ? 0 : 1);
