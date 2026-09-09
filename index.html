@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a5c36">
+<title>AYP 童軍接駁指南</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/logo-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AYP童軍接駁指南">
+<meta name="description" content="非官方指南：幫童軍成員了解童軍進度性獎章與 AYP 同步完成／直接對應，以及轉執行處、升支部時 AYP 點接駁。">
+<style>
+:root{
+  --scout-green:#0a5c36; --scout-green-dark:#064020; --scout-beige:#e8dcc4;
+  --bronze:#b87333; --silver:#8a9199; --gold:#d4af37;
+  --text:#222; --muted:#777; --bg:#f5f5f3; --card:#fff; --line:#e8e4dc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans HK","PingFang HK","Microsoft JhengHei",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);}
+img{max-width:100%}
+
+/* Header */
+header{background:linear-gradient(135deg,#0a5c36,#064020);color:#fff;padding:1.4rem 1rem 1.6rem;text-align:center;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;
+  background:linear-gradient(90deg,var(--bronze) 0 33%,var(--silver) 33% 66%,var(--gold) 66% 100%)}
+.brand{display:flex;align-items:center;justify-content:center;gap:.8rem}
+.brand img{width:56px;height:56px;border-radius:14px;background:#fff;padding:3px}
+.brand h1{font-size:1.35rem;margin:0;line-height:1.2}
+header p.tag{margin:.4rem 0 0;font-size:.9rem;opacity:.9}
+.badge-base{display:inline-block;margin-top:.6rem;background:rgba(255,255,255,.15);
+  padding:.15rem .7rem;border-radius:20px;font-size:.75rem}
+
+/* Nav */
+nav.toc{position:sticky;top:0;z-index:50;background:rgba(245,245,243,.97);border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:.1rem;padding:.3rem .5rem;backdrop-filter:blur(4px)}
+nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.85rem;text-decoration:none}
+nav.toc a:hover{background:#e4ece6}
+
+main{max-width:860px;margin:0 auto;padding:.4rem .9rem 3rem}
+
+/* Section wrapper */
+.hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
+
+h2.sec{display:flex;align-items:center;gap:.6rem;color:#0a5c36;margin:2rem 0 .6rem;padding-left:.6rem;border-left:5px solid var(--scout-green);font-size:1.25rem}
+h2.sec .n{background:#0a5c36;color:#fff;min-width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.95rem}
+h2.sec .hot{background:var(--gold);color:#5a4300}
+
+.part{border:1px solid var(--line);background:var(--card);border-radius:12px;margin:.7rem 0;overflow:hidden}
+.part>summary{list-style:none;display:flex;align-items:center;gap:.7rem;padding:.85rem .9rem;cursor:pointer;font-weight:600;user-select:none}
+.part>summary::-webkit-details-marker{display:none}
+.part>summary .chev{transition:transform .2s;margin-left:auto;color:var(--muted)}
+.part[open]>summary .chev{transform:rotate(180deg)}
+.part>summary .ico{font-size:1.3rem}
+.part .sum-text{display:flex;flex-direction:column}
+.part .sum-text small{font-weight:400;color:var(--muted)}
+.part .part-body{padding:0 .9rem .9rem;border-top:1px dashed var(--line)}
+
+.part-body h4{margin:.7rem 0 .3rem;color:#0a5c36}
+.part-body p{margin:.5rem 0}
+.tip{background:#eaf4ee;border-left:4px solid #2f9e63;padding:.5rem .7rem;border-radius:6px;margin:.5rem 0}
+.warn{background:#fdecec;border-left:4px solid #d64541;padding:.5rem .7rem;border-radius:6px;margin:.5rem 0;font-size:.92rem}
+.warn p{margin:.3rem 0 0}
+
+/* Chips (level) */
+#level-chooser{display:flex;gap:.5rem;flex-wrap:wrap;margin:.6rem 0}
+.chip{border:2px solid transparent;border-radius:30px;padding:.5rem .9rem;font-size:.95rem;cursor:pointer;
+  background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.06);font-weight:600}
+.chip span{margin-right:.3rem}
+.chip.active{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff)}
+@media (max-width:480px){.chip{flex:1 1 auto;justify-content:center;display:flex}}
+
+/* requirement */
+.lv-head{display:flex;gap:.8rem;align-items:center;padding:.3rem 0}
+.lv-icon{font-size:2rem}
+.lv-head h3{margin:0}
+.lv-meta{margin:.2rem 0 0;color:var(--muted);font-size:.85rem}
+table.req{width:100%;border-collapse:collapse;margin:.5rem 0}
+table.req td{border-bottom:1px solid var(--line);padding:.6rem .5rem;vertical-align:top}
+table.req tr:last-child td{border-bottom:none}
+td.sec{display:flex;gap:.5rem;align-items:center;width:42%}
+td.sec .sec-ico{font-size:1.4rem}
+td.sec small{display:block;color:var(--muted)}
+td.val{font-weight:600;color:#0a5c36}
+@media(max-width:520px){td.sec{width:50%}}
+.note-box{background:#f0f4fb;border-left:4px solid #2f6f9e;border-radius:6px;padding:.6rem .8rem;margin:.5rem 0;font-size:.9rem}
+.note-box p{margin:.3rem 0 0}
+.sub-items{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.sub-item{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.5rem .6rem;font-size:.82rem;display:flex;flex-direction:column}
+.sub-item b{color:#0a5c36}
+.sub-item span.sub{color:#8a5a00}
+.detail-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin-top:.5rem}
+.dcol{background:#faf8f4;border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem;font-size:.85rem}
+.dcol p{margin:.3rem 0 0;color:#444;font-size:.8rem}
+
+/* sync */
+.sync-stage{margin:.8rem 0}
+.sync-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.sync-box{flex:1 1 160px;border:2px solid #ddd;border-radius:12px;padding:.6rem;text-align:center;background:#fff}
+.sync-box small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.03em}
+.sync-box b{display:block;font-size:.95rem}
+.sync-box.to{border-color:var(--c,#d4af37);background:color-mix(in srgb,var(--c,#d4af37) 8%,#fff)}
+.sync-arrow-c{font-weight:700;color:var(--scout-green);white-space:nowrap}
+
+/* member paths */
+#member-paths{display:grid;gap:.5rem;margin-top:.5rem}
+.mp{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem}
+.mp b{min-width:130px}
+.mp p{flex-basis:100%;margin:.2rem 0 0;color:#444;font-size:.85rem}
+.tag{border-radius:20px;padding:.1rem .6rem;font-size:.75rem;color:#fff;background:var(--c,#8a9199);font-weight:700}
+
+/* steps */
+ol.steps{padding-left:1.3rem;margin:.4rem 0}
+ol.steps li{margin:.35rem 0}
+
+/* forms */
+table.forms{width:100%;border-collapse:collapse;margin:.4rem 0}
+table.forms td{border-bottom:1px solid var(--line);padding:.55rem .4rem;vertical-align:top}
+table.forms .no{white-space:nowrap;font-weight:700;color:#0a5c36;width:120px}
+table.forms small{display:block;color:var(--muted)}
+
+/* glossary / faq */
+.part.glossary>summary,.part.faq>summary{justify-content:flex-start}
+.q-ico{background:var(--bronze);color:#fff;border-radius:8px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+
+/* timeline */
+#timeline{border-left:3px solid var(--scout-green);margin-left:1rem;padding-left:1.2rem;display:flex;flex-direction:column;gap:.1rem}
+.tl{position:relative;padding:.35rem 0}
+.tl::before{content:"";position:absolute;left:-1.62rem;top:.8rem;width:11px;height:11px;border-radius:50%;background:var(--gold);border:2px solid #fff;box-shadow:0 0 0 2px var(--gold)}
+.tl-age{font-weight:700;color:#0a5c36;background:#eaf4ee;border-radius:6px;padding:0 .45rem;font-size:.8rem}
+.tl p{margin:.2rem 0}
+
+/* disclaimer & footer */
+.disclaimer{background:#f5f2ea;border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;margin-top:2rem;font-size:.85rem;color:#555}
+.disclaimer h3{margin:.2rem 0 .3rem;color:#7a1f2b}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:1rem .8rem 2.5rem}
+
+a{color:#0a5c36;text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+
+.source-list{font-size:.85rem;color:#444}
+.source-list li{margin:.25rem 0}
+@media print{nav.toc,header::after{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="assets/logo-192.png" alt="AYP 童軍接駁指南標誌">
+    <div><h1>AYP 童軍接駁指南</h1>
+      <p class="tag">童軍進度性獎章 ↔ AYP 同步／直接對應・轉處／升團接駁</p></div>
+  </div>
+  <span class="badge-base" id="baseline-foot"></span>
+</header>
+
+<nav class="toc" aria-label="目錄">
+  <a href="#intro">開頭</a>
+  <a href="#eligibility">資格</a>
+  <a href="#sections">五科速查</a>
+  <a href="#sync">同步/對應 ★</a>
+  <a href="#join">加入童軍執行處</a>
+  <a href="#transfer">接駁指南 ★</a>
+  <a href="#timeline-sec">時間表</a>
+  <a href="#complete">完成之後</a>
+  <a href="#resources">表格/辭典/FAQ</a>
+</nav>
+
+<main>
+
+  <!-- ══ 1) 開頭 ══ -->
+  <section id="intro">
+    <h2 class="sec"><span class="n">1</span> AYP 係咩？童軍成員點解／點樣考</h2>
+    <div class="part" data-key="intro-1" data-default-open="1">
+      <summary><span class="ico">🎖️</span> AYP 係咩？</summary>
+      <div class="part-body">
+        <p>香港青年獎勵計劃（AYP，前身愛丁堡公爵獎勵計劃）係國際性獎勵計劃，分<strong>銅章、銀章、金章</strong>三級。每個章級一般由四科組成（服務科、野外鍛鍊科、技能科、康樂體育科），金章級另加<strong>團體生活科</strong>。</p>
+        <p>香港童軍總會自 1969 年起就係 AYP 嘅執行處之一，以<strong>自主執行處</strong>身份喺會內推行 —— 所以童軍成員可以透過童軍活動／訓練，用符合 AYP 年齡、時數、持續期、紀錄及評核要求嘅方式，完成各科。</p>
+        <div class="tip">💡 最正係：由 2026-08-15 起有「<strong>同步完成方案</strong>」——考童軍進度性獎章可以同步攞 AYP，毋須重複做。見「童軍 ↔ AYP 同步／直接對應」。</div>
+      </div>
+    </div>
+    <div class="part" data-key="intro-2" data-default-open="1">
+      <summary><span class="ico">🗺️</span> 呢個指南幫到你咩？</summary>
+      <div class="part-body">
+        <ul>
+          <li>搞清自己可唔可以考、考邊級、點起步（<a href="#eligibility">資格</a>）</li>
+          <li>童軍徽章／進度性獎章可以點<strong>同步／直接對應</strong> AYP 各科（<a href="#sync">同步與直接對應</a>）</li>
+          <li>由其他執行處轉入童軍、童軍內部轉支部、升團嗰陣 AYP 點接駁（<a href="#transfer">接駁指南</a>）</li>
+          <li>幾多歲做咩最順、點完成領獎（<a href="#timeline-sec">時間表</a>、<a href="#complete">完成之後</a>）</li>
+        </ul>
+        <div class="warn">⚠️ 本指南係<strong>非官方輔助工具</strong>。AYP 係試行／會更新嘅計劃，所有操作細節辦理前請向<strong>你所屬執行處支部組長／童軍領袖</strong>核實。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 2) 資格起步 ══ -->
+  <section id="eligibility">
+    <h2 class="sec"><span class="n">2</span> 資格起步：誰合資格、幾歲、考邊級</h2>
+    <div class="part" data-key="elig-1">
+      <summary><span class="ico">👤</span> 邊啲童軍成員可以考？</summary>
+      <div class="part-body">
+        <p>已宣誓嘅<strong>童軍、深資童軍、樂行童軍</strong>成員，以及合資格嘅<strong>青年領袖</strong>，可按年齡同所屬單位安排參加。原則上要隸屬一個已批准成立嘅<strong>執行處支部</strong>；如你旅團未有，可經直屬童軍區／地域嘅執行處支部參加。</p>
+        <p>一般供 <strong>14–24 歲</strong>嘅青年人參加；各章級最低年齡銅 14／銀 15／金 16。最後參加限期為 <strong>23 歲生日當天</strong>，所有活動原則上須於 <strong>25 歲生日前</strong>完成。</p>
+        <div class="tip">🆕 13 歲特別安排：年滿 <strong>13 歲</strong>嘅童軍成員，可經特別安排申請銅章（須與適齡朋友小組進行）。</div>
+      </div>
+    </div>
+    <div class="part" data-key="elig-2">
+      <summary><span class="ico">🎓</span> 我係邊個支部、可以考邊級？（揀你嘅情況）</summary>
+      <div class="part-body">
+        <p><b>童軍／深資／樂行／青年領袖 一覽：</b></p>
+        <div id="member-paths"></div>
+        <p style="font-size:.82rem;color:var(--muted)">* 實際以你年齡、所屬單位執行處支部及官方最新規定為準。</p>
+      </div>
+    </div>
+    <div class="part" data-key="elig-3">
+      <summary><span class="ico">🧾</span> 點報名？（迎新講座 → AYP/01 → 紀錄簿）</summary>
+      <div class="part-body">
+        <ol class="steps">
+          <li>先完成<strong>參加者迎新講座</strong>（網上影片或實體），認識計劃目的、各章級及科目、導師／評核員安排、活動紀錄及參加者責任。</li>
+          <li>填「<strong>香港青年獎勵計劃參加申請表格</strong>」FORM AYP/01，連同所需文件及費用，經所屬<strong>執行處支部組長</strong>辦理。</li>
+          <li>申請獲接納後獲發<strong>紀錄簿</strong>。所有章級活動必須登記喺紀錄簿上先算數 —— <strong>未獲發紀錄簿前做嘅活動，原則上唔可以算做獎章活動</strong>。</li>
+        </ol>
+        <div class="tip">💳 紀錄簿申請費用由 2026-04-01 起為 <strong>HK$45</strong>。</div>
+        <div class="warn">⚠️ 唔好喺未入會／未買紀錄簿前就開始「儲時數」，嗰啲原則上唔計入獎勵計劃。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3) 五科速查 ══ -->
+  <section id="sections">
+    <h2 class="sec"><span class="n">3</span> 五科速查（揀級別即睇要求）</h2>
+    <p>按下面揀銅章／銀章／金章，即睇該級別五科要求。揀「同步完成」見下一節。</p>
+    <div id="level-chooser"></div>
+    <div id="req-table"></div>
+  </section>
+
+  <!-- ══ 4) 同步/直接對應 ══ -->
+  <section id="sync">
+    <h2 class="sec"><span class="n hot">4</span> 童軍 ↔ AYP 同步完成／直接對應 ★</h2>
+    <div class="hero-note">🏕️ <b>重點</b>：童軍活動同 AYP 唔係兩件獨立嘅事——好多童軍訓練／進度性獎章可以<b>同步或直接對應</b> AYP 各科，慳時間唔使重複做。</div>
+
+    <div class="part" data-key="sync-1">
+      <summary><span class="ico">🔗</span> 同步完成方案（P95/2026，2026-08-15 起試行）</summary>
+      <div class="part-body">
+        <div id="sync-plan"></div>
+      </div>
+    </div>
+
+    <div class="part" data-key="sync-2">
+      <summary><span class="ico">🧩</span> 童軍活動／徽章「直接對應」 AYP 各科</summary>
+      <div class="part-body">
+        <p>除同步完成方案外，童軍各支部嘅訓練活動大都能滿足 AYP 各科嘅<strong>全部或部分</strong>要求——即係你可以利用童軍訓練攞到嘅知識、技能同評核，去完成 AYP 科目，而<strong>毋須重複接受同一訓練及審核</strong>。</p>
+        <p>參考方向（按支部／科目）：</p>
+        <ul>
+          <li><b>服務科</b>：急救、拯溺、營地服務、童軍服務等童軍服務項目</li>
+          <li><b>技能科</b>：童軍專科徽章（如通訊、電腦、工藝、語言、攝影、露營技能等）</li>
+          <li><b>康樂體育科</b>：童軍體育／戶外運動訓練及考核</li>
+          <li><b>野外鍛鍊科</b>：童軍遠足／露營／探險旅程 —— ⚠️ 評核旅程仍須由<strong>童軍執行處認可嘅野外鍛鍊科導師／評核員</strong>簽署</li>
+          <li><b>團體生活科（金章）</b>：童軍大型交流／露營／大露營活動（須 5 日 4 夜以上）</li>
+        </ul>
+        <p style="font-size:.9rem">官方曾有《各支部進度性獎章及徽章與 AYP 參照表》（P103/2016）逐項列出；因新《童軍訓練綱要》2026-08-15 起實施，最新對接以「同步完成方案」及童軍執行處網頁公布為準。</p>
+        <div class="warn">⚠️ 每個科目都要符合 AYP 嘅<strong>時數／持續期／分數／評核</strong>要求先得——唔係「考咗童軍章就自動等於」AYP，要按正式申報程序。詳情問你嘅執行處支部組長。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5) 加入童軍執行處 ══ -->
+  <section id="join">
+    <h2 class="sec"><span class="n">5</span> 加入童軍執行處</h2>
+    <div class="part" data-key="join-1">
+      <summary><span class="ico">🏕️</span> 步驟一覽</summary>
+      <div class="part-body">
+        <ol class="steps">
+          <li>確保已宣誓並屬童軍／深資／樂行支部（青年領袖另按委任安排）。</li>
+          <li>確認所屬旅團／區／地域有<strong>執行處支部</strong>；冇就經直屬區／地域執行處支部。</li>
+          <li>完成<strong>參加者迎新講座</strong>（網上／實體）。</li>
+          <li>交 FORM AYP/01 連文件及費用 → 獲發<strong>紀錄簿</strong>。</li>
+        </ol>
+        <p>行政程序正分階段<strong>電子化</strong>（網上申請逐步推行，首年網上＋紙本並行）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6) 接駁指南 ══ -->
+  <section id="transfer">
+    <h2 class="sec"><span class="n hot">6</span> 接駁指南：轉執行處／轉支部／升團 ★</h2>
+    <div class="hero-note">🔁 參考「升團」精神：由 A 去到 B，AYP 進度點帶住走、要辦咩、邊啲要小心。<b>下面每個情境撳開即睇</b>。</div>
+    <div id="transfer-list"></div>
+  </section>
+
+  <!-- ══ 7) 時間表 ══ -->
+  <section id="timeline-sec">
+    <h2 class="sec"><span class="n">7</span> 幾時起步最順？</h2>
+    <div id="timeline"></div>
+    <p style="font-size:.85rem;color:var(--muted)">↑ 時間只係「幾時可開始／可考」嘅參考，實際起步由你計劃安排。</p>
+  </section>
+
+  <!-- ══ 8) 完成之後 ══ -->
+  <section id="complete">
+    <h2 class="sec"><span class="n">8</span> 完成之後：領獎／證書</h2>
+    <div class="part" data-key="comp-1">
+      <summary><span class="ico">🏆</span> 完成章級後點領獎？</summary>
+      <div class="part-body">
+        <p>凡完成各級活動並符合要求，可獲頒<strong>獎狀及獎章</strong>各一。領獎安排因章級而異：</p>
+        <ul>
+          <li><b>銅章</b>：由個別執行處舉辦頒獎，按執行處指示申領。</li>
+          <li><b>銀章／金章</b>：須遞交「銀章／金章完成通知書」（童軍執行處用 FORM AYP/07 及相關表格）→ 交由地域辦事處覆核 → 送交總辦事處安排領獎。</li>
+          <li>銀章由總辦事處統籌頒發；金章由香港特區行政長官頒發（於指定典禮）。</li>
+        </ul>
+        <div class="tip">💡 完成後可以諗下做導師／評核員，幫返後輩——好多 AYP 得獎者之後都返去支援童軍執行處。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 9) 資源 ══ -->
+  <section id="resources">
+    <h2 class="sec"><span class="n">9</span> 表格・辭典・FAQ・常見錯誤</h2>
+
+    <div class="part" data-key="res-1">
+      <summary><span class="ico">📄</span> 常用表格一覽</summary>
+      <div class="part-body">
+        <table class="forms"><tbody id="forms-list"></tbody></table>
+        <p style="font-size:.85rem;color:var(--muted)">實際表格以童軍執行處網頁及青少年活動署最新版本為準。</p>
+      </div>
+    </div>
+
+    <div class="part" data-key="res-2">
+      <summary><span class="ico">📖</span> 術語小辭典</summary>
+      <div class="part-body"><div id="glossary-list"></div></div>
+    </div>
+
+    <div class="part" data-key="res-3">
+      <summary><span class="ico">❓</span> 常見問題 FAQ</summary>
+      <div class="part-body"><div id="faq-list"></div></div>
+    </div>
+
+    <div class="part" data-key="res-4">
+      <summary><span class="ico">⚠️</span> 常見錯誤／貼士</summary>
+      <div class="part-body">
+        <div class="warn">❌ 未買紀錄簿／未正式入會就開始「儲時數」——原則上唔計。</div>
+        <div class="warn">❌ 誤以為「考咗童軍章 = 自動攞到 AYP」——童軍徽章可用作對應，但每個科都要符合 AYP 時數／持續期／評核要求並正式申報。</div>
+        <div class="warn">❌ 轉執行處／轉支部唔通知組長——記得用 FORM AYP/09、通知兩邊執行處支部組長。</div>
+        <div class="tip">✅ 貼士：愈早問清你嘅執行處支部組長係邊位、紀錄簿攞咗未、邊啲童軍活動可申報邊科，條路會順好多。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 資料來源 -->
+  <section>
+    <h2 class="sec"><span class="n">📌</span> 官方資料來源</h2>
+    <div class="part" data-key="src-1">
+      <summary><span class="ico">🔗</span> 官方連結（全部香港官方）</summary>
+      <div class="part-body">
+        <ul class="source-list">
+          <li>青少年活動署通告 <a href="https://www.scout.org.hk/uploads/tc/circulars/25989/p095-26.pdf" target="_blank" rel="noopener">P95/2026《香港青年獎勵計劃更新安排》</a></li>
+          <li>青少年活動署通告 <a href="https://www.scout.org.hk/uploads/tc/circulars/23585/p022-26.pdf" target="_blank" rel="noopener">P22/2026《新修訂支部訓練綱要》</a>（附件含過渡安排）</li>
+          <li>青少年活動署通告 <a href="https://www.scout.org.hk/uploads/tc/circulars/25990/p096-26.pdf" target="_blank" rel="noopener">P96/2026《新修訂支部訓練綱要正式實施及發布安排》</a></li>
+          <li>香港童軍總會 <a href="https://www.scout.org.hk/hkayp/" target="_blank" rel="noopener">香港青年獎勵計劃童軍執行處</a>（計劃簡介／一般規條／五科內容／執行詳情）</li>
+          <li>《各支部進度性獎章及徽章與 AYP 參照表》<a href="https://www.scout.org.hk/article_attach/26708/P103-16.pdf" target="_blank" rel="noopener">P103/2016</a>（舊綱要參考）</li>
+          <li>香港青年獎勵計劃總辦事處 <a href="https://www.ayp.org.hk" target="_blank" rel="noopener">ayp.org.hk</a> ／ <a href="https://insight.ayp.org.hk" target="_blank" rel="noopener">insight.ayp.org.hk</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="disclaimer" id="disclaimer"></div>
+
+</main>
+
+<footer>
+  <p>AYP 童軍接駁指南 · <span id="baseline-foot2"></span></p>
+  <p style="font-size:.72rem">© 2026 非官方輔助工具 · 資料版權屬相關機構</p>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>

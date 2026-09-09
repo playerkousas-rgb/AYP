@@ -1,0 +1,12 @@
+{
+  "name": "ayp-scout-guide",
+  "version": "1.0.0",
+  "description": "AYP 童軍接駁指南 — 非官方靜態 PWA",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 8000 --bind 0.0.0.0",
+    "test:dom": "node tests/dom-test.js",
+    "test": "node tests/dom-test.js",
+    "test:full": "playwright test tests/guide.spec.js --workers=1"
+  }
+}

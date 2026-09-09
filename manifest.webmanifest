@@ -1,0 +1,16 @@
+{
+  "name": "AYP 童軍接駁指南",
+  "short_name": "AYP童軍",
+  "description": "非官方指南：童軍進度性獎章與 AYP 同步完成／直接對應，以及轉執行處、升支部時 AYP 接駁。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f3",
+  "theme_color": "#0a5c36",
+  "lang": "zh-HK",
+  "icons": [
+    { "src": "assets/logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
