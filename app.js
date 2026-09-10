@@ -7,13 +7,14 @@
   const $$ = (s, p) => Array.from((p || document).querySelectorAll(s));
   const OPEN_KEY = "ayp-guide-open-v2";
   const LANG_KEY = "ayp-guide-lang-v1";
+  const VISIT_KEY = "ayp-guide-visited-v1";
   const FIRST_VISIT_KEY = "ayp-guide-first-visit-v1";
 
   function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
   function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
   function smoothTo(el, block) { if (!el) return; try { if (typeof el.scrollIntoView === "function") el.scrollIntoView({ behavior: "smooth", block: block || "start" }); } catch (e) {} }
   function smoothTop() { try { if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {} }
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
   /* ═══════════ 語言 / Language ═══════════ */
   function detectDefaultLang() {
@@ -361,7 +362,7 @@
   }
 
   /* ════════════════════════════════════════════
-     置頂指南列（常駐）：主頁＋7 指南，㩒即成版切換
+     置頂指南列（常駐）：5欄與底部對齊，放大
      ════════════════════════════════════════════ */
   function renderTopBar() {
     const c = $("#topbar"); if (!c) return;
@@ -377,7 +378,7 @@
   }
 
   /* ════════════════════════════════════════════
-     置底 4 格工具（常駐）：㩒即成版切換去該工具 view
+     置底 5格工具（常駐）：滿寬放大，與頂部對齊
      ════════════════════════════════════════════ */
   function renderBottomBar() {
     const c = $("#bottombar"); if (!c) return;
@@ -512,7 +513,7 @@
       oa.innerHTML = `
         <p>${esc(OA.intro)}</p>
         <ul class="oa-links">${OA.links.map(l =>
-          `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul>
+          `<li><a href="${esc(l.url)}\" target=\"_blank\" rel=\"noopener\">${esc(l.label)}</a></li>`).join("")}</ul>
         <p><b>${esc(OA.regionsTitle)}</b></p>
         <table class="oa-regions"><tbody>${OA.regions.map(r =>
           `<tr><td>${esc(r.name)}</td><td>${esc(r.tel)}</td></tr>`).join("")}</tbody></table>
@@ -615,10 +616,15 @@
 
   /* ═══════════ 初始＋首次自動進精靈 ═══════════ */
   function isFirstVisit() {
-    try { return !localStorage.getItem(FIRST_VISIT_KEY); } catch (e) { return false; }
+    try {
+      return !localStorage.getItem(VISIT_KEY) && !localStorage.getItem(FIRST_VISIT_KEY);
+    } catch (e) { return false; }
   }
   function markVisited() {
-    try { localStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (e) {}
+    try {
+      localStorage.setItem(VISIT_KEY, "1");
+      localStorage.setItem(FIRST_VISIT_KEY, "1");
+    } catch (e) {}
   }
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();

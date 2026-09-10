@@ -86,7 +86,15 @@ ok("fab-lang 唔喺底部浮動掣區", !window.document.querySelector("#fab-top
 // 📱 APP：置頂 5 情景＋置底 5 工具，預設正常流程
 ok("置頂 5 格情景", window.document.querySelectorAll("#topbar .tb-btn").length === 5);
 ok("置底 5 格工具", window.document.querySelectorAll("#bottombar .bb-btn").length === 5);
-ok("預設係正常流程 view", window.document.body.dataset.view === "normal");
+ok("置頂 5 格圖示上文字下（與置底對齊）", window.document.querySelectorAll("#topbar .tb-btn .tb-ico").length === 5);
+ok("置底 5 格圖示上文字下", window.document.querySelectorAll("#bottombar .bb-btn .bb-ico").length === 5);
+ok("首次進入自動進精靈", window.document.body.dataset.view === "quick");
+ok("精靈再撳一次返正常流程", (() => {
+  const btn = window.document.querySelector("#topbar [data-tt='quick']");
+  if (!btn) return false;
+  btn.click();
+  return window.document.body.dataset.view === "normal" && !btn.classList.contains("active");
+})());
 ok("正常流程有行動卡", !!window.document.querySelector("#normal-card .plan-card"));
 ok("正常流程齊料（Check/步驟/時間表/領獎/來源）", ["beginner", "f4", "comp", "sources-sec"].every(id =>
   !!window.document.querySelector("#view-normal #" + id)) &&
