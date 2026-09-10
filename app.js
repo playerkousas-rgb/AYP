@@ -51,15 +51,7 @@
     });
   }
 
-  /* ═══════════ 頂層 TOC 導航 / 靜態文字 ═══════════ */
-  function bindToc() {
-    $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
-      const id = a.getAttribute("href").slice(1);
-      const el = document.getElementById(id);
-      if (el) { e.preventDefault(); smoothTo(el); }
-    }));
-  }
-
+  /* ═══════════ 靜態文字 ═══════════ */
   function renderStaticText() {
     const t = UI(); const app = L().APP;
     document.documentElement.lang = L().htmlLang;
@@ -71,11 +63,6 @@
     setText("app-tag", app.tagline);
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", app.description);
-
-    // nav
-    const navMap = { "nav-quick": t.nav.quick, "nav-beginner": t.nav.beginner, "nav-f1": t.nav.f1, "nav-f2": t.nav.f2,
-      "nav-f3": t.nav.f3, "nav-f4": t.nav.f4, "nav-f5": t.nav.f5, "nav-res": t.nav.res, "nav-comp": t.nav.comp };
-    Object.keys(navMap).forEach(id => setText(id, navMap[id]));
 
     setHtml("hero-lead", t.heroLead);
     setHtml("mini1", t.mini1); setHtml("mini2", t.mini2); setHtml("mini3", t.mini3);
@@ -102,33 +89,29 @@
     setText("f5-title", t.f5Title); setText("f5-tag", t.f5Tag);
     setText("f5-sub", t.f5Sub);
 
-    setText("res-title", t.resTitle);
     setText("res-tl-summary", t.resTlSummary);
-    setText("res-fm-summary", t.resFmSummary);
-    setText("res-fm-note", t.resFmNote);
     setText("res-gl-summary", t.resGlSummary);
     setText("res-faq-summary", t.resFaqSummary);
+    setText("bt-faq-summary", t.faqViewTitle);
 
     setText("comp-title", t.compTitle);
     setText("comp-summary", t.compSummary);
 
     setText("sources-title", t.sourcesTitle);
 
-    setText("bottom-tools-title", t.bottomToolsTitle);
-    setText("bottom-tools-sub", t.bottomToolsSub);
     setText("bt-sync-summary", L().SYNC_PLAN.title);
     setText("bt-conv-summary", L().CONVERSION_TABLE.title);
     const startFormsAction = L().BOTTOM_ACTIONS.find(b => b.id === "start-forms");
     if (startFormsAction) setText("bt-forms-summary", startFormsAction.label);
     setText("bt-oa-summary", L().OA_LOOKUP.title);
+    $$(".tv-back-label").forEach(el => { el.textContent = t.backHome; });
 
-    const quicknavAria = $("#quicknav"); if (quicknavAria) quicknavAria.setAttribute("aria-label", t.quickNavAria);
+    const bottombar = $("#bottombar"); if (bottombar) bottombar.setAttribute("aria-label", t.quickNavAria);
+    const topbar = $("#topbar"); if (topbar) topbar.setAttribute("aria-label", t.topBarAria);
 
-    const fabW = $("#fab-wizard"); if (fabW) { fabW.setAttribute("aria-label", t.fabWizardAria); fabW.textContent = t.fabWizardText; }
     const fabT = $("#fab-top"); if (fabT) fabT.setAttribute("aria-label", t.fabTopAria);
     const langBtn = $("#fab-lang");
     if (langBtn) { langBtn.setAttribute("aria-label", t.langToggleAria); langBtn.textContent = L().switchToLabel; }
-    const footerTopLabel = $("#footer-top-label"); if (footerTopLabel) footerTopLabel.textContent = t.backToTop2;
 
     const b = $("#baseline-foot"); if (b) b.textContent = app.baseline;
     const cbApp = $("#copyright-app-line"); if (cbApp) cbApp.textContent = app.name;
@@ -353,7 +336,10 @@
       renderWizard();
     }));
     $$("#wz-result a[href^='#']", root).forEach(a => a.addEventListener("click", e => {
-      const el = document.getElementById(a.getAttribute("href").slice(1));
+      const id = a.getAttribute("href").slice(1);
+      if (id === "f4") { e.preventDefault(); showView("normal"); openDetail("f4-1"); return; }
+      if (VIEWS.indexOf(id) !== -1) { e.preventDefault(); showView(id); return; }
+      const el = document.getElementById(id);
       if (el) { e.preventDefault(); smoothTo(el); }
     }));
   }
@@ -370,44 +356,110 @@
        <ol class="steps">${b.how.map(h => `<li>${h}</li>`).join("")}</ol>
        <div class="say"><b>${esc(t.askLabel)}</b><br>${esc(b.ask)}</div>
        <div class="tip">${esc(t.ifNotPrefix)}${esc(b.ifNot)}</div>`,
-      i === 0)).join("");
+      false)).join("");
   }
 
   /* ════════════════════════════════════════════
-     頂部快速跳轉列
+     置頂指南列（常駐）：主頁＋7 指南，㩒即成版切換
      ════════════════════════════════════════════ */
-  function renderQuickNav() {
-    const c = $("#quicknav"); if (!c) return;
-    const QN = L().QUICKNAV;
-    c.innerHTML = QN.map(q =>
-      `<a class="qn-btn" href="#${esc(q.id)}" data-qn="${esc(q.id)}"><span class="qn-ico">${q.icon}</span><span>${esc(q.label)}</span></a>`
+  function renderTopBar() {
+    const c = $("#topbar"); if (!c) return;
+    const TT = L().TOP_TABS;
+    c.innerHTML = TT.map(q =>
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
     ).join("");
-    $$("[data-qn]", c).forEach(a => a.addEventListener("click", e => {
-      const id = a.getAttribute("href").slice(1);
-      const el = document.getElementById(id);
-      if (el) { e.preventDefault(); smoothTo(el); }
+    $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.tt;
+      showView((document.body.dataset.view || "normal") === key ? "normal" : key);
     }));
+    syncViewUI();
+  }
+
+  /* ════════════════════════════════════════════
+     置底 4 格工具（常駐）：㩒即成版切換去該工具 view
+     ════════════════════════════════════════════ */
+  function renderBottomBar() {
+    const c = $("#bottombar"); if (!c) return;
+    const BA = L().BOTTOM_ACTIONS;
+    c.innerHTML = BA.map(b =>
+      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
+    ).join("");
+    $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.tv;
+      showView((document.body.dataset.view || "normal") === key ? "normal" : key);
+    }));
+    syncViewUI();
+  }
+
+  /* ════════════════════════════════════════════
+     APP 式整版 view 切換：home ＋ 4 工具
+     ════════════════════════════════════════════ */
+  const VIEWS = ["normal", "quick", "f1", "f2", "f3", "f5", "bt-sync", "bt-conv", "bt-forms", "bt-oa", "bt-faq"];
+  function showView(key) {
+    document.body.dataset.view = (VIEWS.indexOf(key) !== -1) ? key : "normal";
+    syncViewUI();
+    if (key === "quick") renderWizard();
+    if (key === "normal") renderNormalCard();
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {}
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  function syncViewUI() {
+    const cur = document.body.dataset.view || "normal";
+    $$("#bottombar [data-tv]").forEach(a => a.classList.toggle("active", a.dataset.tv === cur));
+    $$("#topbar [data-tt]").forEach(a => a.classList.toggle("active", a.dataset.tt === cur));
+  }
+  function bindViews() {
+    $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("normal")));
+  }
+  function openDetail(key) {
+    const d = document.querySelector(`.part[data-key="${key}"]`);
+    if (!d) return;
+    if (typeof d.open === "boolean") d.open = true;
+    smoothTo(d);
+  }
+
+  /* ════════════════════════════════════════════
+     正常流程行動卡（預設 view 核心，與精靈 fresh 共用進度）
+     ════════════════════════════════════════════ */
+  function renderNormalCard() {
+    const c = $("#normal-card"); if (!c) return;
+    const p = L().PLANS.fresh, t = UI();
+    const todo = loadTodo(); const key = "wz-fresh";
+    const checked = todo[key] || [];
+    const doneCount = p.steps.filter((_, i) => checked[i]).length;
+    c.innerHTML = `<div class="plan-card">
+      <div class="plan-head"><span class="plan-ico">${p.icon}</span>
+        <div><b>📍 ${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
+      <div class="plan-progress">${esc(t.progressLabel(doneCount, p.steps.length))}</div>
+      <ol class="todo">${p.steps.map((s, i) => `
+        <li class="${checked[i] ? "done" : ""}"><label>
+          <input type="checkbox" data-todo="${key}:${i}" ${checked[i] ? "checked" : ""}>
+          <span class="todo-n">${i + 1}</span><span>${esc(s)}</span>
+        </label></li>`).join("")}</ol>
+      <div class="plan-meta">
+        <div><small>${esc(t.whoLabel)}</small><b>${esc(p.who)}</b></div>
+        <div><small>${esc(t.formsLabel)}</small><b>${esc(p.forms)}</b></div>
+        <div><small>${esc(t.timeLabel)}</small><b>${esc(p.time)}</b></div>
+      </div>
+      <div class="warn">⚠️ ${esc(p.warn)}</div>
+      <div class="plan-actions">
+        <button class="btn primary" data-normal-detail>${esc(p.linkLabel)} ↓</button>
+      </div>
+    </div>`;
+    $$("[data-todo]", c).forEach(box => box.addEventListener("change", () => {
+      const parts = box.dataset.todo.split(":");
+      const td = loadTodo(); td[parts[0]] = td[parts[0]] || []; td[parts[0]][+parts[1]] = box.checked;
+      saveTodo(td); renderNormalCard();
+    }));
+    const det = $("[data-normal-detail]", c);
+    if (det) det.addEventListener("click", () => openDetail("f4-1"));
   }
 
   /* ════════════════════════════════════════════
      🧰 底部快速工具：同步方案／單項兌換表／開展表格／查執行處
      ════════════════════════════════════════════ */
   function renderBottomTools() {
-    const grid = $("#bottom-grid");
-    const BA = L().BOTTOM_ACTIONS;
-    if (grid) {
-      grid.innerHTML = BA.map(b =>
-        `<button class="bt-btn" data-bt-target="${esc(b.target)}"><span class="bt-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
-      ).join("");
-      $$("[data-bt-target]", grid).forEach(btn => btn.addEventListener("click", () => {
-        const key = btn.dataset.btTarget;
-        const target = document.querySelector(`.part[data-key="${key}"]`);
-        if (target) {
-          if (typeof target.open === "boolean") target.open = true;
-          smoothTo(target);
-        }
-      }));
-    }
+    // 4 個工具整版 view 嘅內容（由置底 4 格直達，主頁唔再顯示）。
 
     // 同步方案
     const sync = $("#bt-sync-body");
@@ -488,18 +540,11 @@
       window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
       top.addEventListener("click", smoothTop);
     }
-    const wiz = $("#fab-wizard");
-    if (wiz) wiz.addEventListener("click", () => {
-      const el = document.getElementById("quick");
-      smoothTo(el);
-    });
     const lang = $("#fab-lang");
     if (lang) lang.addEventListener("click", () => {
       const next = LANG === "zh-HK" ? "en" : "zh-HK";
       setLang(next);
     });
-    const footerTop = $("#footer-top-btn");
-    if (footerTop) footerTop.addEventListener("click", smoothTop);
   }
 
   /* ═══════════ 常規區塊 ═══════════ */
@@ -546,8 +591,10 @@
   /* ═══════════ 全部重繪（切換語言時用） ═══════════ */
   function renderAll() {
     renderStaticText();
-    renderQuickNav();
+    renderTopBar();
+    renderBottomBar();
     renderWizard();
+    renderNormalCard();
     renderBeginner();
     renderTldr();
     renderCopyright();
@@ -562,12 +609,13 @@
     renderBottomTools();
     renderCommon();
     bindPartToggles();
+    syncViewUI();
   }
 
   /* ═══════════ 初始 ═══════════ */
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindFloatBtns();
-    bindToc();
+    bindViews();
   });
 })();

@@ -241,19 +241,20 @@ const LOCALES = {
     { no: "完成通知書", name: "銀／金章完成通知書", note: "完成章級後申領領獎（FORM AYP/07 及相關表格）。", url: "https://www.scout.org.hk/hkayp/chi/memberform.html" },
   ],
 
-  QUICKNAV: [
-    { id: "quick", icon: "⚡", label: "5分鐘精靈" },
-    { id: "f1", icon: "🧮", label: "轉入試算" },
-    { id: "f2", icon: "🔁", label: "兌換方案" },
-    { id: "f3", icon: "🪜", label: "升團接駁" },
-    { id: "bottom-tools", icon: "🧰", label: "快速工具" },
-  ],
-
   BOTTOM_ACTIONS: [
     { id: "sync-plan", icon: "📋", label: "同步方案（試行）", target: "bt-sync" },
     { id: "conv-table", icon: "🔁", label: "單項兌換表", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "AYP開展表格", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "查執行處／組長", target: "bt-oa" },
+    { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
+  ],
+
+  TOP_TABS: [
+    { id: "quick", icon: "⚡", label: "精靈", target: "quick" },
+    { id: "f1", icon: "①", label: "轉入", target: "f1" },
+    { id: "f2", icon: "②", label: "兌換", target: "f2" },
+    { id: "f3", icon: "③", label: "升團", target: "f3" },
+    { id: "f5", icon: "⑤", label: "其他", target: "f5" },
   ],
 
   SYNC_PLAN: {
@@ -495,9 +496,8 @@ const LOCALES = {
   DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條，以及「同步完成方案」等試行安排、單科對應、轉處細節，以 AYP 總辦事處及香港童軍總會（P95/2026 等通告、AYP 童軍執行處網頁）最新公開發表為準。所有操作細節隨時可能更新，辦理前請向你所屬執行處支部組長／童軍領袖核實。",
 
   UI: {
-    nav: { quick: "⚡ 5分鐘精靈", beginner: "🌱 零基礎", f1: "① 轉入童軍", f2: "② 兌換", f3: "③ 升團接駁", f4: "④ 正常流程", f5: "⑤ 其他情況", res: "時間表/表格/辭典", comp: "完成後" },
-    heroLead: "⚡ <b>趕時間？5 分鐘搞掂：</b>下面答 2 條問題 → 即出你嘅行動卡。有時間先慢慢睇詳細版。",
-    mini1: "① 答 2 條問題<br>出行動卡", mini2: "② 做 3 個 Check<br>問領袖＋查支部", mini3: "③ 跟行動卡做<br>剔住完成進度",
+    heroLead: "🌱 <b>正常流程：由零開始考 AYP，跟住做就得。</b>唔肯定自己咩情況？㩒上面 ⚡精靈 答 2 條問題搵路。",
+    mini1: "① 跟行動卡做<br>逐步剔進度", mini2: "② 展開詳情睇<br>Check/步驟/時間表", mini3: "③ 交表問組長<br>用下面工具查",
     quickTitle: "5 分鐘精靈：你咩情況？下一步做咩？",
     beginnerTitle: "零基礎 3 個 Check", beginnerSub: "當你咩都唔知——點查、問邊個、睇咩，逐步教",
     beginnerIntro: "無論你行邊條路，都要先過呢 3 關：宣誓未？有冇支部？組長啱唔啱？每張卡都有「照讀對白」俾你問領袖。",
@@ -514,16 +514,15 @@ const LOCALES = {
     f41Summary: "由頭開始：通用步驟 ＋ 各支部可考咩",
     f5Title: "其他可能情況", f5Tag: "(功能⑤)",
     f5Sub: "反方向／補充情況",
-    resTitle: "幾時起步・表格・辭典・FAQ",
     resTlSummary: "幾時起步時間表",
-    resFmSummary: "常用表格一覽", resFmNote: "實際表格以童軍執行處網頁及青少年活動署最新版本為準。",
     resGlSummary: "術語小辭典",
     resFaqSummary: "常見問題 FAQ",
+    faqViewTitle: "FAQ＋術語辭典",
     compTitle: "完成之後：領獎／證書", compSummary: "完成章級後點領獎？",
     sourcesTitle: "官方資料來源",
     footerLine1: "AYP 童軍接駁指南 ·",
     footerLine2: "© 2026 Scout System · 非官方輔助工具 · 僅作教育用途",
-    fabWizardAria: "去 5 分鐘精靈", fabWizardText: "⚡ 5分鐘", fabTopAria: "返頂部",
+    fabTopAria: "返頂部",
     langToggleAria: "切換語言 / Switch language",
 
     pickLevel: "① 揀你而家想完成嘅章級",
@@ -559,9 +558,8 @@ const LOCALES = {
     disclaimerTitle: "免責聲明",
     baselineFoot: "資料基準日：2026 年 9 月（P95/2026）",
 
-    quickNavAria: "快速跳去頁面各部分",
-    bottomToolsTitle: "快速工具",
-    bottomToolsSub: "同步方案・單項兌換表・開展表格・查執行處",
+    quickNavAria: "底部工具列",
+    topBarAria: "頂部指南列",
     unofficialBadge: "⚠️ 非官方整理，須向執行處組長核實",
     verifyBeforeAct: "辦理前請核實：",
     openOfficialLink: "查看官方原文 →",
@@ -572,7 +570,7 @@ const LOCALES = {
     conversionCancelSource: "取消名單來源：",
     formsDownload: "下載表格",
     oaRegionsTitle: "地域辦事處電話",
-    backToTop2: "返頁頂",
+    backHome: "返正常流程",
   },
 },
 
@@ -804,19 +802,20 @@ const LOCALES = {
     { no: "Notification of Attainment", name: "Notification of Attainment of Silver/Gold Award", note: "Used to apply for the presentation ceremony after completing an Award level (FORM AYP/07 and related forms).", url: "https://www.scout.org.hk/hkayp/chi/memberform.html" },
   ],
 
-  QUICKNAV: [
-    { id: "quick", icon: "⚡", label: "5-Min Wizard" },
-    { id: "f1", icon: "🧮", label: "Transfer calc" },
-    { id: "f2", icon: "🔁", label: "Conversion" },
-    { id: "f3", icon: "🪜", label: "Advancement" },
-    { id: "bottom-tools", icon: "🧰", label: "Quick tools" },
+  BOTTOM_ACTIONS: [
+    { id: "sync-plan", icon: "📋", label: "Sync Plan", target: "bt-sync" },
+    { id: "conv-table", icon: "🔁", label: "Conversion", target: "bt-conv" },
+    { id: "start-forms", icon: "📝", label: "Start Forms", target: "bt-forms" },
+    { id: "oa-lookup", icon: "🏢", label: "Find OA", target: "bt-oa" },
+    { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
   ],
 
-  BOTTOM_ACTIONS: [
-    { id: "sync-plan", icon: "📋", label: "Sync Plan (Trial)", target: "bt-sync" },
-    { id: "conv-table", icon: "🔁", label: "Item Conversion Table", target: "bt-conv" },
-    { id: "start-forms", icon: "📝", label: "AYP Starting Forms", target: "bt-forms" },
-    { id: "oa-lookup", icon: "🏢", label: "Find OA / Unit Leader", target: "bt-oa" },
+  TOP_TABS: [
+    { id: "quick", icon: "⚡", label: "Wizard", target: "quick" },
+    { id: "f1", icon: "①", label: "Transfer", target: "f1" },
+    { id: "f2", icon: "②", label: "Convert", target: "f2" },
+    { id: "f3", icon: "③", label: "Advance", target: "f3" },
+    { id: "f5", icon: "⑤", label: "More", target: "f5" },
   ],
 
   SYNC_PLAN: {
@@ -1058,9 +1057,8 @@ const LOCALES = {
   DISCLAIMER: "This app is an unofficial aid tool. The official rules of The Hong Kong Award for Young People, as well as trial arrangements such as the \"Simultaneous Completion Scheme\", Section mapping, and transfer details, are subject to the latest public announcements from the Award Office and the Scout Association of Hong Kong (circulars such as P95/2026, and the AYP Scout Operating Authority webpage). Operational details may be updated at any time — please verify with your User Unit Leader / Scout leader before proceeding.",
 
   UI: {
-    nav: { quick: "⚡ 5-Min Wizard", beginner: "🌱 Beginners", f1: "① Transfer into Scouts", f2: "② Conversion", f3: "③ Advancement", f4: "④ Standard process", f5: "⑤ Other situations", res: "Timeline/Forms/Glossary", comp: "After completion" },
-    heroLead: "⚡ <b>In a hurry? Sorted in 5 minutes:</b> answer 2 questions below → get your personal action card instantly. Read the detailed version later if you have time.",
-    mini1: "① Answer 2 questions<br>Get an action card", mini2: "② Do 3 Checks<br>Ask leaders + check your Unit", mini3: "③ Follow the action card<br>Tick off your progress",
+    heroLead: "🌱 <b>Standard process: start AYP from zero by following the action card.</b> Not sure which situation fits you? Tap ⚡ Wizard above and answer 2 questions.",
+    mini1: "① Follow the action card<br>Tick off step by step", mini2: "② Expand for details<br>Checks/steps/timeline", mini3: "③ Forms & leaders<br>Use tools below",
     quickTitle: "5-Minute Wizard: What's your situation? What's next?",
     beginnerTitle: "3 Checks for Beginners", beginnerSub: "When you don't know anything — how to check, who to ask, what to look at, step by step",
     beginnerIntro: "Whichever route you take, you need to pass these 3 checks first: made your Promise? Have a User Unit? Is the leader the right one? Every card includes a \"script to read aloud\" when asking your leader.",
@@ -1077,16 +1075,15 @@ const LOCALES = {
     f41Summary: "Starting from scratch: general steps + what each Section can take",
     f5Title: "Other possible situations", f5Tag: "(Feature ⑤)",
     f5Sub: "Reverse direction / additional situations",
-    resTitle: "When to start · Forms · Glossary · FAQ",
     resTlSummary: "Timeline: when to start",
-    resFmSummary: "Commonly used forms", resFmNote: "Actual forms are subject to the latest versions on the Scout Operating Authority website and from the Programme Branch.",
     resGlSummary: "Glossary of terms",
     resFaqSummary: "Frequently Asked Questions",
+    faqViewTitle: "FAQ & Glossary",
     compTitle: "After completion: receiving your Award/certificate", compSummary: "How do I receive my Award after completing a level?",
     sourcesTitle: "Official sources",
     footerLine1: "AYP Scout Bridging Guide ·",
     footerLine2: "© 2026 Scout System · Unofficial aid tool · For educational purposes only",
-    fabWizardAria: "Go to 5-Minute Wizard", fabWizardText: "⚡ 5-Min", fabTopAria: "Back to top",
+    fabTopAria: "Back to top",
     langToggleAria: "Switch language / 切換語言",
 
     pickLevel: "① Choose the Award level you want to complete",
@@ -1122,9 +1119,8 @@ const LOCALES = {
     disclaimerTitle: "Disclaimer",
     baselineFoot: "Data baseline: September 2026 (Circular P95/2026)",
 
-    quickNavAria: "Quick jump to page sections",
-    bottomToolsTitle: "Quick Tools",
-    bottomToolsSub: "Sync Plan · Item Conversion Table · Starting Forms · Find Your OA",
+    quickNavAria: "Bottom tool bar",
+    topBarAria: "Top guide bar",
     unofficialBadge: "⚠️ Unofficial compilation — must be verified with your User Unit Leader",
     verifyBeforeAct: "Verify before acting: ",
     openOfficialLink: "View official source →",
@@ -1135,7 +1131,7 @@ const LOCALES = {
     conversionCancelSource: "Cancellation list source: ",
     formsDownload: "Download form",
     oaRegionsTitle: "Regional office phone numbers",
-    backToTop2: "Back to top",
+    backHome: "Normal Flow",
   },
 },
 

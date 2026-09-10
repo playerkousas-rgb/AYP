@@ -27,7 +27,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans H
 a{color:#0a5c36;font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
 
 header{background:linear-gradient(135deg,#0a5c36,#064020);color:#fff;padding:1.3rem 1rem 1.6rem;text-align:center;position:relative}
-#fab-lang{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.95);color:#0a5c36;border:2px solid #fff;
+#fab-lang{position:fixed;top:calc(.7rem + env(safe-area-inset-top));right:.7rem;background:rgba(255,255,255,.95);color:#0a5c36;border:2px solid #fff;
   width:44px;height:44px;justify-content:center;font-size:.82rem;padding:0;z-index:70}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--bronze) 0 33%,var(--silver) 33% 66%,var(--gold) 66% 100%)}
 .brand{display:flex;align-items:center;justify-content:center;gap:.8rem}
@@ -36,20 +36,31 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;ba
 .brand .tag{margin:.3rem 0 0;font-size:.85rem;opacity:.92}
 .badge-base{display:inline-block;margin-top:.6rem;background:rgba(255,255,255,.16);padding:.15rem .7rem;border-radius:20px;font-size:.74rem}
 
-nav.toc{position:sticky;top:0;z-index:60;background:rgba(245,245,243,.97);border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:.1rem;padding:.3rem .5rem;backdrop-filter:blur(4px)}
-nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.84rem;text-decoration:none}
-nav.toc a:hover{background:#e4ece6}
-nav.toc a.hot{color:#8a5a00}
+/* ── APP 式整版 view：正常流程＋5 情景＋5 工具，body[data-view] 切換 ── */
+.toolview,.guideview{display:none}
+body[data-view="bt-sync"] #view-bt-sync,body[data-view="bt-conv"] #view-bt-conv,
+body[data-view="bt-forms"] #view-bt-forms,body[data-view="bt-oa"] #view-bt-oa,
+body[data-view="bt-faq"] #view-bt-faq,body[data-view="quick"] #quick,
+body[data-view="f1"] #f1,body[data-view="f2"] #f2,body[data-view="f3"] #f3,
+body[data-view="f5"] #f5{display:block}
+body:not([data-view="normal"]) #view-normal{display:none}
+/* ── 置頂指南列（常駐） ── */
+.topbar{position:sticky;top:0;z-index:70;background:rgba(245,245,243,.97);border-bottom:1px solid var(--line);
+  display:flex;overflow-x:auto;gap:.15rem;padding:.35rem .5rem;backdrop-filter:blur(4px)}
+.tb-btn{flex:none;white-space:nowrap;border:2px solid transparent;border-radius:10px;background:transparent;
+  color:#0a5c36;font-weight:700;font-size:.82rem;padding:.45rem .7rem;cursor:pointer;min-height:44px}
+.tb-btn:hover{background:#e4ece6}
+.tb-btn.active{background:#0a5c36;color:#fff}
+.tv-head{position:sticky;top:.5rem;z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);padding:.5rem .6rem;margin:.6rem 0 .7rem;display:flex;align-items:center;gap:.6rem}
+.tv-head b{color:#0a5c36;font-size:.98rem;line-height:1.4}
+.tv-back{flex:none;border:2px solid #0a5c36;background:#fff;color:#0a5c36;border-radius:10px;
+  padding:.35rem .6rem;font-weight:700;font-size:.85rem;cursor:pointer;min-height:44px;white-space:nowrap}
+.tv-back:hover{background:#e7f3ea}
+html{scroll-padding-top:16px}
+section[id]{scroll-margin-top:12px}
 
-/* ── 快速跳轉列（頂部按鈕） ── */
-.quicknav{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:880px;margin:.6rem auto 0;padding:0 .9rem}
-.qn-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;border:2px solid #0a5c36;
-  border-radius:12px;background:#fff;color:#0a5c36;padding:.5rem .3rem;font-weight:700;font-size:.78rem;min-height:52px;cursor:pointer;text-decoration:none}
-.qn-btn .qn-ico{font-size:1.15rem}
-.qn-btn:hover{background:#e7f3ea;text-decoration:none}
-@media(min-width:640px){.quicknav{grid-template-columns:repeat(5,1fr)}}
-
-main{max-width:880px;margin:0 auto;padding:.3rem .9rem 3rem}
+main{max-width:880px;margin:0 auto;padding:.3rem .9rem calc(7rem + env(safe-area-inset-bottom))}
 .hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
 
 h2.sec{display:flex;align-items:center;gap:.6rem;color:#0a5c36;margin:2.1rem 0 .5rem;padding-left:.6rem;border-left:5px solid var(--scout-green);font-size:1.22rem}
@@ -145,12 +156,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:1rem .8rem 2
 .source-list{font-size:.85rem;color:#444;margin:.4rem 0;padding-left:1.2rem}
 .source-list li{margin:.25rem 0}
 
-/* ── 🧰 底部快速工具 ── */
-.bottom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.7rem 0}
-.bt-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;border:2px solid var(--line);
-  border-radius:14px;background:#fff;padding:.9rem .5rem;font-weight:700;font-size:.86rem;color:#0a5c36;cursor:pointer;text-align:center;min-height:76px}
-.bt-btn .bt-ico{font-size:1.5rem}
-.bt-btn:hover{border-color:#0a5c36;background:#f3f8f4}
+/* ── 🧰 快速工具內容卡（跳轉掣已抽走，由置底列常駐負責） ── */
 .unofficial-badge{display:inline-block;background:#fdecec;color:#7a1f2b;border:1px solid #f0b8b8;border-radius:8px;
   padding:.3rem .6rem;font-size:.8rem;font-weight:700;margin:.3rem 0}
 .conv-group{margin:1rem 0}
@@ -163,8 +169,6 @@ table.conv td.ayp-col{width:30%;font-weight:700;color:#0a5c36}
 .oa-links li{margin:.5rem 0}
 .oa-regions{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.9rem}
 .oa-regions td{border-bottom:1px solid var(--line);padding:.4rem .3rem}
-#footer-top-btn{margin:0 auto}
-
 /* ── ⚡ 5分鐘精靈 ── */
 #quick .wizard-shell{background:#fff;border:2px solid #0a5c36;border-radius:16px;padding:1rem;margin:.6rem 0}
 .wz-progress{height:8px;background:#e7ebe7;border-radius:6px;overflow:hidden;margin-bottom:.5rem}
@@ -209,11 +213,22 @@ ol.todo li.done label span:last-child{text-decoration:line-through}
 .ministep{flex:1 1 140px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.6rem;text-align:center;font-size:.85rem}
 .ministep b{display:block;font-size:1.3rem}
 
+/* ── 置底工具列（常駐） ── */
+.bottombar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.97);
+  border-top:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 -2px 12px rgba(0,0,0,.08);
+  display:grid;grid-template-columns:repeat(5,minmax(62px,110px));justify-content:center;gap:.15rem;
+  padding:.25rem .4rem calc(.3rem + env(safe-area-inset-bottom))}
+.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;
+  border:none;border-radius:12px;background:transparent;color:#0a5c36;
+  padding:.45rem .15rem;font-weight:700;font-size:.68rem;min-height:58px;cursor:pointer;text-decoration:none;line-height:1.25}
+.bb-btn .bb-ico{font-size:1.3rem;line-height:1}
+.bb-btn:hover{background:#e7f3ea;text-decoration:none}
+.bb-btn.active{background:#0a5c36;color:#fff}
+
 /* ── 浮動掣 ── */
 .fab{position:fixed;right:.9rem;z-index:80;border:none;border-radius:50px;font-weight:800;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;gap:.3rem}
-#fab-wizard{bottom:calc(1rem + env(safe-area-inset-bottom));background:#d4af37;color:#3d2f00;padding:.8rem 1.1rem;font-size:.95rem}
-#fab-top{bottom:calc(4.6rem + env(safe-area-inset-bottom));background:#0a5c36;color:#fff;width:48px;height:48px;
+#fab-top{bottom:calc(5.6rem + env(safe-area-inset-bottom));background:#0a5c36;color:#fff;width:48px;height:48px;
   justify-content:center;font-size:1.2rem;opacity:0;pointer-events:none;transition:opacity .25s}
 #fab-top.show{opacity:1;pointer-events:auto}
 
@@ -225,7 +240,7 @@ img{max-width:100%;height:auto}
 @media(max-width:640px){
   body{font-size:16px}
   header{padding-right:3.6rem}
-  main{padding:.3rem .7rem 6rem}
+  main{padding:.3rem .7rem calc(7rem + env(safe-area-inset-bottom))}
   .brand h1{font-size:1.15rem}
   .wz-grid{grid-template-columns:repeat(2,1fr)}
   .wz-opt{min-height:92px;font-size:.95rem;padding:.8rem .4rem}
@@ -238,20 +253,17 @@ img{max-width:100%;height:auto}
   .joinrow{flex-direction:column;gap:.1rem}
   .joinrow b{min-width:0}
   table.map,table.forms{font-size:.9rem}
-  nav.toc a{padding:.55rem .8rem;font-size:.9rem;scroll-snap-align:start}
-  nav.toc{scroll-snap-type:x proximity}
   h2.sec{font-size:1.1rem}
   .pn-body .lbl{min-width:76px}
 }
 @media(max-width:640px){
-  .quicknav{grid-template-columns:repeat(2,1fr)}
-  .bottom-grid{grid-template-columns:repeat(2,1fr)}
   table.conv{font-size:.84rem}
+  .bb-btn{font-size:.66rem;min-height:56px}
 }
-@media print{nav.toc,header::after,.fab,#fab-wizard,#fab-top,#fab-lang,.quicknav,.bottom-grid{display:none}}
+@media print{header::after,.fab,#fab-top,#fab-lang,.bottombar,.topbar{display:none}}
 </style>
 </head>
-<body>
+<body data-view="normal">
 
 <header>
   <button class="fab" id="fab-lang" aria-label="切換語言 / Switch language">EN</button>
@@ -263,21 +275,11 @@ img{max-width:100%;height:auto}
   <span class="badge-base" id="baseline-foot"></span>
 </header>
 
-<div class="quicknav" id="quicknav" aria-label="快速跳去頁面各部分"></div>
-
-<nav class="toc">
-  <a href="#quick" class="hot" id="nav-quick">⚡ 5分鐘精靈</a>
-  <a href="#beginner" id="nav-beginner">🌱 零基礎</a>
-  <a href="#f1" id="nav-f1">① 轉入童軍</a>
-  <a href="#f2" id="nav-f2">② 兌換</a>
-  <a href="#f3" id="nav-f3">③ 升團接駁</a>
-  <a href="#f4" id="nav-f4">④ 正常流程</a>
-  <a href="#f5" class="hot" id="nav-f5">⑤ 其他情況</a>
-  <a href="#res" id="nav-res">時間表/表格/辭典</a>
-  <a href="#comp" id="nav-comp">完成後</a>
-</nav>
+<nav class="topbar" id="topbar" aria-label="頂部指南列"></nav>
 
 <main>
+
+<div id="view-normal">
 
   <!-- 指引開場：5分鐘用法 -->
   <div class="hero-note">
@@ -289,11 +291,9 @@ img{max-width:100%;height:auto}
     </div>
   </div>
 
-  <!-- ══ ⚡ 5分鐘精靈 ══ -->
-  <section id="quick">
-    <h2 class="sec"><span class="n hot">⚡</span> <span id="quick-title">5 分鐘精靈：你咩情況？下一步做咩？</span></h2>
-    <div class="wizard-shell"><div id="wizard"></div></div>
-  </section>
+
+
+  <div id="normal-card"></div>
 
   <!-- ══ 🌱 零基礎 ══ -->
   <section id="beginner">
@@ -302,8 +302,55 @@ img{max-width:100%;height:auto}
     <div id="beginner-list"></div>
   </section>
 
+  <!-- ══ 功能4：正常流程 ══ -->
+  <section id="f4">
+    <h2 class="sec"><span class="n hot">4</span> <span id="f4-title">各支部正常開始 AYP 嘅流程</span> <small id="f4-tag">(功能④)</small></h2>
+    <div class="tldr" data-tldr="f4"></div>
+    <details class="part" data-key="f4-1">
+      <summary><span class="ico">🚪</span> <span id="f41-summary">由頭開始：通用步驟 ＋ 各支部可考咩</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="join-flow"></div></div>
+    </details>
+  </section>
+
+<details class="part" data-key="res-tl">
+      <summary><span class="ico">⏱️</span> <span id="res-tl-summary">幾時起步時間表</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="timeline"></div></div>
+    </details>
+
+  <!-- ══ 完成之後 ══ -->
+  <section id="comp">
+    <h2 class="sec"><span class="n">✔</span> <span id="comp-title">完成之後：領獎／證書</span></h2>
+    <details class="part" data-key="comp">
+      <summary><span class="ico">🏆</span> <span id="comp-summary">完成章級後點領獎？</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="complete-steps"></div></div>
+    </details>
+  </section>
+
+  <!-- 來源 -->
+  <section id="sources-sec">
+    <h2 class="sec"><span class="n">📌</span> <span id="sources-title">官方資料來源</span></h2>
+    <div id="sources"></div>
+  </section>
+
+  <div class="disclaimer" id="disclaimer"></div>
+
+  <div class="copyright-bar">
+    <b id="copyright-app-line">AYP 童軍接駁指南</b>
+    <small id="copyright-edu"></small>
+    <small id="copyright-data"></small>
+    <small id="copyright-baseline"></small>
+    <small id="copyright-line">© 2026 Scout System</small>
+  </div>
+</div><!-- /#view-normal -->
+
+  <!-- ══ ⚡ 5分鐘精靈 ══ -->
+  <section class="guideview" id="quick">
+    <h2 class="sec"><span class="n hot">⚡</span> <span id="quick-title">5 分鐘精靈：你咩情況？下一步做咩？</span></h2>
+    <div class="wizard-shell"><div id="wizard"></div></div>
+  </section>
+
   <!-- ══ 功能1：轉入童軍 ══ -->
-  <section id="f1">
+  <section class="guideview" id="f1">
     <h2 class="sec"><span class="n hot">1</span> <span id="f1-title">由其他執行處轉入童軍 → 仲有咩要考</span> <small id="f1-tag">(功能①)</small></h2>
     <div class="tldr" data-tldr="f1"></div>
     <p id="f1-hint">撳「① 揀章級」＋「② 剔已批核嘅科」👇</p>
@@ -318,7 +365,7 @@ img{max-width:100%;height:auto}
   </section>
 
   <!-- ══ 功能2：兌換 ══ -->
-  <section id="f2">
+  <section class="guideview" id="f2">
     <h2 class="sec"><span class="n hot">2</span> <span id="f2-title">兌換情況</span> <small id="f2-tag">(功能②)</small></h2>
     <div class="tldr" data-tldr="f2"></div>
 
@@ -333,7 +380,7 @@ img{max-width:100%;height:auto}
   </section>
 
   <!-- ══ 功能3：升團接駁 ══ -->
-  <section id="f3">
+  <section class="guideview" id="f3">
     <h2 class="sec"><span class="n hot">3</span> <span id="f3-title">邊個支部考到咩・升團後要點做</span> <small id="f3-tag">(功能③)</small></h2>
     <div class="tldr" data-tldr="f3"></div>
     <div class="part" data-key="f3-1">
@@ -345,18 +392,8 @@ img{max-width:100%;height:auto}
     </div>
   </section>
 
-  <!-- ══ 功能4：正常流程 ══ -->
-  <section id="f4">
-    <h2 class="sec"><span class="n hot">4</span> <span id="f4-title">各支部正常開始 AYP 嘅流程</span> <small id="f4-tag">(功能④)</small></h2>
-    <div class="tldr" data-tldr="f4"></div>
-    <div class="part" data-key="f4-1">
-      <summary><span class="ico">🚪</span> <span id="f41-summary">由頭開始：通用步驟 ＋ 各支部可考咩</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="join-flow"></div></div>
-    </div>
-  </section>
-
   <!-- ══ 功能5：其他情況 ══ -->
-  <section id="f5">
+  <section class="guideview" id="f5">
     <h2 class="sec"><span class="n hot">5</span> <span id="f5-title">其他可能情況</span> <small id="f5-tag">(功能⑤)</small></h2>
     <div class="tldr" data-tldr="f5"></div>
     <div id="extra-list"></div>
@@ -365,86 +402,79 @@ img{max-width:100%;height:auto}
     <div id="extra-list-2"></div>
   </section>
 
-  <!-- ══ 資源 ══ -->
-  <section id="res">
-    <h2 class="sec"><span class="n">＋</span> <span id="res-title">幾時起步・表格・辭典・FAQ</span></h2>
 
-    <div class="part" data-key="res-tl">
-      <summary><span class="ico">⏱️</span> <span id="res-tl-summary">幾時起步時間表</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="timeline"></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- ══ 🧰 5 個工具整版 view（置底直達） ══ -->
+  <section class="toolview" id="view-bt-sync">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
+      <b id="bt-sync-summary">同步完成方案（試行安排）</b>
     </div>
-    <div class="part" data-key="res-fm">
-      <summary><span class="ico">📄</span> <span id="res-fm-summary">常用表格一覽</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="forms-list"></div>
-        <p style="font-size:.82rem;color:var(--muted)" id="res-fm-note">實際表格以童軍執行處網頁及青少年活動署最新版本為準。</p></div>
+    <div id="bt-sync-body"></div>
+  </section>
+
+  <section class="toolview" id="view-bt-conv">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
+      <b id="bt-conv-summary">單項兌換表（非官方整理）</b>
     </div>
-    <div class="part" data-key="res-gl">
-      <summary><span class="ico">📖</span> <span id="res-gl-summary">術語小辭典</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="glossary-list"></div></div>
+    <div id="bt-conv-body"></div>
+  </section>
+
+  <section class="toolview" id="view-bt-forms">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
+      <b id="bt-forms-summary">AYP開展表格</b>
     </div>
-    <div class="part" data-key="res-faq">
+    <div id="bt-forms-body"></div>
+  </section>
+
+  <section class="toolview" id="view-bt-oa">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
+      <b id="bt-oa-summary">查執行處 / 執行處支部組長</b>
+    </div>
+    <div id="bt-oa-body"></div>
+  </section>
+
+  <!-- ══ ❓ FAQ＋辭典 ══ -->
+  <section class="toolview" id="view-bt-faq">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
+      <b id="bt-faq-summary">FAQ＋術語辭典</b>
+    </div>
+<div class="part" data-key="res-faq">
       <summary><span class="ico">❓</span> <span id="res-faq-summary">常見問題 FAQ</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="faq-list"></div></div>
     </div>
-  </section>
 
-  <!-- ══ 完成之後 ══ -->
-  <section id="comp">
-    <h2 class="sec"><span class="n">✔</span> <span id="comp-title">完成之後：領獎／證書</span></h2>
-    <div class="part" data-key="comp">
-      <summary><span class="ico">🏆</span> <span id="comp-summary">完成章級後點領獎？</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="complete-steps"></div></div>
+<div class="part" data-key="res-gl">
+      <summary><span class="ico">📖</span> <span id="res-gl-summary">術語小辭典</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="glossary-list"></div></div>
     </div>
   </section>
 
-  <!-- ══ 🧰 快速工具（同步方案／兌換表／開展表格／查執行處） ══ -->
-  <section id="bottom-tools">
-    <h2 class="sec"><span class="n hot">🧰</span> <span id="bottom-tools-title">快速工具</span> <small id="bottom-tools-sub">同步方案・單項兌換表・開展表格・查執行處</small></h2>
-    <div class="bottom-grid" id="bottom-grid"></div>
-
-    <div class="part" data-key="bt-sync">
-      <summary><span class="ico">📋</span> <span id="bt-sync-summary">同步方案（試行）</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-sync-body"></div></div>
-    </div>
-
-    <div class="part" data-key="bt-conv">
-      <summary><span class="ico">🔁</span> <span id="bt-conv-summary">單項兌換表</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-conv-body"></div></div>
-    </div>
-
-    <div class="part" data-key="bt-forms">
-      <summary><span class="ico">📝</span> <span id="bt-forms-summary">AYP開展表格</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-forms-body"></div></div>
-    </div>
-
-    <div class="part" data-key="bt-oa">
-      <summary><span class="ico">🏢</span> <span id="bt-oa-summary">查執行處／組長</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-oa-body"></div></div>
-    </div>
-  </section>
-
-  <!-- 來源 -->
-  <section>
-    <h2 class="sec"><span class="n">📌</span> <span id="sources-title">官方資料來源</span></h2>
-    <div id="sources"></div>
-  </section>
-
-  <div class="disclaimer" id="disclaimer"></div>
-
-  <div class="copyright-bar">
-    <b id="copyright-app-line">AYP 童軍接駁指南</b>
-    <small id="copyright-edu"></small>
-    <small id="copyright-data"></small>
-    <small id="copyright-baseline"></small>
-    <small id="copyright-line">© 2026 Scout System</small>
-  </div>
 </main>
 
-<footer>
-  <button class="btn ghost" id="footer-top-btn">↑ <span id="footer-top-label">返頁頂</span></button>
-</footer>
+<nav class="bottombar" id="bottombar" aria-label="底部工具列"></nav>
 
-<button class="fab" id="fab-wizard" aria-label="去 5 分鐘精靈">⚡ 5分鐘</button>
 <button class="fab" id="fab-top" aria-label="返頂部">↑</button>
 
 <script src="data.js"></script>
