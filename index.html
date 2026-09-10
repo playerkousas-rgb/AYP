@@ -27,6 +27,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans H
 a{color:#0a5c36;font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
 
 header{background:linear-gradient(135deg,#0a5c36,#064020);color:#fff;padding:1.3rem 1rem 1.6rem;text-align:center;position:relative}
+#fab-lang{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.95);color:#0a5c36;border:2px solid #fff;
+  width:44px;height:44px;justify-content:center;font-size:.82rem;padding:0;z-index:70}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--bronze) 0 33%,var(--silver) 33% 66%,var(--gold) 66% 100%)}
 .brand{display:flex;align-items:center;justify-content:center;gap:.8rem}
 .brand img{width:54px;height:54px;border-radius:14px;background:#fff;padding:3px}
@@ -38,6 +40,14 @@ nav.toc{position:sticky;top:0;z-index:60;background:rgba(245,245,243,.97);border
 nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.84rem;text-decoration:none}
 nav.toc a:hover{background:#e4ece6}
 nav.toc a.hot{color:#8a5a00}
+
+/* ── 快速跳轉列（頂部按鈕） ── */
+.quicknav{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:880px;margin:.6rem auto 0;padding:0 .9rem}
+.qn-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;border:2px solid #0a5c36;
+  border-radius:12px;background:#fff;color:#0a5c36;padding:.5rem .3rem;font-weight:700;font-size:.78rem;min-height:52px;cursor:pointer;text-decoration:none}
+.qn-btn .qn-ico{font-size:1.15rem}
+.qn-btn:hover{background:#e7f3ea;text-decoration:none}
+@media(min-width:640px){.quicknav{grid-template-columns:repeat(5,1fr)}}
 
 main{max-width:880px;margin:0 auto;padding:.3rem .9rem 3rem}
 .hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
@@ -130,10 +140,30 @@ table.forms small{display:block;color:var(--muted)}
 .disclaimer h3{margin:.2rem 0 .3rem;color:#7a1f2b}
 .copyright-bar{background:#0f2e1f;color:#e8f3ec;border-radius:12px;padding:.9rem 1rem;margin-top:1rem;font-size:.85rem;text-align:center}
 .copyright-bar b{display:block;font-size:.95rem;margin-bottom:.15rem}
-.copyright-bar small{display:block;opacity:.85;line-height:1.6}
+.copyright-bar small{display:block;opacity:.85;line-height:1.6;margin:.1rem 0}
 footer{text-align:center;color:var(--muted);font-size:.8rem;padding:1rem .8rem 2.5rem}
 .source-list{font-size:.85rem;color:#444;margin:.4rem 0;padding-left:1.2rem}
 .source-list li{margin:.25rem 0}
+
+/* ── 🧰 底部快速工具 ── */
+.bottom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.7rem 0}
+.bt-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;border:2px solid var(--line);
+  border-radius:14px;background:#fff;padding:.9rem .5rem;font-weight:700;font-size:.86rem;color:#0a5c36;cursor:pointer;text-align:center;min-height:76px}
+.bt-btn .bt-ico{font-size:1.5rem}
+.bt-btn:hover{border-color:#0a5c36;background:#f3f8f4}
+.unofficial-badge{display:inline-block;background:#fdecec;color:#7a1f2b;border:1px solid #f0b8b8;border-radius:8px;
+  padding:.3rem .6rem;font-size:.8rem;font-weight:700;margin:.3rem 0}
+.conv-group{margin:1rem 0}
+.conv-group h4{color:#0a5c36;margin:.4rem 0}
+table.conv{width:100%;border-collapse:collapse;margin:.4rem 0;font-size:.88rem}
+table.conv td{border-bottom:1px solid var(--line);padding:.5rem .4rem;vertical-align:top}
+table.conv td.ayp-col{width:30%;font-weight:700;color:#0a5c36}
+@media(max-width:520px){table.conv td.ayp-col{width:36%}}
+.oa-links{list-style:none;padding:0;margin:.5rem 0}
+.oa-links li{margin:.5rem 0}
+.oa-regions{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.9rem}
+.oa-regions td{border-bottom:1px solid var(--line);padding:.4rem .3rem}
+#footer-top-btn{margin:0 auto}
 
 /* ── ⚡ 5分鐘精靈 ── */
 #quick .wizard-shell{background:#fff;border:2px solid #0a5c36;border-radius:16px;padding:1rem;margin:.6rem 0}
@@ -194,6 +224,7 @@ img{max-width:100%;height:auto}
 .chip{min-height:44px;font-size:.92rem}
 @media(max-width:640px){
   body{font-size:16px}
+  header{padding-right:3.6rem}
   main{padding:.3rem .7rem 6rem}
   .brand h1{font-size:1.15rem}
   .wz-grid{grid-template-columns:repeat(2,1fr)}
@@ -212,170 +243,205 @@ img{max-width:100%;height:auto}
   h2.sec{font-size:1.1rem}
   .pn-body .lbl{min-width:76px}
 }
-@media print{nav.toc,header::after,.fab,#fab-wizard,#fab-top{display:none}}
+@media(max-width:640px){
+  .quicknav{grid-template-columns:repeat(2,1fr)}
+  .bottom-grid{grid-template-columns:repeat(2,1fr)}
+  table.conv{font-size:.84rem}
+}
+@media print{nav.toc,header::after,.fab,#fab-wizard,#fab-top,#fab-lang,.quicknav,.bottom-grid{display:none}}
 </style>
 </head>
 <body>
 
 <header>
+  <button class="fab" id="fab-lang" aria-label="切換語言 / Switch language">EN</button>
   <div class="brand">
     <img src="assets/logo-192.png" alt="標誌">
-    <div><h1>AYP 童軍接駁指南</h1>
-      <p class="tag">情況主導：同步／兌換・轉處接駁・升團・正常流程</p></div>
+    <div><h1 id="app-title">AYP 童軍接駁指南</h1>
+      <p class="tag" id="app-tag">情況主導：同步／兌換・轉處接駁・升團・正常流程</p></div>
   </div>
   <span class="badge-base" id="baseline-foot"></span>
 </header>
 
+<div class="quicknav" id="quicknav" aria-label="快速跳去頁面各部分"></div>
+
 <nav class="toc">
-  <a href="#quick" class="hot">⚡ 5分鐘精靈</a>
-  <a href="#beginner">🌱 零基礎</a>
-  <a href="#f1">① 轉入童軍</a>
-  <a href="#f2">② 兌換</a>
-  <a href="#f3">③ 升團接駁</a>
-  <a href="#f4">④ 正常流程</a>
-  <a href="#f5" class="hot">⑤ 其他情況</a>
-  <a href="#res">時間表/表格/辭典</a>
-  <a href="#comp">完成後</a>
+  <a href="#quick" class="hot" id="nav-quick">⚡ 5分鐘精靈</a>
+  <a href="#beginner" id="nav-beginner">🌱 零基礎</a>
+  <a href="#f1" id="nav-f1">① 轉入童軍</a>
+  <a href="#f2" id="nav-f2">② 兌換</a>
+  <a href="#f3" id="nav-f3">③ 升團接駁</a>
+  <a href="#f4" id="nav-f4">④ 正常流程</a>
+  <a href="#f5" class="hot" id="nav-f5">⑤ 其他情況</a>
+  <a href="#res" id="nav-res">時間表/表格/辭典</a>
+  <a href="#comp" id="nav-comp">完成後</a>
 </nav>
 
 <main>
 
   <!-- 指引開場：5分鐘用法 -->
   <div class="hero-note">
-    ⚡ <b>趕時間？5 分鐘搞掂：</b>下面答 2 條問題 → 即出你嘅行動卡。有時間先慢慢睇詳細版。
+    <span id="hero-lead">⚡ <b>趕時間？5 分鐘搞掂：</b>下面答 2 條問題 → 即出你嘅行動卡。有時間先慢慢睇詳細版。</span>
     <div class="ministeps">
-      <div class="ministep"><b>⚡</b>① 答 2 條問題<br>出行動卡</div>
-      <div class="ministep"><b>🌱</b>② 做 3 個 Check<br>問領袖＋查支部</div>
-      <div class="ministep"><b>✅</b>③ 跟行動卡做<br>剔住完成進度</div>
+      <div class="ministep"><b>⚡</b><span id="mini1">① 答 2 條問題<br>出行動卡</span></div>
+      <div class="ministep"><b>🌱</b><span id="mini2">② 做 3 個 Check<br>問領袖＋查支部</span></div>
+      <div class="ministep"><b>✅</b><span id="mini3">③ 跟行動卡做<br>剔住完成進度</span></div>
     </div>
   </div>
 
   <!-- ══ ⚡ 5分鐘精靈 ══ -->
   <section id="quick">
-    <h2 class="sec"><span class="n hot">⚡</span> 5 分鐘精靈：你咩情況？下一步做咩？</h2>
+    <h2 class="sec"><span class="n hot">⚡</span> <span id="quick-title">5 分鐘精靈：你咩情況？下一步做咩？</span></h2>
     <div class="wizard-shell"><div id="wizard"></div></div>
   </section>
 
   <!-- ══ 🌱 零基礎 ══ -->
   <section id="beginner">
-    <h2 class="sec"><span class="n">🌱</span> 零基礎 3 個 Check <small>當你咩都唔知——點查、問邊個、睇咩，逐步教</small></h2>
-    <div class="tldr"><span class="tldr-tag">⚡ 30 秒睇懂</span> 無論你行邊條路，都要先過呢 3 關：宣誓未？有冇支部？組長啱唔啱？每張卡都有「照讀對白」俾你問領袖。</div>
+    <h2 class="sec"><span class="n">🌱</span> <span id="beginner-title">零基礎 3 個 Check</span> <small id="beginner-sub">當你咩都唔知——點查、問邊個、睇咩，逐步教</small></h2>
+    <div class="tldr" id="beginner-tldr"></div>
     <div id="beginner-list"></div>
   </section>
 
   <!-- ══ 功能1：轉入童軍 ══ -->
   <section id="f1">
-    <h2 class="sec"><span class="n hot">1</span> 由其他執行處轉入童軍 → 仲有咩要考 <small>(功能①)</small></h2>
+    <h2 class="sec"><span class="n hot">1</span> <span id="f1-title">由其他執行處轉入童軍 → 仲有咩要考</span> <small id="f1-tag">(功能①)</small></h2>
     <div class="tldr" data-tldr="f1"></div>
-    <p>撳「① 揀章級」＋「② 剔已批核嘅科」👇</p>
+    <p id="f1-hint">撳「① 揀章級」＋「② 剔已批核嘅科」👇</p>
     <div class="part" data-key="ti-1" open>
-      <summary><span class="ico">🧮</span> 我轉入後仲欠咩？<span class="chev">▾</span></summary>
+      <summary><span class="ico">🧮</span> <span id="ti1-summary">我轉入後仲欠咩？</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="ti-inner"></div></div>
     </div>
     <div class="part" data-key="ti-2">
-      <summary><span class="ico">🧾</span> 轉入童軍執行處嘅行政手續<span class="chev">▾</span></summary>
+      <summary><span class="ico">🧾</span> <span id="ti2-summary">轉入童軍執行處嘅行政手續</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="ti-steps"></div></div>
     </div>
   </section>
 
   <!-- ══ 功能2：兌換 ══ -->
   <section id="f2">
-    <h2 class="sec"><span class="n hot">2</span> 兌換情況 <small>(功能②)</small></h2>
+    <h2 class="sec"><span class="n hot">2</span> <span id="f2-title">兌換情況</span> <small id="f2-tag">(功能②)</small></h2>
     <div class="tldr" data-tldr="f2"></div>
 
     <div class="part" data-key="c2a">
-      <summary><span class="ico">🏅</span> 成個章兌換：童軍進度性獎章 同步完成 AYP<span class="chev">▾</span></summary>
+      <summary><span class="ico">🏅</span> <span id="c2a-summary">成個章兌換：童軍進度性獎章 同步完成 AYP</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-sync"></div></div>
     </div>
     <div class="part" data-key="c2b">
-      <summary><span class="ico">🧩</span> 單科對應參考：童軍活動 / 徽章 → AYP 各科<span class="chev">▾</span></summary>
+      <summary><span class="ico">🧩</span> <span id="c2b-summary">單科對應參考：童軍活動 / 徽章 → AYP 各科</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-map"></div></div>
     </div>
   </section>
 
   <!-- ══ 功能3：升團接駁 ══ -->
   <section id="f3">
-    <h2 class="sec"><span class="n hot">3</span> 邊個支部考到咩・升團後要點做 <small>(功能③)</small></h2>
+    <h2 class="sec"><span class="n hot">3</span> <span id="f3-title">邊個支部考到咩・升團後要點做</span> <small id="f3-tag">(功能③)</small></h2>
     <div class="tldr" data-tldr="f3"></div>
     <div class="part" data-key="f3-1">
-      <summary><span class="ico">🪜</span> 童軍 → 深資 → 樂行：每階段 AYP 點跟進<span class="chev">▾</span></summary>
+      <summary><span class="ico">🪜</span> <span id="f31-summary">童軍 → 深資 → 樂行：每階段 AYP 點跟進</span><span class="chev">▾</span></summary>
       <div class="part-body">
         <div id="paths"></div>
-        <div class="warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 你升團唔會令 AYP 進度清零，但記得更新所屬執行處支部資料。</div>
+        <div class="warn" id="f3-warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 你升團唔會令 AYP 進度清零，但記得更新所屬執行處支部資料。</div>
       </div>
     </div>
   </section>
 
   <!-- ══ 功能4：正常流程 ══ -->
   <section id="f4">
-    <h2 class="sec"><span class="n hot">4</span> 各支部正常開始 AYP 嘅流程 <small>(功能④)</small></h2>
+    <h2 class="sec"><span class="n hot">4</span> <span id="f4-title">各支部正常開始 AYP 嘅流程</span> <small id="f4-tag">(功能④)</small></h2>
     <div class="tldr" data-tldr="f4"></div>
     <div class="part" data-key="f4-1">
-      <summary><span class="ico">🚪</span> 由頭開始：通用步驟 ＋ 各支部可考咩<span class="chev">▾</span></summary>
+      <summary><span class="ico">🚪</span> <span id="f41-summary">由頭開始：通用步驟 ＋ 各支部可考咩</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="join-flow"></div></div>
     </div>
   </section>
 
   <!-- ══ 功能5：其他情況 ══ -->
   <section id="f5">
-    <h2 class="sec"><span class="n hot">5</span> 其他可能情況 <small>(功能⑤)</small></h2>
+    <h2 class="sec"><span class="n hot">5</span> <span id="f5-title">其他可能情況</span> <small id="f5-tag">(功能⑤)</small></h2>
     <div class="tldr" data-tldr="f5"></div>
     <div id="extra-list"></div>
 
-    <h3 style="margin-top:1.2rem;color:#0a5c36">反方向／補充情況</h3>
+    <h3 style="margin-top:1.2rem;color:#0a5c36" id="f5-sub">反方向／補充情況</h3>
     <div id="extra-list-2"></div>
   </section>
 
   <!-- ══ 資源 ══ -->
   <section id="res">
-    <h2 class="sec"><span class="n">＋</span> 幾時起步・表格・辭典・FAQ</h2>
+    <h2 class="sec"><span class="n">＋</span> <span id="res-title">幾時起步・表格・辭典・FAQ</span></h2>
 
     <div class="part" data-key="res-tl">
-      <summary><span class="ico">⏱️</span> 幾時起步時間表<span class="chev">▾</span></summary>
+      <summary><span class="ico">⏱️</span> <span id="res-tl-summary">幾時起步時間表</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="timeline"></div></div>
     </div>
     <div class="part" data-key="res-fm">
-      <summary><span class="ico">📄</span> 常用表格一覽<span class="chev">▾</span></summary>
+      <summary><span class="ico">📄</span> <span id="res-fm-summary">常用表格一覽</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="forms-list"></div>
-        <p style="font-size:.82rem;color:var(--muted)">實際表格以童軍執行處網頁及青少年活動署最新版本為準。</p></div>
+        <p style="font-size:.82rem;color:var(--muted)" id="res-fm-note">實際表格以童軍執行處網頁及青少年活動署最新版本為準。</p></div>
     </div>
     <div class="part" data-key="res-gl">
-      <summary><span class="ico">📖</span> 術語小辭典<span class="chev">▾</span></summary>
+      <summary><span class="ico">📖</span> <span id="res-gl-summary">術語小辭典</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="glossary-list"></div></div>
     </div>
     <div class="part" data-key="res-faq">
-      <summary><span class="ico">❓</span> 常見問題 FAQ<span class="chev">▾</span></summary>
+      <summary><span class="ico">❓</span> <span id="res-faq-summary">常見問題 FAQ</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="faq-list"></div></div>
     </div>
   </section>
 
   <!-- ══ 完成之後 ══ -->
   <section id="comp">
-    <h2 class="sec"><span class="n">✔</span> 完成之後：領獎／證書</h2>
+    <h2 class="sec"><span class="n">✔</span> <span id="comp-title">完成之後：領獎／證書</span></h2>
     <div class="part" data-key="comp">
-      <summary><span class="ico">🏆</span> 完成章級後點領獎？<span class="chev">▾</span></summary>
+      <summary><span class="ico">🏆</span> <span id="comp-summary">完成章級後點領獎？</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="complete-steps"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 🧰 快速工具（同步方案／兌換表／開展表格／查執行處） ══ -->
+  <section id="bottom-tools">
+    <h2 class="sec"><span class="n hot">🧰</span> <span id="bottom-tools-title">快速工具</span> <small id="bottom-tools-sub">同步方案・單項兌換表・開展表格・查執行處</small></h2>
+    <div class="bottom-grid" id="bottom-grid"></div>
+
+    <div class="part" data-key="bt-sync">
+      <summary><span class="ico">📋</span> <span id="bt-sync-summary">同步方案（試行）</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="bt-sync-body"></div></div>
+    </div>
+
+    <div class="part" data-key="bt-conv">
+      <summary><span class="ico">🔁</span> <span id="bt-conv-summary">單項兌換表</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="bt-conv-body"></div></div>
+    </div>
+
+    <div class="part" data-key="bt-forms">
+      <summary><span class="ico">📝</span> <span id="bt-forms-summary">AYP開展表格</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="bt-forms-body"></div></div>
+    </div>
+
+    <div class="part" data-key="bt-oa">
+      <summary><span class="ico">🏢</span> <span id="bt-oa-summary">查執行處／組長</span><span class="chev">▾</span></summary>
+      <div class="part-body"><div id="bt-oa-body"></div></div>
     </div>
   </section>
 
   <!-- 來源 -->
   <section>
-    <h2 class="sec"><span class="n">📌</span> 官方資料來源</h2>
+    <h2 class="sec"><span class="n">📌</span> <span id="sources-title">官方資料來源</span></h2>
     <div id="sources"></div>
   </section>
 
   <div class="disclaimer" id="disclaimer"></div>
 
   <div class="copyright-bar">
-    <b id="copyright-line">© 2026 Scout System</b>
+    <b id="copyright-app-line">AYP 童軍接駁指南</b>
     <small id="copyright-edu"></small>
     <small id="copyright-data"></small>
+    <small id="copyright-baseline"></small>
+    <small id="copyright-line">© 2026 Scout System</small>
   </div>
 </main>
 
 <footer>
-  <p>AYP 童軍接駁指南 · <span id="baseline-foot2"></span></p>
-  <p style="font-size:.72rem">© 2026 Scout System · 非官方輔助工具 · 僅作教育用途</p>
+  <button class="btn ghost" id="footer-top-btn">↑ <span id="footer-top-label">返頁頂</span></button>
 </footer>
 
 <button class="fab" id="fab-wizard" aria-label="去 5 分鐘精靈">⚡ 5分鐘</button>
