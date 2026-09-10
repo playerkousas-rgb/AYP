@@ -404,7 +404,7 @@
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   function syncViewUI() {
-    const cur = document.body.dataset.view || "home";
+    const cur = document.body.dataset.view || "normal";
     $$("#bottombar [data-tv]").forEach(a => a.classList.toggle("active", a.dataset.tv === cur));
     $$("#topbar [data-tt]").forEach(a => a.classList.toggle("active", a.dataset.tt === cur));
   }
