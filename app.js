@@ -7,6 +7,7 @@
   const $$ = (s, p) => Array.from((p || document).querySelectorAll(s));
   const OPEN_KEY = "ayp-guide-open-v2";
   const LANG_KEY = "ayp-guide-lang-v1";
+  const VISIT_KEY = "ayp-guide-visited-v1";
 
   function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
   function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
@@ -366,7 +367,7 @@
     const c = $("#topbar"); if (!c) return;
     const TT = L().TOP_TABS;
     c.innerHTML = TT.map(q =>
-      `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${q.icon}</span><span>${esc(q.label)}</span></button>`
     ).join("");
     $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tt;
@@ -617,5 +618,12 @@
     renderAll();
     bindFloatBtns();
     bindViews();
+    // 首次開啟 App：自動進入 ⚡ 精靈，先了解使用者需要；之後預設留喺正常流程
+    try {
+      if (!localStorage.getItem(VISIT_KEY)) {
+        localStorage.setItem(VISIT_KEY, "1");
+        showView("quick");
+      }
+    } catch (e) {}
   });
 })();
