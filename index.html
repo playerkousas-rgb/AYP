@@ -209,6 +209,27 @@ ol.todo li.done label span:last-child{text-decoration:line-through}
 .bb-btn:hover{background:#e7f3ea;text-decoration:none}
 .bb-btn.active{background:#0a5c36;color:#fff}
 
+/* ── 🧰 快速工具彈層（一㩒即見 4 選項） ── */
+.sheet-backdrop{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .22s}
+.sheet-backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:120;background:#fff;border-radius:18px 18px 0 0;
+  box-shadow:0 -6px 24px rgba(0,0,0,.25);max-width:640px;margin:0 auto;
+  padding:.6rem .9rem calc(1rem + env(safe-area-inset-bottom));
+  transform:translateY(105%);transition:transform .25s ease-out}
+.sheet.open{transform:translateY(0)}
+.sheet-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
+.sheet-head b{font-size:1rem;color:#0a5c36}
+.sheet-head small{display:block;color:var(--muted);font-weight:400;font-size:.75rem}
+.sheet-x{margin-left:auto;border:2px solid var(--line);background:#fff;border-radius:10px;min-width:44px;min-height:44px;
+  font-size:1rem;cursor:pointer;color:#555}
+.sheet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem}
+.sheet-opt{display:flex;align-items:center;gap:.6rem;border:2px solid var(--line);border-radius:14px;background:#fff;
+  padding:.75rem .7rem;font-weight:700;font-size:.88rem;color:#0a5c36;cursor:pointer;text-align:left;min-height:64px}
+.sheet-opt .so-ico{font-size:1.5rem;flex:none}
+.sheet-opt:hover{border-color:#0a5c36;background:#f3f8f4}
+.part.flash{animation:partFlash 1.3s ease}
+@keyframes partFlash{0%,45%{box-shadow:0 0 0 3px rgba(212,175,55,.95);border-color:#d4af37}100%{box-shadow:none}}
+
 /* ── 浮動掣 ── */
 .fab{position:fixed;right:.9rem;z-index:80;border:none;border-radius:50px;font-weight:800;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;gap:.3rem}
@@ -246,7 +267,7 @@ img{max-width:100%;height:auto}
   table.conv{font-size:.84rem}
   .bb-btn{font-size:.66rem;min-height:56px}
 }
-@media print{nav.toc,header::after,.fab,#fab-top,#fab-lang,.bottombar{display:none}}
+@media print{nav.toc,header::after,.fab,#fab-top,#fab-lang,.bottombar,.sheet,.sheet-backdrop{display:none}}
 </style>
 </head>
 <body>
@@ -433,6 +454,15 @@ img{max-width:100%;height:auto}
     <small id="copyright-line">© 2026 Scout System</small>
   </div>
 </main>
+
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<div class="sheet" id="tool-sheet" role="dialog" aria-modal="true" aria-label="快速工具">
+  <div class="sheet-head">
+    <div><b id="sheet-title">🧰 快速工具</b><small id="sheet-sub"></small></div>
+    <button class="sheet-x" id="sheet-x" aria-label="關閉">✕</button>
+  </div>
+  <div class="sheet-grid" id="sheet-grid"></div>
+</div>
 
 <nav class="bottombar" id="bottombar" aria-label="快速跳去頁面各部分"></nav>
 

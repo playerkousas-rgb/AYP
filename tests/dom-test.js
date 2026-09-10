@@ -100,6 +100,29 @@ ok("置底列掣可撳唔報錯", (() => {
   return true;
 })());
 
+// 🧰 快速工具彈層：一㩒彈 4 選項
+ok("工具彈層有 4 個選項", window.document.querySelectorAll("#tool-sheet .sheet-opt").length === 4);
+ok("撳置底「快速工具」會彈層", (() => {
+  const btn = window.document.querySelector("#bottombar [data-bb='bottom-tools']");
+  if (!btn) return false;
+  btn.click();
+  return window.document.getElementById("tool-sheet").classList.contains("open");
+})());
+ok("撳彈層選項會閂層＋閃目標卡", (() => {
+  const opt = window.document.querySelector("#tool-sheet [data-sheet-target='bt-sync']");
+  const target = window.document.querySelector(".part[data-key='bt-sync']");
+  if (!opt || !target) return false;
+  opt.click();
+  return !window.document.getElementById("tool-sheet").classList.contains("open") && target.classList.contains("flash");
+})());
+ok("撳 Esc 會閂彈層", (() => {
+  window.document.querySelector("#bottombar [data-bb='bottom-tools']").click();
+  const sheet = window.document.getElementById("tool-sheet");
+  if (!sheet.classList.contains("open")) return false;
+  window.document.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+  return !sheet.classList.contains("open");
+})());
+
 // 🧰 快速工具內容卡（同步方案／單項兌換表／開展表格／查執行處；頁身跳轉掣已抽走）
 ok("快速工具 4 張內容卡", window.document.querySelectorAll("#bottom-tools .part").length === 4);
 ok("同步方案有試行字眼", /試行|trial/i.test(window.document.getElementById("bt-sync-body").textContent));
@@ -138,6 +161,11 @@ ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-fo
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切去英文後標題變英文", /AYP Scout Bridging Guide/.test(window.document.title));
   ok("切去英文後 html lang=en", window.document.documentElement.lang === "en");
+  ok("切去英文後置底列變短標籤", (() => {
+    const txt = window.document.getElementById("bottombar").textContent;
+    return /Wizard/.test(txt) && /Calc/.test(txt) && /Convert/.test(txt) && /Bridge/.test(txt) && !/5-Min Wizard/.test(txt);
+  })());
+  ok("切去英文後彈層標題變英文", /Quick Tools/.test(window.document.getElementById("sheet-title").textContent));
   ok("切去英文後 TI 有內容", innerLen("ti-inner") > 150);
   ok("切去英文後 FAQ 有內容", innerLen("faq-list") > 50);
   ok("切去英文後 disclaimer 有內容", innerLen("disclaimer") > 50);
@@ -147,6 +175,7 @@ ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-fo
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切返中文後標題變回中文", /AYP 童軍接駁指南/.test(window.document.title));
   ok("切返中文後同步方案變回中文", /同步完成方案/.test(window.document.getElementById("bt-sync-summary").textContent));
+  ok("切返中文後置底列變回中文", /5分鐘精靈/.test(window.document.getElementById("bottombar").textContent));
 }
 
 let pass = 0, fail = 0;

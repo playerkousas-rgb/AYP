@@ -53,7 +53,7 @@
 
   /* ═══════════ 頂層 TOC 導航 / 靜態文字 ═══════════ */
   function bindToc() {
-    $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
+    $$("nav.toc a[href^='#']").forEach(a => a.addEventListener("click", e => {
       const id = a.getAttribute("href").slice(1);
       const el = document.getElementById(id);
       if (el) { e.preventDefault(); smoothTo(el); }
@@ -381,10 +381,65 @@
       `<a class="bb-btn" href="#${esc(q.id)}" data-bb="${esc(q.id)}"><span class="bb-ico">${q.icon}</span><span>${esc(q.label)}</span></a>`
     ).join("");
     $$("[data-bb]", c).forEach(a => a.addEventListener("click", e => {
+      e.preventDefault();
       const id = a.getAttribute("href").slice(1);
+      if (id === "bottom-tools") { openSheet(); return; }
       const el = document.getElementById(id);
-      if (el) { e.preventDefault(); smoothTo(el); }
+      if (el) smoothTo(el);
     }));
+  }
+
+  /* ════════════════════════════════════════════
+     🧰 快速工具彈層：一㩒即見 4 個選項，撳選項直達＋打開對應卡
+     ════════════════════════════════════════════ */
+  function renderSheet() {
+    const grid = $("#sheet-grid"); if (!grid) return;
+    const BA = L().BOTTOM_ACTIONS, t = UI();
+    const title = $("#sheet-title");
+    if (title) title.textContent = "🧰 " + t.bottomToolsTitle;
+    const sub = $("#sheet-sub");
+    if (sub) sub.textContent = t.bottomToolsSub;
+    const sheet = $("#tool-sheet");
+    if (sheet) sheet.setAttribute("aria-label", t.bottomToolsTitle);
+    const x = $("#sheet-x");
+    if (x) x.setAttribute("aria-label", t.closeSheet || "Close");
+    grid.innerHTML = BA.map(b =>
+      `<button class="sheet-opt" data-sheet-target="${esc(b.target)}"><span class="so-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
+    ).join("");
+    $$("[data-sheet-target]", grid).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.sheetTarget;
+      closeSheet();
+      const target = document.querySelector(`.part[data-key="${key}"]`);
+      if (target) {
+        if (typeof target.open === "boolean") target.open = true;
+        smoothTo(target);
+        target.classList.add("flash");
+        setTimeout(() => target.classList.remove("flash"), 1350);
+      }
+    }));
+  }
+  function openSheet() {
+    const sheet = $("#tool-sheet"), bd = $("#sheet-backdrop");
+    if (sheet) sheet.classList.add("open");
+    if (bd) bd.classList.add("open");
+    $$("#bottombar [data-bb]").forEach(a => a.classList.toggle("active", a.dataset.bb === "bottom-tools"));
+    try { document.body.style.overflow = "hidden"; } catch (e) {}
+  }
+  function closeSheet() {
+    const sheet = $("#tool-sheet"), bd = $("#sheet-backdrop");
+    if (sheet) sheet.classList.remove("open");
+    if (bd) bd.classList.remove("open");
+    try { document.body.style.overflow = ""; } catch (e) {}
+    updateSpy();
+  }
+  function bindSheet() {
+    const bd = $("#sheet-backdrop");
+    if (bd) bd.addEventListener("click", closeSheet);
+    const x = $("#sheet-x");
+    if (x) x.addEventListener("click", closeSheet);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeSheet();
+    });
   }
 
   /* ════════════════════════════════════════════
@@ -552,6 +607,7 @@
   function renderAll() {
     renderStaticText();
     renderBottomBar();
+    renderSheet();
     renderWizard();
     renderBeginner();
     renderTldr();
@@ -576,5 +632,6 @@
     bindFloatBtns();
     bindToc();
     bindSpy();
+    bindSheet();
   });
 })();

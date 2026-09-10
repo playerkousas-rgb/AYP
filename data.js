@@ -573,6 +573,7 @@ const LOCALES = {
     formsDownload: "下載表格",
     oaRegionsTitle: "地域辦事處電話",
     backToTop2: "返頁頂",
+    closeSheet: "關閉",
   },
 },
 
@@ -805,11 +806,11 @@ const LOCALES = {
   ],
 
   QUICKNAV: [
-    { id: "quick", icon: "⚡", label: "5-Min Wizard" },
-    { id: "f1", icon: "🧮", label: "Transfer calc" },
-    { id: "f2", icon: "🔁", label: "Conversion" },
-    { id: "f3", icon: "🪜", label: "Advancement" },
-    { id: "bottom-tools", icon: "🧰", label: "Quick tools" },
+    { id: "quick", icon: "⚡", label: "Wizard" },
+    { id: "f1", icon: "🧮", label: "Calc" },
+    { id: "f2", icon: "🔁", label: "Convert" },
+    { id: "f3", icon: "🪜", label: "Bridge" },
+    { id: "bottom-tools", icon: "🧰", label: "Tools" },
   ],
 
   BOTTOM_ACTIONS: [
@@ -1136,6 +1137,7 @@ const LOCALES = {
     formsDownload: "Download form",
     oaRegionsTitle: "Regional office phone numbers",
     backToTop2: "Back to top",
+    closeSheet: "Close",
   },
 },
 
