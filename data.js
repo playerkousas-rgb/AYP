@@ -23,8 +23,8 @@ const LOCALES = {
   APP: {
     name: "AYP 童軍接駁指南",
     shortName: "AYP童軍",
-    tagline: "情況主導：同步／兌換・轉處接駁・升團・正常流程",
-    description: "非官方指南：童軍 ↔ AYP 同步完成／直接對應、轉執行處／升支部接駁、各支部正常流程。",
+    tagline: "情況主導：同步完成／銜接・轉處接駁・升團・正常流程",
+    description: "非官方指南：童軍 ↔ AYP 同步完成／銜接認可、轉執行處／升支部接駁、各支部正常流程。所有活動須於正式開展日後進行，不可追溯。",
     baseline: "資料基準日：2026 年 9 月（P95/2026）",
   },
 
@@ -110,11 +110,11 @@ const LOCALES = {
       { scoutBadge: "童軍高級獎章", scoutInfo: "童軍支部進度性獎章", toAyp: "AYP 銅章", toAypLv: "bronze", note: "考取童軍高級獎章可同步完成 AYP 銅章。" },
       { scoutBadge: "總領袖獎章", scoutInfo: "先完成 AYP 銅章", toAyp: "AYP 漸進銀章", toAypLv: "silver", note: "完成銅章後，可透過總領袖獎章同步完成 AYP 漸進銀章。" },
     ],
-    caveat: "屬試行安排；詳細對接內容、參加／紀錄／評核指引，由香港童軍總會「香港青年獎勵計劃童軍執行處」網頁公布，辦理前請核實。",
+    caveat: "屬試行安排，並非「拎童軍章換 AYP 章」嘅自動一對一兌換 —— 每個對接項目仍須由執行處支部組長／認可評核員（Assessor）簽署核實先算數，而且擬用作同步完成嘅活動必須喺你正式開展該章級日期之後進行，唔可以追溯。詳細對接內容、參加／紀錄／評核指引，由香港童軍總會「香港青年獎勵計劃童軍執行處」網頁公布，辦理前請核實。",
   },
 
   SECTION_MAP: {
-    header: "童軍各支部活動／徽章可「直接對應」AYP 各科 —— 即利用童軍訓練已攞到嘅知識技能去申報 AYP，毋須重複接受同一訓練及審核。但每科仍要符合 AYP 時數／持續期／評核要求，並正式申報。",
+    header: "童軍各支部活動／徽章可以「銜接（認可）」至 AYP 各科 —— 即利用童軍訓練已攞到嘅知識技能去申報 AYP，毋須重複接受同一訓練及審核。但每科仍要符合 AYP 時數／持續期／評核要求，經正式申報、由執行處支部組長／認可評核員簽署核實，唔係自動生效。",
     rows: [
       { ayp: "服務科", scout: "童軍急救／拯溺專科徽章、營地服務、童軍區／地域社區服務計劃、服務獎章等", lv: "銅銀金" },
       { ayp: "技能科", scout: "童軍專科徽章（通訊、電腦、工藝、語言、攝影、露營、觀鳥等，視乎性質）、深資／樂行個人興趣項目", lv: "銅銀金" },
@@ -122,7 +122,7 @@ const LOCALES = {
       { ayp: "野外鍛鍊科", scout: "童軍遠足／露營／探險旅程 —— 必須由童軍執行處認可嘅野外鍛鍊科導師主持訓練及評核", lv: "銅銀金（旅程長度按級別）" },
       { ayp: "團體生活科（金）", scout: "童軍大型交流／露營／大露營（總會／地域／區／旅主辦，5 日 4 夜或以上）", lv: "金" },
     ],
-    caveat: "以上為「直接對應」嘅參考方向。官方舊《各支部進度性獎章及徽章與 AYP 參照表》（P103/2016）屬舊《訓練綱要》版本，因新綱要 2026-08-15 起實施已更新；最新單科對應以童軍執行處公布及「同步完成方案」為準。切勿假設「考咗童軍章＝自動等於 AYP」——每科仍要經 AYP 正式申報程序。",
+    caveat: "以上為「銜接（認可）」嘅參考方向，唔係自動一對一兌換。官方舊《各支部進度性獎章及徽章與 AYP 參照表》（P103/2016）屬舊《訓練綱要》版本，因新綱要 2026-08-15 起實施已更新；最新單科認可以童軍執行處公布及「同步完成方案」為準。切勿假設「考咗童軍章＝自動等於完成 AYP 某科」——每科都要經 AYP 正式申報，並由執行處支部組長／認可評核員簽署核實先算數。",
   },
 
   SECTION_PATHS: {
@@ -130,18 +130,18 @@ const LOCALES = {
       name: "童軍", age: "約 11–16 歲", color: "#0a5c36",
       aypStart: "13–14 歲起：年滿 13 歲可特別申請銅章、14 歲一般可報銅章、15 歲可報銀章。",
       sync: "同步完成：考「童軍高級獎章」可同步完成 AYP 銅章。",
-      toNext: "升深資童軍後：AYP 進度照跟住你（唔會因升團清零），繼續未完成科；可用深資童軍活動補返餘下科（見兌換）。",
+      toNext: "升深資童軍後：AYP 進度照跟住你（唔會因升團清零），繼續未完成科；可用深資童軍活動補返餘下科（見銜接）。",
     },
     venture: {
       name: "深資童軍", age: "約 15–20 歲", color: "#7a1f2b",
       aypStart: "按年齡可揀銅／銀／金起步（漸進或直接）；15 歲報銀、16 歲報金。",
-      sync: "深資童軍嘅「活動／探險」等訓練可對應 AYP 各科（參考單科對應）。",
-      toNext: "升樂行童軍後：AYP 進度照跟住你；樂行童軍嘅「社區服務／個人興趣／認識世界」等可對應 AYP 高級別科目。",
+      sync: "深資童軍嘅「活動／探險」等訓練可以銜接（認可）至 AYP 各科（參考單項銜接表）。",
+      toNext: "升樂行童軍後：AYP 進度照跟住你；樂行童軍嘅「社區服務／個人興趣／認識世界」等可銜接 AYP 高級別科目。",
     },
     rover: {
       name: "樂行童軍", age: "約 18–25 歲（未滿 23 歲可參加）", color: "#0a3a5c",
       aypStart: "可揀銅／直接銀／直接金作為開始級別（視年齡）；最後參加限期 23 歲生日當天。",
-      sync: "樂行童軍嘅服務、個人興趣、國際視野（大露營等）可對應 AYP 各科，尤其服務／技能／團體生活。",
+      sync: "樂行童軍嘅服務、個人興趣、國際視野（大露營等）可以銜接（認可）至 AYP 各科，尤其服務／技能／團體生活。",
       toNext: "樂行後可成為領袖／導師；若屬青年領袖並持有效委任，可另行直入金章（見其他情況 E）。",
     },
   },
@@ -212,12 +212,13 @@ const LOCALES = {
   FAQ: [
     { q: "童軍成員係咪一定要透過童軍執行處考 AYP？", a: "唔一定。你可以喺任何一個認可執行處（學校、其他制服團隊等）考。如果你喺其他執行處想轉入童軍，見「轉入童軍」；想知點揀，問你嘅旅團領袖／執行處支部組長。" },
     { q: "我未足 14 歲係咪唔可以考銅章？", a: "一般銅章最低 14 歲；但年滿 13 歲嘅童軍成員可經特別安排申請（須與適齡朋友小組進行）。未夠齡做嘅活動唔可以計入 AYP。" },
-    { q: "「同步完成」同「直接對應」有咩分別？", a: "同步完成＝考取特定童軍獎章（童軍高級獎章／總領袖獎章）可直接同步攞到成個 AYP 章級，毋須分科申報（試行中）。直接對應＝你用童軍活動／徽章嘅內容去申報 AYP 某一科，但仍要符合該科時數／持續期／評核要求並正式申報。" },
+    { q: "「同步完成」同「銜接（認可）」有咩分別？", a: "同步完成＝考取特定童軍獎章（童軍高級獎章／總領袖獎章）可同步攞到成個 AYP 章級，毋須分科申報（試行中，仍須組長核實）。銜接（認可）＝你用童軍活動／徽章嘅內容去申報 AYP 某一科，但要符合該科時數／持續期／評核要求、經認可評核員核實並正式申報。兩者都唔係「拎章換章」嘅自動兌換。" },
     { q: "我由其他執行處轉入童軍，做咗嘅嘢會唔會冇咗？", a: "原則上已批核嘅科會隨紀錄簿帶住走，唔使重考；用 FORM AYP/09 連同紀錄辦理。實際以童軍執行處及兩邊支部組長核實為準。" },
+    { q: "我以前做開嘅童軍活動／服務時數，可唔可以追溯計入 AYP？", a: "原則上唔可以（No Backdating）。AYP 活動一律由你正式開展該章級（成功報名、獲發紀錄簿）當日或之後起計；開展日之前嘅舊活動、時數或徽章紀錄，唔可以追溯計入時數及次數要求。所以想做 AYP 就愈早正式報名開展愈穩陣，有疑問問執行處支部組長。" },
     { q: "金章係咪一定要連銀章一齊考？", a: "唔一定。可直接考金章（直接金），但要符合年齡（一般 17 歲半）等要求。" },
     { q: "紀錄簿幾錢？", a: "由 2026-04-01 起申請費用為 HK$45。" },
     { q: "要幾時前完成？", a: "所有章級須於 25 歲生日前完成；最後參加限期為 23 歲生日當天。" },
-    { q: "同一個活動可唔可以同時用嚟做童軍章同 AYP？", a: "可以 —— 呢個正正係「同步完成／直接對應」嘅精神，用同一訓練／活動／評核歷程。但要按 AYP 正式申報，唔係自動；詳情問執行處支部組長。" },
+    { q: "同一個活動可唔可以同時用嚟做童軍章同 AYP？", a: "可以 —— 呢個正正係「同步完成／銜接（認可）」嘅精神，用同一訓練／活動／評核歷程。但要按 AYP 正式申報，唔係自動；詳情問執行處支部組長。" },
   ],
 
   GLOSSARY: [
@@ -229,6 +230,9 @@ const LOCALES = {
     { term: "導師／評核員", def: "負責指導並簽署確認你某科表現／進度嘅人；野外鍛鍊科旅程須由認可導師／評核員主持。" },
     { term: "主項／副項", def: "新制直接參加者要揀主項（時數較高）及副項；漸進者無須分主副。" },
     { term: "同步完成方案", def: "考「童軍高級獎章」同步完成 AYP 銅章；完成銅章後透過「總領袖獎章」同步完成漸進銀章（2026-08-15 起試行）。" },
+    { term: "銜接（認可）", def: "將童軍活動／徽章用作申報 AYP 某科嘅官方概念 —— 唔係「拎章換章」：每科仍須符合時數／持續期／評核要求，經正式申報並由執行處支部組長／認可評核員核實。" },
+    { term: "開展日（Start Date）", def: "你正式獲接納參加該章級嘅日子。所有計入 AYP 嘅活動必須喺開展日當日或之後進行 —— 之前做嘅活動原則上唔可以追溯（No Backdating）。" },
+    { term: "轉換執行處", def: "由一個執行處（例如學校）轉去另一個（例如童軍總會）嘅正式行政手續，用 FORM AYP/09 辦理。留意：呢個同童軍內部「升團／轉支部」唔同 —— 升團唔使轉處，轉處就一定要辦手續。" },
     { term: "直接參加／漸進", def: "直接參加＝跳過低級直接考銀／金；漸進＝先完成銅／銀再上一級。" },
   ],
 
@@ -243,7 +247,7 @@ const LOCALES = {
 
   BOTTOM_ACTIONS: [
     { id: "sync-plan", icon: "📋", label: "同步方案（試行）", target: "bt-sync" },
-    { id: "conv-table", icon: "🔁", label: "單項兌換表", target: "bt-conv" },
+    { id: "conv-table", icon: "🔁", label: "單項銜接表", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "AYP開展表格", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "查執行處／組長", target: "bt-oa" },
     { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
@@ -252,7 +256,7 @@ const LOCALES = {
   TOP_TABS: [
     { id: "quick", icon: "⚡", label: "精靈", target: "quick" },
     { id: "f1", icon: "①", label: "轉入", target: "f1" },
-    { id: "f2", icon: "②", label: "兌換", target: "f2" },
+    { id: "f2", icon: "②", label: "銜接", target: "f2" },
     { id: "f3", icon: "③", label: "升團", target: "f3" },
     { id: "f5", icon: "⑤", label: "其他", target: "f5" },
   ],
@@ -264,6 +268,7 @@ const LOCALES = {
     points: [
       "新方案下，童軍高級獎章嘅個別訓練項目會逐項對應 AYP 銅章嘅服務／技能／康體／野外鍛鍊等科目要求，並非整個獎章自動生效。",
       "完成銅章後，總領袖獎章嘅個別項目同樣以「項目對項目」方式對接 AYP 漸進銀章。",
+      "同步方案嘅活動同樣受「開展日」限制：擬用作同步完成嘅活動，必須喺你正式開展該 AYP 章級（成功報名、獲發紀錄簿）日期之後進行，先前嘅童軍活動原則上唔可以追溯計入。",
       "呢個安排屬「試行」（試驗性質），並非最終定案——實際嘅逐項對接方法、參加安排、紀錄同評核指引，官方尚未全面公布。",
       "香港童軍總會表示，詳細對接內容將上載至「香港青年獎勵計劃童軍執行處」網頁，辦理前必須睇返最新版本。",
     ],
@@ -273,9 +278,9 @@ const LOCALES = {
   },
 
   CONVERSION_TABLE: {
-    title: "單項兌換表（非官方整理）",
+    title: "單項銜接表（非官方整理）",
     unofficialTag: "非官方整理，須向執行處組長核實",
-    intro: "以下係按 2016 年官方《各支部進度性獎章及徽章與香港青年獎勵計劃參照表》（P103/2016）為基礎，經我哋自行整理、並剔除咗 2026-08-15 通告已取消嘅專科徽章後嘅參考表，方便執行處支部組長參考點樣將童軍活動同 AYP 各科對接。呢張表並非童軍總會官方發布嘅最新表格，只係我哋按官方舊表加工整理嘅民間參考版本。",
+    intro: "以下係按 2016 年官方《各支部進度性獎章及徽章與香港青年獎勵計劃參照表》（P103/2016）為基礎，經我哋自行整理、並剔除咗 2026-08-15 通告已取消嘅專科徽章後嘅參考表，方便執行處支部組長參考點樣將童軍活動銜接（認可）至 AYP 各科。注意：官方用語係「同步完成／銜接／認可」，唔係「拎章換章」嘅自動兌換 —— 每科仍須由執行處支部組長及認可評核員（Assessor）簽署核實，並符合 AYP 時數／持續期要求。呢張表並非童軍總會官方發布嘅最新表格，只係我哋按官方舊表加工整理嘅民間參考版本。",
     excludedNote: "已剔除因 2026-08-15《童軍支部專科徽章更新》通告（P013/26）而取消嘅 8 個專科徽章：愛護動物章（興趣組）、獨木舟國際賽艇章（技能組）、風帆賽艇舵手章（技能組）、國際友誼章（技能組）、營地管理章（服務組）、獨木舟救生章（服務組）、護養章（服務組）、護養章（教導組）。呢啲徽章總會已停止簽發，就算原有持有人仍可佩戴，都不應再用嚟申報新嘅 AYP 項目。",
     groups: [
       {
@@ -327,7 +332,7 @@ const LOCALES = {
         ],
       },
     ],
-    footnote: "參加者必須最少完成兩個科別，先可以開始下一個章級嘅活動，並且必須已經成功申請成為 AYP 成員、持有紀錄簿。",
+    footnote: "參加者必須最少完成兩個科別，先可以開始下一個章級嘅活動，並且必須已經成功申請成為 AYP 成員、持有紀錄簿；所有擬用作銜接嘅活動，必須喺正式開展該章級（獲發紀錄簿）日期之後進行，唔可以追溯。",
     officialSource: { label: "《各支部進度性獎章及徽章與 AYP 參照表》P103/2016（舊綱要，僅供整理參考）", url: "https://www.scout.org.hk/article_attach/26708/p103-16.pdf" },
     cancelSource: { label: "P013/26《童軍支部專科徽章更新》通告（2026-08-15 取消名單）", url: "https://www.scout.org.hk/uploads/tc/circulars/23262/p013-26.pdf" },
   },
@@ -363,7 +368,7 @@ const LOCALES = {
   },
 
   TIMELINE: [
-    { age: "11–13 歲", text: "童軍支部；未足 14 歲——先專心童軍進度性獎章，日後可同步／對應 AYP。" },
+    { age: "11–13 歲", text: "童軍支部；未足 14 歲——先專心童軍進度性獎章，日後可同步完成／銜接 AYP（記住：開展日前嘅活動唔可以追溯計入）。" },
     { age: "13 歲", text: "符合特別安排可申請銅章（與適齡朋友小組進行）。" },
     { age: "14 歲", text: "一般可報銅章；考「童軍高級獎章」可同步完成 AYP 銅章。" },
     { age: "15 歲", text: "可報銀章（漸進或直接）。" },
@@ -389,7 +394,7 @@ const LOCALES = {
       { id: "done",    icon: "✅", label: "已完成低級章",    desc: "想升呢一級" },
       { id: "overseas",icon: "🌏", label: "海外獎章轉入",    desc: "愛丁堡公爵國際獎" },
       { id: "messy",   icon: "📂", label: "紀錄唔齊／唔見簿", desc: "唔知點算" },
-      { id: "sync",    icon: "🏅", label: "想用童軍章兌換",  desc: "同步／對應 AYP" },
+      { id: "sync",    icon: "🏅", label: "想用童軍章銜接",  desc: "同步完成／認可 AYP" },
     ],
     roleNote: {
       scout: "💡 你係童軍：考「童軍高級獎章」可同步完成 AYP 銅章——係最抵嘅路。",
@@ -463,23 +468,23 @@ const LOCALES = {
       warn: "AYP 以紀錄簿為準——唔見簿就盡快問原執行處，唔好等到轉處先搵。",
     },
     sync: {
-      icon: "🏅", pos: "你有童軍獎章／徽章，想知點兌換 AYP。",
-      route: "成個章同步完成＋單科對應，唔使做兩次",
+      icon: "🏅", pos: "你有童軍獎章／徽章，想知點樣銜接（認可）至 AYP。",
+      route: "成個章同步完成＋單科銜接認可，唔使做兩次",
       steps: [
         "成個章：童軍高級獎章→同步完成銅章；完成銅章後經總領袖獎章→漸進銀章（試行中）。",
-        "單科：童軍活動／徽章可對應服務／技能／康體／野外／團體生活科，但要正式申報。",
-        "辦理前問執行處支部組長＋睇執行處網頁最新指引，唔好假設自動兌換。",
+        "單科：童軍活動／徽章可銜接至服務／技能／康體／野外／團體生活科，但要正式申報。",
+        "辦理前問執行處支部組長＋睇執行處網頁最新指引，唔好假設自動認可。",
       ],
       who: "執行處支部組長", forms: "按執行處指引申報",
-      time: "跟你考童軍章嘅進度", link: "#f2", linkLabel: "睇兌換詳情",
-      warn: "「考咗童軍章」唔等於自動有 AYP——每科都要經 AYP 正式申報程序。",
+      time: "跟你考童軍章嘅進度", link: "#f2", linkLabel: "睇銜接詳情",
+      warn: "「考咗童軍章」唔等於自動有 AYP——每科都要經 AYP 正式申報、由支部組長／認可評核員核實；而且活動必須喺你正式開展該章級之後進行，唔可以追溯。",
     },
   },
 
   SECTION_TLDR: {
     f1: "已批核嘅科帶住走、唔使重考。下面計數機剔返已批核科，即知仲爭咩。",
-    f2: "成個章靠「同步完成」；散科靠「對應＋正式申報」。兩者都要經執行處，唔係自動。",
-    f3: "升團唔會清零 AYP 進度——記得更新所屬執行處支部資料，繼續做未完成嘅科。",
+    f2: "成個章靠「同步完成」；單科靠「銜接（認可）＋正式申報」。兩者都要經執行處／認可評核員核實，唔係自動，亦唔可以追溯開展日之前嘅活動。",
+    f3: "同一執行處內升團唔會清零 AYP 進度，只須更新支部資料；但由其他執行處轉入就必須辦 FORM AYP/09 轉處手續。",
     f4: "3 個 Check → 迎新講座 → AYP/01＋$45 → 攞紀錄簿 → 先開始計。跟住做就得。",
     f5: "轉出、補時數、紀錄問題等特殊情況——撳開你嗰張卡睇，唔使全部睇晒。",
   },
@@ -488,12 +493,13 @@ const LOCALES = {
     { label: "青少年活動署通告 P95/2026《香港青年獎勵計劃更新安排》", url: "https://www.scout.org.hk/uploads/tc/circulars/25989/p095-26.pdf" },
     { label: "P22/2026《新修訂支部訓練綱要》", url: "https://www.scout.org.hk/uploads/tc/circulars/23585/p022-26.pdf" },
     { label: "P96/2026《新修訂支部訓練綱要正式實施及發布安排》", url: "https://www.scout.org.hk/uploads/tc/circulars/25990/p096-26.pdf" },
+    { label: "香港童軍總會通告一覽（可按「青少年活動署」篩選最新 AYP 相關通告）", url: "https://www.scout.org.hk/tc/circulars-forms/circulars/index.html" },
     { label: "香港童軍總會 AYP 童軍執行處", url: "https://www.scout.org.hk/hkayp/" },
     { label: "《各支部進度性獎章及徽章與 AYP 參照表》P103/2016（舊綱要參考）", url: "https://www.scout.org.hk/article_attach/26708/P103-16.pdf" },
     { label: "香港青年獎勵計劃總辦事處 ayp.org.hk", url: "https://www.ayp.org.hk" },
   ],
 
-  DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條，以及「同步完成方案」等試行安排、單科對應、轉處細節，以 AYP 總辦事處及香港童軍總會（P95/2026 等通告、AYP 童軍執行處網頁）最新公開發表為準。所有操作細節隨時可能更新，辦理前請向你所屬執行處支部組長／童軍領袖核實。",
+  DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條，以及「同步完成方案」等試行安排、單科銜接／認可、轉處細節，以 AYP 總辦事處及香港童軍總會（P95/2026 等通告、AYP 童軍執行處網頁）最新公開發表為準。所有操作細節隨時可能更新，辦理前請向你所屬執行處支部組長／童軍領袖核實。另請注意：AYP 活動一律以正式開展日期起計，開展日之前嘅活動原則上不可追溯（No Backdating）。",
 
   UI: {
     heroLead: "🌱 <b>正常流程：由零開始考 AYP，跟住做就得。</b>唔肯定自己咩情況？㩒上面 ⚡精靈 答 2 條問題搵路。",
@@ -504,12 +510,12 @@ const LOCALES = {
     f1Title: "由其他執行處轉入童軍 → 仲有咩要考", f1Tag: "(功能①)",
     f1Hint: "撳「① 揀章級」＋「② 剔已批核嘅科」👇",
     ti1Summary: "我轉入後仲欠咩？", ti2Summary: "轉入童軍執行處嘅行政手續",
-    f2Title: "兌換情況", f2Tag: "(功能②)",
-    c2aSummary: "成個章兌換：童軍進度性獎章 同步完成 AYP",
-    c2bSummary: "單科對應參考：童軍活動 / 徽章 → AYP 各科",
+    f2Title: "銜接情況（同步完成／認可）", f2Tag: "(功能②)",
+    c2aSummary: "成個章銜接：童軍進度性獎章 同步完成 AYP",
+    c2bSummary: "單科銜接／認可參考：童軍活動 / 徽章 → AYP 各科",
     f3Title: "邊個支部考到咩・升團後要點做", f3Tag: "(功能③)",
     f31Summary: "童軍 → 深資 → 樂行：每階段 AYP 點跟進",
-    f3Warn: "AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 你升團唔會令 AYP 進度清零，但記得更新所屬執行處支部資料。",
+    f3Warn: "AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 只要一直喺香港童軍總會執行處，由童軍升深資、深資升樂行，紀錄簿同 AYP 進度照舊有效、唔會清零，升團後通知組長更新所屬執行處支部資料就得。⚠️ 但如果你係由「學校／其他執行處」轉入童軍總會執行處（例如中學畢業後喺旅團繼續做 AYP），就唔係更新資料咁簡單 —— 必須辦理「轉換執行處」行政手續（FORM AYP/09），紀錄先會正式帶過嚟。",
     f4Title: "各支部正常開始 AYP 嘅流程", f4Tag: "(功能④)",
     f41Summary: "由頭開始：通用步驟 ＋ 各支部可考咩",
     f5Title: "其他可能情況", f5Tag: "(功能⑤)",
@@ -561,6 +567,7 @@ const LOCALES = {
     quickNavAria: "底部工具列",
     topBarAria: "頂部指南列",
     unofficialBadge: "⚠️ 非官方整理，須向執行處組長核實",
+    backdateWarn: "🚫 <b>不可追溯（No Backdating）警告：</b>AYP 所有活動時數／次數，一律由你<b>正式開展該章級嘅日期</b>（成功報名、獲發紀錄簿）當日或之後起計。開展日之前嘅舊童軍活動、服務時數或徽章紀錄，原則上<b>唔可以追溯</b>計入 AYP —— 切勿以為攞住以前嘅童軍紀錄就可以直接申報。",
     verifyBeforeAct: "辦理前請核實：",
     openOfficialLink: "查看官方原文 →",
     syncPlanEffective: "生效：",
@@ -584,8 +591,8 @@ const LOCALES = {
   APP: {
     name: "AYP Scout Bridging Guide",
     shortName: "AYP Scout",
-    tagline: "Situation-led: Synchronise / Convert · Transfer bridging · Advancement · Standard process",
-    description: "Unofficial guide: Scout ↔ AYP simultaneous completion / direct mapping, transferring Operating Authority / advancing Sections, and the standard AYP process for each Section.",
+    tagline: "Situation-led: Simultaneous completion / Bridging · Transfer bridging · Advancement · Standard process",
+    description: "Unofficial guide: Scout ↔ AYP simultaneous completion / bridging recognition, transferring Operating Authority / advancing Sections, and the standard AYP process for each Section. All activities must take place after your official start date — no backdating.",
     baseline: "Data baseline: September 2026 (Circular P95/2026)",
   },
 
@@ -671,11 +678,11 @@ const LOCALES = {
       { scoutBadge: "Scout Advanced Award", scoutInfo: "Scout Section Progressive Badge", toAyp: "AYP Bronze Award", toAypLv: "bronze", note: "Achieving the Scout Advanced Award simultaneously completes the AYP Bronze Award." },
       { scoutBadge: "Chief Scout's Award", scoutInfo: "Requires AYP Bronze Award completed first", toAyp: "AYP Progressive Silver Award", toAypLv: "silver", note: "After completing Bronze, the Chief Scout's Award can simultaneously complete the AYP Progressive Silver Award." },
     ],
-    caveat: "This is a trial arrangement; detailed matching, participation, record-keeping and assessment guidance is published on the Scout Association of Hong Kong's \"AYP Scout Operating Authority\" webpage — please verify before proceeding.",
+    caveat: "This is a trial arrangement, not an automatic one-to-one 'badge-for-award' swap — each matched item still has to be signed off by your User Unit Leader / a recognised Assessor before it counts, and activities used for simultaneous completion must take place after your official start date for that Award level (no backdating). Detailed matching, participation, record-keeping and assessment guidance is published on the Scout Association of Hong Kong's \"AYP Scout Operating Authority\" webpage — please verify before proceeding.",
   },
 
   SECTION_MAP: {
-    header: "Scout activities/badges can be \"directly mapped\" to AYP Sections — i.e. the knowledge and skills already gained through Scout training can be used to report AYP, without repeating the same training and assessment. However, each Section must still meet AYP's hours/duration/assessment requirements and be formally reported.",
+    header: "Scout activities/badges can be \"bridged (recognised)\" towards AYP Sections — i.e. the knowledge and skills already gained through Scout training can be used to report AYP, without repeating the same training and assessment. However, each Section must still meet AYP's hours/duration/assessment requirements, be formally reported, and be signed off by your User Unit Leader / a recognised Assessor — it is not automatic.",
     rows: [
       { ayp: "Service Section", scout: "Scout First Aid / Life Saving Proficiency Badges, campsite service, Scout District/Region community service schemes, service awards, etc.", lv: "Bronze / Silver / Gold" },
       { ayp: "Skills Section", scout: "Scout Proficiency Badges (Communications, Computer, Handicraft, Language, Photography, Camping, Bird-watching, etc., depending on nature), Venture/Rover personal interest projects", lv: "Bronze / Silver / Gold" },
@@ -683,7 +690,7 @@ const LOCALES = {
       { ayp: "Adventurous Journey Section", scout: "Scout hiking/camping/expedition journeys — must be led and assessed by an Adventurous Journey Instructor recognised by the Scout Operating Authority", lv: "Bronze / Silver / Gold (journey length varies by level)" },
       { ayp: "Residential Project Section (Gold)", scout: "Large-scale Scout exchange / camp / Jamboree (organised by HQ / Region / District / Group, 5 days 4 nights or longer)", lv: "Gold" },
     ],
-    caveat: "The above is a reference direction for \"direct mapping\" only. The old official \"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" (P103/2016) is based on the old Training Scheme, which has been updated as the new scheme takes effect from 15 August 2026; the latest section mapping follows announcements from the Scout Operating Authority and the Simultaneous Completion Scheme. Never assume \"earning a Scout badge automatically equals AYP\" — every Section still needs to go through AYP's formal reporting process.",
+    caveat: "The above is a reference direction for \"bridging (recognition)\" only — not an automatic one-to-one conversion. The old official \"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" (P103/2016) is based on the old Training Scheme, which has been updated as the new scheme takes effect from 15 August 2026; the latest Section recognition follows announcements from the Scout Operating Authority and the Simultaneous Completion Scheme. Never assume \"earning a Scout badge automatically equals completing an AYP Section\" — every Section still needs to go through AYP's formal reporting process and be signed off by your User Unit Leader / a recognised Assessor.",
   },
 
   SECTION_PATHS: {
@@ -691,18 +698,18 @@ const LOCALES = {
       name: "Scout", age: "approx. 11–16", color: "#0a5c36",
       aypStart: "From age 13–14: aged 13+ may apply for Bronze under special arrangement, 14 generally eligible for Bronze, 15 eligible for Silver.",
       sync: "Simultaneous completion: earning the \"Scout Advanced Award\" simultaneously completes the AYP Bronze Award.",
-      toNext: "After advancing to Venture Scout: your AYP progress carries over (advancing doesn't reset it), so continue unfinished Sections; Venture Scout activities can be used for the remaining Sections (see Conversion).",
+      toNext: "After advancing to Venture Scout: your AYP progress carries over (advancing doesn't reset it), so continue unfinished Sections; Venture Scout activities can be used for the remaining Sections (see Bridging).",
     },
     venture: {
       name: "Venture Scout", age: "approx. 15–20", color: "#7a1f2b",
       aypStart: "You may start at Bronze/Silver/Gold depending on age (progressive or direct); Silver from 15, Gold from 16.",
-      sync: "Venture Scout \"activities/expeditions\" training can map to AYP Sections (see the Section mapping reference).",
-      toNext: "After advancing to Rover Scout: your AYP progress carries over; Rover Scout \"community service / personal interest / world awareness\" activities can map to higher-level AYP Sections.",
+      sync: "Venture Scout \"activities/expeditions\" training can be bridged (recognised) towards AYP Sections (see the item-by-item bridging table).",
+      toNext: "After advancing to Rover Scout: your AYP progress carries over; Rover Scout \"community service / personal interest / world awareness\" activities can be bridged towards higher-level AYP Sections.",
     },
     rover: {
       name: "Rover Scout", age: "approx. 18–25 (must join before turning 23)", color: "#0a3a5c",
       aypStart: "May choose Bronze / direct Silver / direct Gold as the starting level (depending on age); the latest date for entry is your 23rd birthday.",
-      sync: "Rover Scout service, personal interest, and international outlook activities (Jamborees, etc.) can map to AYP Sections, especially Service / Skills / Residential Project.",
+      sync: "Rover Scout service, personal interest, and international outlook activities (Jamborees, etc.) can be bridged (recognised) towards AYP Sections, especially Service / Skills / Residential Project.",
       toNext: "After Rover Scouts, you may become a leader/instructor; if you're a Young Leader with a valid appointment, you may enter Gold directly (see \"Other Situations\" case E).",
     },
   },
@@ -773,12 +780,13 @@ const LOCALES = {
   FAQ: [
     { q: "Do Scout members have to do AYP through the Scout Operating Authority?", a: "Not necessarily. You can do it through any recognised Operating Authority (schools, other uniformed groups, etc.). If you're at another Operating Authority and want to transfer into Scouts, see \"Transferring into Scouts\"; ask your Group/Unit Leader or User Unit Leader which option suits you." },
     { q: "Can I not apply for Bronze if I'm under 14?", a: "Bronze generally requires a minimum age of 14; however, Scout members aged 13+ may apply under a special arrangement (must be done together with an age-appropriate peer group). Activities done while underage can't count towards AYP." },
-    { q: "What's the difference between \"Simultaneous Completion\" and \"Direct Mapping\"?", a: "Simultaneous Completion = earning a specific Scout Award (Scout Advanced Award / Chief Scout's Award) directly and simultaneously completes a whole AYP Award level, without reporting by Section (currently on trial). Direct Mapping = you use the content of a Scout activity/badge to report a specific AYP Section, but it must still meet that Section's hours/duration/assessment requirements and be formally reported." },
+    { q: "What's the difference between \"Simultaneous Completion\" and \"Bridging (Recognition)\"?", a: "Simultaneous Completion = earning a specific Scout Award (Scout Advanced Award / Chief Scout's Award) simultaneously completes a whole AYP Award level, without reporting by Section (currently on trial; still subject to your Unit Leader's confirmation). Bridging (Recognition) = you use the content of a Scout activity/badge to report a specific AYP Section, but it must still meet that Section's hours/duration/assessment requirements, be verified by a recognised Assessor, and be formally reported. Neither is an automatic 'badge-for-award' swap." },
     { q: "If I transfer into Scouts from another Operating Authority, will what I've already done disappear?", a: "In principle, already-approved Sections carry over with the Record Book and don't need to be redone; use FORM AYP/09 together with your records to process the transfer. This is subject to verification by the Scout Operating Authority and both Unit Leaders." },
+    { q: "Can my previous Scout activities / service hours be backdated into AYP?", a: "In principle, no (No Backdating). AYP activities count only from the date you officially start that Award level (successful enrolment and issue of the Record Book); old activities, hours or badge records from before your start date cannot be backdated into the time and frequency requirements. So if you want to do AYP, enrol and start formally as early as possible — check with your User Unit Leader if in doubt." },
     { q: "Do I have to complete Silver before I can do Gold?", a: "Not necessarily. You can enter Gold directly (\"direct entry Gold\"), but you must meet the age requirement (generally 17½) and other conditions." },
     { q: "How much does the Record Book cost?", a: "From 1 April 2026, the application fee is HK$45." },
     { q: "By when must I complete everything?", a: "All Award levels must be completed before your 25th birthday; the latest date for entry is your 23rd birthday." },
-    { q: "Can the same activity be used for both a Scout Award and AYP at the same time?", a: "Yes — this is exactly the spirit of \"Simultaneous Completion / Direct Mapping\", using the same training/activity/assessment process. But it must still be formally reported to AYP — it's not automatic; ask your User Unit Leader for details." },
+    { q: "Can the same activity be used for both a Scout Award and AYP at the same time?", a: "Yes — this is exactly the spirit of \"Simultaneous Completion / Bridging (Recognition)\", using the same training/activity/assessment process. But it must still be formally reported to AYP — it's not automatic; ask your User Unit Leader for details." },
   ],
 
   GLOSSARY: [
@@ -790,6 +798,9 @@ const LOCALES = {
     { term: "Instructor/Assessor", def: "The person responsible for guiding and signing off your performance/progress in a Section; Adventurous Journey Section journeys must be led by a recognised Instructor/Assessor." },
     { term: "Main Section / Secondary Section", def: "Under the current system, direct entrants must choose a Main Section (higher hours) and Secondary Sections; those progressing from a lower Award don't need to split Main/Secondary." },
     { term: "Simultaneous Completion Scheme", def: "Earning the \"Scout Advanced Award\" simultaneously completes the AYP Bronze Award; after completing Bronze, the \"Chief Scout's Award\" simultaneously completes the Progressive Silver Award (trial from 15 August 2026)." },
+    { term: "Bridging (Recognition)", def: "The official concept of using Scout activities/badges towards an AYP Section — not a 'badge-for-award' swap: each Section must still meet the hours/duration/assessment requirements, be formally reported, and be verified by your User Unit Leader / a recognised Assessor." },
+    { term: "Start Date", def: "The date you are officially accepted into an Award level. All activities counting towards AYP must take place on or after the start date — earlier activities generally cannot be backdated (No Backdating)." },
+    { term: "Change of Operating Authority", def: "The formal administrative procedure for moving from one Operating Authority (e.g. a school) to another (e.g. the Scout Association), processed with FORM AYP/09. Note: this is different from advancing Scout Sections within the same Operating Authority — advancing Sections doesn't require a transfer, but changing Operating Authority always does." },
     { term: "Direct entry / Progressive", def: "Direct entry = skipping lower levels to go straight to Silver/Gold; Progressive = completing Bronze/Silver first before moving up." },
   ],
 
@@ -804,7 +815,7 @@ const LOCALES = {
 
   BOTTOM_ACTIONS: [
     { id: "sync-plan", icon: "📋", label: "Sync Plan", target: "bt-sync" },
-    { id: "conv-table", icon: "🔁", label: "Conversion", target: "bt-conv" },
+    { id: "conv-table", icon: "🔁", label: "Recognition", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "Start Forms", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "Find OA", target: "bt-oa" },
     { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
@@ -813,7 +824,7 @@ const LOCALES = {
   TOP_TABS: [
     { id: "quick", icon: "⚡", label: "Wizard", target: "quick" },
     { id: "f1", icon: "①", label: "Transfer", target: "f1" },
-    { id: "f2", icon: "②", label: "Convert", target: "f2" },
+    { id: "f2", icon: "②", label: "Bridging", target: "f2" },
     { id: "f3", icon: "③", label: "Advance", target: "f3" },
     { id: "f5", icon: "⑤", label: "More", target: "f5" },
   ],
@@ -825,6 +836,7 @@ const LOCALES = {
     points: [
       "Under the new scheme, individual training items within the Scout Advanced Award map to the requirements of the AYP Bronze Award's Service / Skills / Physical Recreation / Adventurous Journey Sections item-by-item — the whole Award does not take effect automatically as a single block.",
       "After completing Bronze, individual items of the Chief Scout's Award are likewise matched item-by-item to the AYP Progressive Silver Award.",
+      "The scheme is also subject to the start-date rule: activities used for simultaneous completion must take place after you officially start that AYP Award level (successful enrolment and issue of the Record Book); earlier Scout activities generally cannot be backdated.",
       "This arrangement is a \"trial\" (试行) and not yet finalised — the actual item-matching method, participation arrangements, and record-keeping/assessment guidance have not been fully published by the Association.",
       "The Scout Association of Hong Kong states that detailed matching content will be uploaded to the \"AYP Scout Operating Authority\" webpage — you must check the latest version before proceeding.",
     ],
@@ -834,9 +846,9 @@ const LOCALES = {
   },
 
   CONVERSION_TABLE: {
-    title: "Item-by-Item Conversion Table (Unofficial Compilation)",
+    title: "Item-by-Item Bridging Table (Unofficial Compilation)",
     unofficialTag: "Unofficial compilation — must be verified with your User Unit Leader",
-    intro: "The table below is compiled by us based on the 2016 official \"Conversion Table for Sectional Progressive Badges and Awards with AYP\" (P103/2016), with badges cancelled by the 15 August 2026 circular removed, to help User Unit Leaders see how Scout activities can map to AYP Sections. This is NOT an official table currently published by the Scout Association — it is our own reference version reworked from the old official table.",
+    intro: "The table below is compiled by us based on the 2016 official \"Conversion Table for Sectional Progressive Badges and Awards with AYP\" (P103/2016), with badges cancelled by the 15 August 2026 circular removed, to help User Unit Leaders see how Scout activities can be bridged (recognised) towards AYP Sections. Note the official terminology is \"simultaneous completion / bridging / recognition\" — not an automatic 'badge-for-award' swap: each Section must still be signed off by the User Unit Leader and a recognised Assessor, and meet AYP's hours/duration requirements. This is NOT an official table currently published by the Scout Association — it is our own reference version reworked from the old official table.",
     excludedNote: "The following 8 Proficiency Badges, cancelled under the \"Update of Sectional Proficiency Badges\" circular (P013/26, effective 15 August 2026), have been excluded: Animal Care Badge (Interest Group), Canoe/Kayak Racing Badge (Skill Group), Sailing Helmsman Badge (Skill Group), International Friendship Badge (Skill Group), Camp Management Badge (Service Group), Canoe Lifesaving Badge (Service Group), Animal Husbandry Badge (Service Group), Animal Husbandry Badge (Instructor Group). These badges are no longer issued by the Association; even if existing holders may still wear them, they should not be used to report new AYP items.",
     groups: [
       {
@@ -888,7 +900,7 @@ const LOCALES = {
         ],
       },
     ],
-    footnote: "Participants must complete at least two Sections before starting the next Award level's activities, and one of those Sections must be from the completed lower Award; the participant must also already exceed the minimum age for the higher Award level.",
+    footnote: "Participants must complete at least two Sections before starting the next Award level's activities, and one of those Sections must be from the completed lower Award; the participant must also already exceed the minimum age for the higher Award level. All activities used for bridging must take place after you officially start that Award level (Record Book issued) — no backdating.",
     officialSource: { label: "\"Conversion Table for Sectional Progressive Badges and Awards with AYP\" P103/2016 (old scheme, for compilation reference only)", url: "https://www.scout.org.hk/article_attach/26708/p103-16.pdf" },
     cancelSource: { label: "Circular P013/26 \"Update of Sectional Proficiency Badges\" (cancellation list effective 15 August 2026)", url: "https://www.scout.org.hk/uploads/tc/circulars/23262/p013-26.pdf" },
   },
@@ -924,7 +936,7 @@ const LOCALES = {
   },
 
   TIMELINE: [
-    { age: "11–13", text: "Scout Section; under 14 — focus first on Scout Progressive Badges, which can later be synchronised/mapped to AYP." },
+    { age: "11–13", text: "Scout Section; under 14 — focus first on Scout Progressive Badges, which can later be simultaneously completed / bridged towards AYP (remember: activities before your start date cannot be backdated)." },
     { age: "13", text: "May apply for Bronze under a special arrangement (done with an age-appropriate peer group)." },
     { age: "14", text: "Generally eligible for Bronze; earning the \"Scout Advanced Award\" simultaneously completes AYP Bronze." },
     { age: "15", text: "Eligible for Silver (progressive or direct)." },
@@ -950,7 +962,7 @@ const LOCALES = {
       { id: "done",    icon: "✅", label: "Completed a lower Award", desc: "Want to move up a level" },
       { id: "overseas",icon: "🌏", label: "Transferring from overseas", desc: "Duke of Edinburgh's International Award" },
       { id: "messy",   icon: "📂", label: "Records incomplete/lost", desc: "Not sure what to do" },
-      { id: "sync",    icon: "🏅", label: "Want to convert Scout badges", desc: "Sync/map to AYP" },
+      { id: "sync",    icon: "🏅", label: "Want to bridge Scout badges", desc: "Sync / recognition towards AYP" },
     ],
     roleNote: {
       scout: "💡 You're a Scout: earning the \"Scout Advanced Award\" simultaneously completes AYP Bronze — it's the best-value route.",
@@ -1024,23 +1036,23 @@ const LOCALES = {
       warn: "AYP relies on the Record Book — if it's lost, ask your original Operating Authority as soon as possible, don't wait until you transfer.",
     },
     sync: {
-      icon: "🏅", pos: "You have Scout Awards/badges and want to know how to convert them to AYP.",
-      route: "Whole-Award simultaneous completion + Section mapping, no need to do things twice",
+      icon: "🏅", pos: "You have Scout Awards/badges and want to know how they can be bridged (recognised) towards AYP.",
+      route: "Whole-Award simultaneous completion + Section bridging/recognition, no need to do things twice",
       steps: [
         "Whole Award: Scout Advanced Award → simultaneously completes Bronze; after completing Bronze, Chief Scout's Award → Progressive Silver (currently on trial).",
-        "By Section: Scout activities/badges can map to Service / Skills / Physical Recreation / Adventurous Journey / Residential Project Sections, but must be formally reported.",
-        "Before proceeding, ask your User Unit Leader and check the Operating Authority's website for the latest guidance — don't assume automatic conversion.",
+        "By Section: Scout activities/badges can be bridged towards Service / Skills / Physical Recreation / Adventurous Journey / Residential Project Sections, but must be formally reported.",
+        "Before proceeding, ask your User Unit Leader and check the Operating Authority's website for the latest guidance — don't assume automatic recognition.",
       ],
       who: "User Unit Leader", forms: "Report as guided by your Operating Authority",
-      time: "Follows your progress on the Scout Award", link: "#f2", linkLabel: "See conversion details",
-      warn: "\"Earning a Scout Award\" doesn't automatically mean you have AYP — every Section still needs to go through AYP's formal reporting process.",
+      time: "Follows your progress on the Scout Award", link: "#f2", linkLabel: "See bridging details",
+      warn: "\"Earning a Scout Award\" doesn't automatically mean you have AYP — every Section still needs to go through AYP's formal reporting process and be signed off by your Unit Leader / a recognised Assessor; and activities must take place after your official start date for that level — no backdating.",
     },
   },
 
   SECTION_TLDR: {
     f1: "Already-approved Sections carry over — no need to redo them. Use the calculator below to tick off approved Sections and see instantly what's left.",
-    f2: "A whole Award relies on \"Simultaneous Completion\"; individual Sections rely on \"Mapping + formal reporting\". Both must go through the Operating Authority — neither is automatic.",
-    f3: "Advancing Sections doesn't reset your AYP progress — remember to update your User Unit information and continue unfinished Sections.",
+    f2: "A whole Award relies on \"Simultaneous Completion\"; individual Sections rely on \"bridging (recognition) + formal reporting\". Both must be verified through the Operating Authority and recognised Assessors — neither is automatic, and activities before your start date can't be backdated.",
+    f3: "Advancing Sections within the same Operating Authority doesn't reset your AYP progress — just update your User Unit information; but moving in from another Operating Authority requires the FORM AYP/09 transfer procedure.",
     f4: "3 Checks → Orientation → AYP/01 + $45 → Get your Record Book → Only then start counting. Just follow these steps.",
     f5: "Special situations like transferring out, topping up hours, or record problems — open the card that matches you, no need to read them all.",
   },
@@ -1049,12 +1061,13 @@ const LOCALES = {
     { label: "Programme Branch Circular P95/2026 \"Updated Arrangements for The Hong Kong Award for Young People\"", url: "https://www.scout.org.hk/uploads/tc/circulars/25989/p095-26.pdf" },
     { label: "P22/2026 \"Newly Revised Sectional Training Scheme\"", url: "https://www.scout.org.hk/uploads/tc/circulars/23585/p022-26.pdf" },
     { label: "P96/2026 \"Formal Implementation and Publication Arrangements of the Newly Revised Sectional Training Scheme\"", url: "https://www.scout.org.hk/uploads/tc/circulars/25990/p096-26.pdf" },
+    { label: "Scout Association of Hong Kong — circulars listing (filter by Programme Branch for the latest AYP-related circulars)", url: "https://www.scout.org.hk/tc/circulars-forms/circulars/index.html" },
     { label: "Scout Association of Hong Kong — AYP Scout Operating Authority", url: "https://www.scout.org.hk/hkayp/" },
     { label: "\"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" P103/2016 (old scheme, for reference)", url: "https://www.scout.org.hk/article_attach/26708/P103-16.pdf" },
     { label: "The Hong Kong Award for Young People (Award Office) — ayp.org.hk", url: "https://www.ayp.org.hk" },
   ],
 
-  DISCLAIMER: "This app is an unofficial aid tool. The official rules of The Hong Kong Award for Young People, as well as trial arrangements such as the \"Simultaneous Completion Scheme\", Section mapping, and transfer details, are subject to the latest public announcements from the Award Office and the Scout Association of Hong Kong (circulars such as P95/2026, and the AYP Scout Operating Authority webpage). Operational details may be updated at any time — please verify with your User Unit Leader / Scout leader before proceeding.",
+  DISCLAIMER: "This app is an unofficial aid tool. The official rules of The Hong Kong Award for Young People, as well as trial arrangements such as the \"Simultaneous Completion Scheme\", Section bridging/recognition, and transfer details, are subject to the latest public announcements from the Award Office and the Scout Association of Hong Kong (circulars such as P95/2026, and the AYP Scout Operating Authority webpage). Operational details may be updated at any time — please verify with your User Unit Leader / Scout leader before proceeding. Note also that AYP activities count only from your official start date — activities before that date generally cannot be backdated (No Backdating).",
 
   UI: {
     heroLead: "🌱 <b>Standard process: start AYP from zero by following the action card.</b> Not sure which situation fits you? Tap ⚡ Wizard above and answer 2 questions.",
@@ -1065,12 +1078,12 @@ const LOCALES = {
     f1Title: "Transferring into Scouts from another Operating Authority → what's still needed", f1Tag: "(Feature ①)",
     f1Hint: "Click \"① Choose your Award level\" + \"② Tick off approved Sections\" 👇",
     ti1Summary: "What am I still missing after transferring in?", ti2Summary: "Administrative procedure for transferring into the Scout Operating Authority",
-    f2Title: "Conversion situations", f2Tag: "(Feature ②)",
-    c2aSummary: "Convert the whole Award: Scout Progressive Badge synchronised with AYP",
-    c2bSummary: "Section mapping reference: Scout activities / badges → AYP Sections",
+    f2Title: "Bridging situations (Simultaneous completion / Recognition)", f2Tag: "(Feature ②)",
+    c2aSummary: "Bridging the whole Award: Scout Progressive Badge synchronised with AYP",
+    c2bSummary: "Section bridging / recognition reference: Scout activities / badges → AYP Sections",
     f3Title: "Which Section leads to what, and what to do after advancing", f3Tag: "(Feature ③)",
     f31Summary: "Scout → Venture Scout → Rover Scout: how to follow up on AYP at each stage",
-    f3Warn: "AYP follows the \"participant\" and the \"Operating Authority\", not the Scout Section — advancing Sections won't reset your AYP progress, but remember to update your User Unit information.",
+    f3Warn: "AYP follows the \"participant\" and the \"Operating Authority\", not the Scout Section — as long as you stay within the Scout Association of Hong Kong's Operating Authority, advancing from Scouts to Venture Scouts to Rover Scouts keeps your Record Book and AYP progress valid (no reset); after advancing, just ask your Unit Leader to update your User Unit information. ⚠️ However, if you're moving in from a school/other Operating Authority (e.g. continuing AYP with a Scout Group after secondary school), it is NOT just an information update — you must complete the Change of Operating Authority procedure (FORM AYP/09) for your records to formally carry over.",
     f4Title: "Standard process for starting AYP in each Section", f4Tag: "(Feature ④)",
     f41Summary: "Starting from scratch: general steps + what each Section can take",
     f5Title: "Other possible situations", f5Tag: "(Feature ⑤)",
@@ -1122,6 +1135,7 @@ const LOCALES = {
     quickNavAria: "Bottom tool bar",
     topBarAria: "Top guide bar",
     unofficialBadge: "⚠️ Unofficial compilation — must be verified with your User Unit Leader",
+    backdateWarn: "🚫 <b>No Backdating warning:</b> AYP activity hours and frequency count only from your <b>official start date of that Award level</b> (successful enrolment and issue of the Record Book). Scout activities, service hours or badge records from before your start date generally <b>cannot be backdated</b> into AYP — never assume old Scout records can be reported automatically.",
     verifyBeforeAct: "Verify before acting: ",
     openOfficialLink: "View official source →",
     syncPlanEffective: "Effective: ",
