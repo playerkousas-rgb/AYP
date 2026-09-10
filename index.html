@@ -40,16 +40,11 @@ nav.toc{position:sticky;top:0;z-index:60;background:rgba(245,245,243,.97);border
 nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.84rem;text-decoration:none}
 nav.toc a:hover{background:#e4ece6}
 nav.toc a.hot{color:#8a5a00}
+nav.toc a.active{background:#0a5c36;color:#fff;text-decoration:none}
+html{scroll-padding-top:70px}
+section[id]{scroll-margin-top:64px}
 
-/* ── 快速跳轉列（頂部按鈕） ── */
-.quicknav{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:880px;margin:.6rem auto 0;padding:0 .9rem}
-.qn-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;border:2px solid #0a5c36;
-  border-radius:12px;background:#fff;color:#0a5c36;padding:.5rem .3rem;font-weight:700;font-size:.78rem;min-height:52px;cursor:pointer;text-decoration:none}
-.qn-btn .qn-ico{font-size:1.15rem}
-.qn-btn:hover{background:#e7f3ea;text-decoration:none}
-@media(min-width:640px){.quicknav{grid-template-columns:repeat(5,1fr)}}
-
-main{max-width:880px;margin:0 auto;padding:.3rem .9rem 3rem}
+main{max-width:880px;margin:0 auto;padding:.3rem .9rem calc(7rem + env(safe-area-inset-bottom))}
 .hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
 
 h2.sec{display:flex;align-items:center;gap:.6rem;color:#0a5c36;margin:2.1rem 0 .5rem;padding-left:.6rem;border-left:5px solid var(--scout-green);font-size:1.22rem}
@@ -145,12 +140,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:1rem .8rem 2
 .source-list{font-size:.85rem;color:#444;margin:.4rem 0;padding-left:1.2rem}
 .source-list li{margin:.25rem 0}
 
-/* ── 🧰 底部快速工具 ── */
-.bottom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.7rem 0}
-.bt-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;border:2px solid var(--line);
-  border-radius:14px;background:#fff;padding:.9rem .5rem;font-weight:700;font-size:.86rem;color:#0a5c36;cursor:pointer;text-align:center;min-height:76px}
-.bt-btn .bt-ico{font-size:1.5rem}
-.bt-btn:hover{border-color:#0a5c36;background:#f3f8f4}
+/* ── 🧰 快速工具內容卡（跳轉掣已抽走，由置底列常駐負責） ── */
 .unofficial-badge{display:inline-block;background:#fdecec;color:#7a1f2b;border:1px solid #f0b8b8;border-radius:8px;
   padding:.3rem .6rem;font-size:.8rem;font-weight:700;margin:.3rem 0}
 .conv-group{margin:1rem 0}
@@ -163,8 +153,6 @@ table.conv td.ayp-col{width:30%;font-weight:700;color:#0a5c36}
 .oa-links li{margin:.5rem 0}
 .oa-regions{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.9rem}
 .oa-regions td{border-bottom:1px solid var(--line);padding:.4rem .3rem}
-#footer-top-btn{margin:0 auto}
-
 /* ── ⚡ 5分鐘精靈 ── */
 #quick .wizard-shell{background:#fff;border:2px solid #0a5c36;border-radius:16px;padding:1rem;margin:.6rem 0}
 .wz-progress{height:8px;background:#e7ebe7;border-radius:6px;overflow:hidden;margin-bottom:.5rem}
@@ -209,11 +197,22 @@ ol.todo li.done label span:last-child{text-decoration:line-through}
 .ministep{flex:1 1 140px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.6rem;text-align:center;font-size:.85rem}
 .ministep b{display:block;font-size:1.3rem}
 
+/* ── 置底工具列（常駐） ── */
+.bottombar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.97);
+  border-top:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 -2px 12px rgba(0,0,0,.08);
+  display:grid;grid-template-columns:repeat(5,minmax(60px,120px));justify-content:center;gap:.15rem;
+  padding:.25rem .4rem calc(.3rem + env(safe-area-inset-bottom))}
+.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;
+  border:none;border-radius:12px;background:transparent;color:#0a5c36;
+  padding:.45rem .15rem;font-weight:700;font-size:.68rem;min-height:58px;cursor:pointer;text-decoration:none;line-height:1.25}
+.bb-btn .bb-ico{font-size:1.3rem;line-height:1}
+.bb-btn:hover{background:#e7f3ea;text-decoration:none}
+.bb-btn.active{background:#0a5c36;color:#fff}
+
 /* ── 浮動掣 ── */
 .fab{position:fixed;right:.9rem;z-index:80;border:none;border-radius:50px;font-weight:800;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;gap:.3rem}
-#fab-wizard{bottom:calc(1rem + env(safe-area-inset-bottom));background:#d4af37;color:#3d2f00;padding:.8rem 1.1rem;font-size:.95rem}
-#fab-top{bottom:calc(4.6rem + env(safe-area-inset-bottom));background:#0a5c36;color:#fff;width:48px;height:48px;
+#fab-top{bottom:calc(5.6rem + env(safe-area-inset-bottom));background:#0a5c36;color:#fff;width:48px;height:48px;
   justify-content:center;font-size:1.2rem;opacity:0;pointer-events:none;transition:opacity .25s}
 #fab-top.show{opacity:1;pointer-events:auto}
 
@@ -225,7 +224,7 @@ img{max-width:100%;height:auto}
 @media(max-width:640px){
   body{font-size:16px}
   header{padding-right:3.6rem}
-  main{padding:.3rem .7rem 6rem}
+  main{padding:.3rem .7rem calc(7rem + env(safe-area-inset-bottom))}
   .brand h1{font-size:1.15rem}
   .wz-grid{grid-template-columns:repeat(2,1fr)}
   .wz-opt{min-height:92px;font-size:.95rem;padding:.8rem .4rem}
@@ -244,11 +243,10 @@ img{max-width:100%;height:auto}
   .pn-body .lbl{min-width:76px}
 }
 @media(max-width:640px){
-  .quicknav{grid-template-columns:repeat(2,1fr)}
-  .bottom-grid{grid-template-columns:repeat(2,1fr)}
   table.conv{font-size:.84rem}
+  .bb-btn{font-size:.66rem;min-height:56px}
 }
-@media print{nav.toc,header::after,.fab,#fab-wizard,#fab-top,#fab-lang,.quicknav,.bottom-grid{display:none}}
+@media print{nav.toc,header::after,.fab,#fab-top,#fab-lang,.bottombar{display:none}}
 </style>
 </head>
 <body>
@@ -263,9 +261,7 @@ img{max-width:100%;height:auto}
   <span class="badge-base" id="baseline-foot"></span>
 </header>
 
-<div class="quicknav" id="quicknav" aria-label="快速跳去頁面各部分"></div>
-
-<nav class="toc">
+<nav class="toc" aria-label="頁面分類">
   <a href="#quick" class="hot" id="nav-quick">⚡ 5分鐘精靈</a>
   <a href="#beginner" id="nav-beginner">🌱 零基礎</a>
   <a href="#f1" id="nav-f1">① 轉入童軍</a>
@@ -400,8 +396,6 @@ img{max-width:100%;height:auto}
   <!-- ══ 🧰 快速工具（同步方案／兌換表／開展表格／查執行處） ══ -->
   <section id="bottom-tools">
     <h2 class="sec"><span class="n hot">🧰</span> <span id="bottom-tools-title">快速工具</span> <small id="bottom-tools-sub">同步方案・單項兌換表・開展表格・查執行處</small></h2>
-    <div class="bottom-grid" id="bottom-grid"></div>
-
     <div class="part" data-key="bt-sync">
       <summary><span class="ico">📋</span> <span id="bt-sync-summary">同步方案（試行）</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="bt-sync-body"></div></div>
@@ -440,11 +434,8 @@ img{max-width:100%;height:auto}
   </div>
 </main>
 
-<footer>
-  <button class="btn ghost" id="footer-top-btn">↑ <span id="footer-top-label">返頁頂</span></button>
-</footer>
+<nav class="bottombar" id="bottombar" aria-label="快速跳去頁面各部分"></nav>
 
-<button class="fab" id="fab-wizard" aria-label="去 5 分鐘精靈">⚡ 5分鐘</button>
 <button class="fab" id="fab-top" aria-label="返頂部">↑</button>
 
 <script src="data.js"></script>

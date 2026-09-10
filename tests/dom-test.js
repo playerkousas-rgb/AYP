@@ -78,16 +78,30 @@ ok("TLDR 5 段有內容", window.document.querySelectorAll("[data-tldr]").length
   Array.from(window.document.querySelectorAll("[data-tldr]")).every(el => el.textContent.length > 10));
 ok("版權 Scout System", /Scout System/.test(window.document.getElementById("copyright-line").textContent));
 ok("版權只出現一次 Scout System", (window.document.getElementById("copyright-line").textContent.match(/Scout System/g) || []).length === 1);
-ok("浮動掣存在", has("fab-wizard") && has("fab-top"));
+ok("置底列＋返頂掣存在", has("bottombar") && has("fab-top"));
 ok("fab-lang 喺 header 入面（頂部）", !!window.document.querySelector("header #fab-lang"));
 ok("fab-lang 唔喺底部浮動掣區", !window.document.querySelector("#fab-top ~ #fab-lang, #fab-wizard ~ #fab-lang"));
 
-// 🧭 頂部快速跳轉列
-ok("quicknav 存在且有 4-5 個掣", window.document.querySelectorAll("#quicknav .qn-btn").length >= 4 &&
-  window.document.querySelectorAll("#quicknav .qn-btn").length <= 5);
+// 🧭 置頂分類列（常駐）
+ok("置頂分類列有 9 個分類", window.document.querySelectorAll("nav.toc a").length === 9);
+ok("置頂分類列喺 header 下面", (() => {
+  const header = window.document.querySelector("header");
+  const toc = window.document.querySelector("nav.toc");
+  return header && toc && (header.nextElementSibling === toc);
+})());
 
-// 🧰 底部快速工具（同步方案／單項兌換表／開展表格／查執行處）
-ok("底部工具 4 個掣", window.document.querySelectorAll("#bottom-grid .bt-btn").length === 4);
+// 📌 置底工具列（常駐）：5 分鐘精靈／轉入試算／兌換／升團／快速工具
+ok("置底列有 4-5 個掣", window.document.querySelectorAll("#bottombar .bb-btn").length >= 4 &&
+  window.document.querySelectorAll("#bottombar .bb-btn").length <= 5);
+ok("置底列掣可撳唔報錯", (() => {
+  const btn = window.document.querySelector("#bottombar [data-bb='f1']");
+  if (!btn) return false;
+  btn.click();
+  return true;
+})());
+
+// 🧰 快速工具內容卡（同步方案／單項兌換表／開展表格／查執行處；頁身跳轉掣已抽走）
+ok("快速工具 4 張內容卡", window.document.querySelectorAll("#bottom-tools .part").length === 4);
 ok("同步方案有試行字眼", /試行|trial/i.test(window.document.getElementById("bt-sync-body").textContent));
 ok("同步方案有通知組長警語", /通知.*組長|inform.*Unit Leader/i.test(window.document.getElementById("bt-sync-body").textContent));
 ok("單項兌換表有非官方標籤", /非官方整理|Unofficial compilation/.test(window.document.getElementById("bt-conv-body").textContent));
@@ -100,13 +114,8 @@ ok("單項兌換表無列出已取消嘅獨木舟國際賽艇章項目（表格�
 ok("AYP開展表格含 AYP/01", /AYP\/01/.test(window.document.getElementById("bt-forms-body").textContent));
 ok("AYP開展表格有下載連結", window.document.querySelectorAll("#bt-forms-body a[href*='form01.pdf']").length >= 1);
 ok("查執行處有 uul_list.pdf 連結", window.document.querySelectorAll("#bt-oa-body a[href*='uul_list.pdf']").length >= 1);
-ok("底部工具掣可撳並跳去對應卡", (() => {
-  const btn = window.document.querySelector("#bottom-grid [data-bt-target='bt-sync']");
-  const target = window.document.querySelector(".part[data-key='bt-sync']");
-  if (!btn || !target) return false;
-  btn.click();
-  return true;
-})());
+ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-forms", "bt-oa"].every(k =>
+  !!window.document.querySelector(".part[data-key='" + k + "']")));
 
 // 互動：精靈揀身份+情況 → 出行動卡
 {

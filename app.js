@@ -122,13 +122,11 @@
     if (startFormsAction) setText("bt-forms-summary", startFormsAction.label);
     setText("bt-oa-summary", L().OA_LOOKUP.title);
 
-    const quicknavAria = $("#quicknav"); if (quicknavAria) quicknavAria.setAttribute("aria-label", t.quickNavAria);
+    const bottombar = $("#bottombar"); if (bottombar) bottombar.setAttribute("aria-label", t.quickNavAria);
 
-    const fabW = $("#fab-wizard"); if (fabW) { fabW.setAttribute("aria-label", t.fabWizardAria); fabW.textContent = t.fabWizardText; }
     const fabT = $("#fab-top"); if (fabT) fabT.setAttribute("aria-label", t.fabTopAria);
     const langBtn = $("#fab-lang");
     if (langBtn) { langBtn.setAttribute("aria-label", t.langToggleAria); langBtn.textContent = L().switchToLabel; }
-    const footerTopLabel = $("#footer-top-label"); if (footerTopLabel) footerTopLabel.textContent = t.backToTop2;
 
     const b = $("#baseline-foot"); if (b) b.textContent = app.baseline;
     const cbApp = $("#copyright-app-line"); if (cbApp) cbApp.textContent = app.name;
@@ -374,15 +372,15 @@
   }
 
   /* ════════════════════════════════════════════
-     頂部快速跳轉列
+     置底工具列（常駐）：5 分鐘精靈／轉入試算／兌換／升團／快速工具
      ════════════════════════════════════════════ */
-  function renderQuickNav() {
-    const c = $("#quicknav"); if (!c) return;
+  function renderBottomBar() {
+    const c = $("#bottombar"); if (!c) return;
     const QN = L().QUICKNAV;
     c.innerHTML = QN.map(q =>
-      `<a class="qn-btn" href="#${esc(q.id)}" data-qn="${esc(q.id)}"><span class="qn-ico">${q.icon}</span><span>${esc(q.label)}</span></a>`
+      `<a class="bb-btn" href="#${esc(q.id)}" data-bb="${esc(q.id)}"><span class="bb-ico">${q.icon}</span><span>${esc(q.label)}</span></a>`
     ).join("");
-    $$("[data-qn]", c).forEach(a => a.addEventListener("click", e => {
+    $$("[data-bb]", c).forEach(a => a.addEventListener("click", e => {
       const id = a.getAttribute("href").slice(1);
       const el = document.getElementById(id);
       if (el) { e.preventDefault(); smoothTo(el); }
@@ -393,21 +391,8 @@
      🧰 底部快速工具：同步方案／單項兌換表／開展表格／查執行處
      ════════════════════════════════════════════ */
   function renderBottomTools() {
-    const grid = $("#bottom-grid");
-    const BA = L().BOTTOM_ACTIONS;
-    if (grid) {
-      grid.innerHTML = BA.map(b =>
-        `<button class="bt-btn" data-bt-target="${esc(b.target)}"><span class="bt-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
-      ).join("");
-      $$("[data-bt-target]", grid).forEach(btn => btn.addEventListener("click", () => {
-        const key = btn.dataset.btTarget;
-        const target = document.querySelector(`.part[data-key="${key}"]`);
-        if (target) {
-          if (typeof target.open === "boolean") target.open = true;
-          smoothTo(target);
-        }
-      }));
-    }
+    // 註：舊版頁身 #bottom-grid 跳轉掣已抽走（縮短頁面），導航改由
+    // 置頂分類列＋置底工具列常駐負責。此處只渲染 4 張工具內容卡。
 
     // 同步方案
     const sync = $("#bt-sync-body");
@@ -488,18 +473,38 @@
       window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
       top.addEventListener("click", smoothTop);
     }
-    const wiz = $("#fab-wizard");
-    if (wiz) wiz.addEventListener("click", () => {
-      const el = document.getElementById("quick");
-      smoothTo(el);
-    });
     const lang = $("#fab-lang");
     if (lang) lang.addEventListener("click", () => {
       const next = LANG === "zh-HK" ? "en" : "zh-HK";
       setLang(next);
     });
-    const footerTop = $("#footer-top-btn");
-    if (footerTop) footerTop.addEventListener("click", smoothTop);
+  }
+
+  /* ═══════════ 置頂分類列＋置底列：目前位置高亮（scrollspy） ═══════════ */
+  const SPY_ORDER = ["quick", "beginner", "f1", "f2", "f3", "f4", "f5", "res", "comp", "bottom-tools"];
+  function updateSpy() {
+    const y = (window.scrollY || 0) + 140;
+    let cur = SPY_ORDER[0];
+    SPY_ORDER.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= y) cur = id;
+    });
+    $$("nav.toc a").forEach(a => {
+      const id = a.getAttribute("href").slice(1);
+      a.classList.toggle("active", id === cur || (cur === "bottom-tools" && id === "comp"));
+    });
+    $$("#bottombar [data-bb]").forEach(a => {
+      a.classList.toggle("active", a.dataset.bb === cur);
+    });
+  }
+  let spyTick = false;
+  function bindSpy() {
+    window.addEventListener("scroll", () => {
+      if (spyTick) return; spyTick = true;
+      const raf = window.requestAnimationFrame || (fn => setTimeout(fn, 60));
+      raf(() => { spyTick = false; updateSpy(); });
+    }, { passive: true });
+    updateSpy();
   }
 
   /* ═══════════ 常規區塊 ═══════════ */
@@ -546,7 +551,7 @@
   /* ═══════════ 全部重繪（切換語言時用） ═══════════ */
   function renderAll() {
     renderStaticText();
-    renderQuickNav();
+    renderBottomBar();
     renderWizard();
     renderBeginner();
     renderTldr();
@@ -562,6 +567,7 @@
     renderBottomTools();
     renderCommon();
     bindPartToggles();
+    updateSpy();
   }
 
   /* ═══════════ 初始 ═══════════ */
@@ -569,5 +575,6 @@
     renderAll();
     bindFloatBtns();
     bindToc();
+    bindSpy();
   });
 })();
