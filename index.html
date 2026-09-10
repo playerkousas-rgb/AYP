@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AYP童軍">
-<meta name="description" content="非官方指南：童軍 ↔ AYP 同步完成／直接對應、轉執行處／升支部接駁、各支部正常流程。">
+<meta name="description" content="非官方指南：童軍 ↔ AYP 同步完成／銜接認可、轉執行處／升支部接駁、各支部正常流程。所有活動須於正式開展日後進行，不可追溯。">
 <meta name="copyright" content="© 2026 Scout System · 資料版權屬香港青年獎勵計劃及香港童軍總會所有">
 <style>
 :root{
@@ -91,6 +91,8 @@ h2.sec small{font-size:.78rem;color:var(--muted);font-weight:400}
 .part-body p{margin:.5rem 0}
 .tip{background:#eaf4ee;border-left:4px solid #2f9e63;padding:.5rem .7rem;border-radius:6px;margin:.5rem 0}
 .warn{background:#fdecec;border-left:4px solid #d64541;padding:.5rem .7rem;border-radius:6px;margin:.6rem 0;font-size:.9rem}
+.warn.backdate{border:2px solid #d64541;border-left-width:6px;border-radius:12px;padding:.75rem .9rem;font-size:.93rem}
+.warn.backdate b{color:#a12622}
 .ok-box{background:#eaf7ec;border-left:4px solid #2f9e63;padding:.6rem .8rem;border-radius:6px;margin:.6rem 0}
 ol.steps{padding-left:1.35rem;margin:.5rem 0}
 ol.steps li{margin:.35rem 0}
@@ -111,7 +113,7 @@ ol.steps li{margin:.35rem 0}
 .gap .sec-ico{font-size:1.3rem}
 .gap .gap-scout{margin:.2rem 0 0;color:#333;font-size:.9rem}
 
-/* ── 功能2 兌換 ── */
+/* ── 功能2 銜接（同步完成／認可） ── */
 .sync-stage{margin:.7rem 0}
 .sync-row{display:flex;align-items:stretch;gap:.5rem;flex-wrap:wrap}
 .sync-box{flex:1 1 180px;border:2px solid #d9d9d9;border-radius:12px;padding:.6rem;text-align:center;background:#fff}
@@ -289,7 +291,7 @@ img{max-width:100%;height:auto}
   <div class="brand">
     <img src="assets/logo-192.png" alt="標誌">
     <div><h1 id="app-title">AYP 童軍接駁指南</h1>
-      <p class="tag" id="app-tag">情況主導：同步／兌換・轉處接駁・升團・正常流程</p></div>
+      <p class="tag" id="app-tag">情況主導：同步完成／銜接・轉處接駁・升團・正常流程</p></div>
   </div>
   <span class="badge-base" id="baseline-foot"></span>
 </header>
@@ -372,6 +374,7 @@ img{max-width:100%;height:auto}
   <section class="guideview" id="f1">
     <h2 class="sec"><span class="n hot">1</span> <span id="f1-title">由其他執行處轉入童軍 → 仲有咩要考</span> <small id="f1-tag">(功能①)</small></h2>
     <div class="tldr" data-tldr="f1"></div>
+    <div class="warn backdate" id="f1-backdate"></div>
     <p id="f1-hint">撳「① 揀章級」＋「② 剔已批核嘅科」👇</p>
     <div class="part" data-key="ti-1" open>
       <summary><span class="ico">🧮</span> <span id="ti1-summary">我轉入後仲欠咩？</span><span class="chev">▾</span></summary>
@@ -383,17 +386,18 @@ img{max-width:100%;height:auto}
     </div>
   </section>
 
-  <!-- ══ 功能2：兌換 ══ -->
+  <!-- ══ 功能2：銜接（同步完成／認可） ══ -->
   <section class="guideview" id="f2">
-    <h2 class="sec"><span class="n hot">2</span> <span id="f2-title">兌換情況</span> <small id="f2-tag">(功能②)</small></h2>
+    <h2 class="sec"><span class="n hot">2</span> <span id="f2-title">銜接情況（同步完成／認可）</span> <small id="f2-tag">(功能②)</small></h2>
     <div class="tldr" data-tldr="f2"></div>
+    <div class="warn backdate" id="f2-backdate"></div>
 
     <div class="part" data-key="c2a">
-      <summary><span class="ico">🏅</span> <span id="c2a-summary">成個章兌換：童軍進度性獎章 同步完成 AYP</span><span class="chev">▾</span></summary>
+      <summary><span class="ico">🏅</span> <span id="c2a-summary">成個章銜接：童軍進度性獎章 同步完成 AYP</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-sync"></div></div>
     </div>
     <div class="part" data-key="c2b">
-      <summary><span class="ico">🧩</span> <span id="c2b-summary">單科對應參考：童軍活動 / 徽章 → AYP 各科</span><span class="chev">▾</span></summary>
+      <summary><span class="ico">🧩</span> <span id="c2b-summary">單科銜接／認可參考：童軍活動 / 徽章 → AYP 各科</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-map"></div></div>
     </div>
   </section>
@@ -406,7 +410,7 @@ img{max-width:100%;height:auto}
       <summary><span class="ico">🪜</span> <span id="f31-summary">童軍 → 深資 → 樂行：每階段 AYP 點跟進</span><span class="chev">▾</span></summary>
       <div class="part-body">
         <div id="paths"></div>
-        <div class="warn" id="f3-warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 你升團唔會令 AYP 進度清零，但記得更新所屬執行處支部資料。</div>
+        <div class="warn" id="f3-warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 只要一直喺香港童軍總會執行處，升團唔會令 AYP 進度清零，升團後更新所屬執行處支部資料就得；但由學校／其他執行處轉入，就必須辦理「轉換執行處」手續（FORM AYP/09）。</div>
       </div>
     </div>
   </section>
@@ -453,7 +457,7 @@ img{max-width:100%;height:auto}
   <section class="toolview" id="view-bt-conv">
     <div class="tv-head">
       <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-conv-summary">單項兌換表（非官方整理）</b>
+      <b id="bt-conv-summary">單項銜接表（非官方整理）</b>
     </div>
     <div id="bt-conv-body"></div>
   </section>

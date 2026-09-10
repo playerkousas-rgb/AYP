@@ -55,6 +55,19 @@ ok("extra-list-2 有卡", window.document.querySelectorAll("#extra-list-2 .part"
   ok("剔一科後缺失減少", after < before);
 }
 
+// 🚫 不可追溯（No Backdating）警告
+ok("轉入頁頂有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("f1-backdate").textContent));
+ok("銜接頁頂有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("f2-backdate").textContent));
+ok("轉入計數機內有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("ti-inner").textContent));
+ok("同步方案工具有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("bt-sync-body").textContent));
+ok("單項銜接表工具有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("bt-conv-body").textContent));
+ok("單項銜接表強調須評核員核實", /評核員|Assessor/.test(window.document.getElementById("bt-conv-body").textContent));
+ok("升團警告區分轉執行處手續（AYP/09）", /FORM AYP\/09/.test(window.document.getElementById("f3-warn").textContent));
+ok("官方來源有總會通告一覽連結", window.document.querySelectorAll("#sources a[href*='circulars-forms/circulars']").length >= 1);
+ok("FAQ 有不可追溯條目", /追溯/.test(window.document.getElementById("faq-list").textContent));
+ok("辭典有開展日條目", /開展日|Start Date/.test(window.document.getElementById("glossary-list").textContent));
+ok("辭典有銜接（認可）條目", /銜接（認可）|Bridging \(Recognition\)/.test(window.document.getElementById("glossary-list").textContent));
+
 // 其他區塊
 ok("faq 有內容", innerLen("faq-list") > 50);
 ok("glossary 有內容", innerLen("glossary-list") > 50);
@@ -202,11 +215,11 @@ ok("5 工具 view 返正常流程掣齊全", ["view-bt-sync", "view-bt-conv", "v
   ok("切去英文後 html lang=en", window.document.documentElement.lang === "en");
   ok("切去英文後置底變 5 工具英文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
-    return /Sync Plan/.test(txt) && /Conversion/.test(txt) && /Start Forms/.test(txt) && /Find OA/.test(txt) && /FAQ/.test(txt);
+    return /Sync Plan/.test(txt) && /Recognition/.test(txt) && /Start Forms/.test(txt) && /Find OA/.test(txt) && /FAQ/.test(txt);
   })());
   ok("切去英文後置頂變 5 情景英文標籤", (() => {
     const txt = window.document.getElementById("topbar").textContent;
-    return /Wizard/.test(txt) && /Transfer/.test(txt) && /Convert/.test(txt) && /Advance/.test(txt) && /More/.test(txt);
+    return /Wizard/.test(txt) && /Transfer/.test(txt) && /Bridging/.test(txt) && /Advance/.test(txt) && /More/.test(txt);
   })());
   ok("切去英文後行動卡＋FAQ＋返正常流程變英文", /You're at the starting point/.test(window.document.getElementById("normal-card").textContent) &&
     /FAQ & Glossary/.test(window.document.getElementById("bt-faq-summary").textContent) &&
@@ -217,16 +230,17 @@ ok("5 工具 view 返正常流程掣齊全", ["view-bt-sync", "view-bt-conv", "v
   ok("切去英文後同步方案變英文", /Simultaneous Completion Scheme/.test(window.document.getElementById("bt-sync-summary").textContent));
   ok("切去英文後兌換表變英文", /Unofficial compilation/.test(window.document.getElementById("bt-conv-body").textContent));
   ok("切去英文後查執行處變英文", /Find Your Operating Authority/.test(window.document.getElementById("bt-oa-summary").textContent));
+  ok("切去英文後不可追溯警告變英文", /official start date/i.test(window.document.getElementById("f1-backdate").textContent));
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切返中文後標題變回中文", /AYP 童軍接駁指南/.test(window.document.title));
   ok("切返中文後同步方案變回中文", /同步完成方案/.test(window.document.getElementById("bt-sync-summary").textContent));
   ok("切返中文後置底變回 5 工具中文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
-    return /同步方案/.test(txt) && /單項兌換表/.test(txt) && /開展表格/.test(txt) && /查執行處/.test(txt) && /FAQ/.test(txt);
+    return /同步方案/.test(txt) && /單項銜接表/.test(txt) && /開展表格/.test(txt) && /查執行處/.test(txt) && /FAQ/.test(txt);
   })());
   ok("切返中文後置頂變回情景中文標籤", (() => {
     const txt = window.document.getElementById("topbar").textContent;
-    return /精靈/.test(txt) && /轉入/.test(txt) && /兌換/.test(txt) && /升團/.test(txt) && /其他/.test(txt);
+    return /精靈/.test(txt) && /轉入/.test(txt) && /銜接/.test(txt) && /升團/.test(txt) && /其他/.test(txt);
   })());
   ok("切返中文後返正常流程變回中文", /返正常流程/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
 }

@@ -81,6 +81,10 @@
     setText("f2-title", t.f2Title); setText("f2-tag", t.f2Tag);
     setText("c2a-summary", t.c2aSummary); setText("c2b-summary", t.c2bSummary);
 
+    // 🚫 不可追溯（No Backdating）警告 — 轉入／銜接頁頂部常駐
+    const bd1 = document.getElementById("f1-backdate"); if (bd1) bd1.innerHTML = t.backdateWarn;
+    const bd2 = document.getElementById("f2-backdate"); if (bd2) bd2.innerHTML = t.backdateWarn;
+
     setText("f3-title", t.f3Title); setText("f3-tag", t.f3Tag);
     setText("f31-summary", t.f31Summary);
     setText("f3-warn", "⚠️ " + t.f3Warn);
@@ -133,6 +137,7 @@
     const secName = k => FS[k].name;
     step.innerHTML = `
       <div class="ti">
+        <div class="warn backdate">${t.backdateWarn}</div>
         <div class="ti-tools">
           <div class="ti-lev">
             <b>${esc(t.pickLevel)}</b>
@@ -177,7 +182,7 @@
   }
 
   /* ════════════════════════════════════════════
-     功能 2：兌換
+     功能 2：銜接（同步完成／認可）
      ════════════════════════════════════════════ */
   function renderConvertSync() {
     const c = $("#convert-sync"); if (!c) return;
@@ -458,7 +463,7 @@
   }
 
   /* ════════════════════════════════════════════
-     🧰 底部快速工具：同步方案／單項兌換表／開展表格／查執行處
+     🧰 底部快速工具：同步方案／單項銜接表／開展表格／查執行處
      ════════════════════════════════════════════ */
   function renderBottomTools() {
     // 4 個工具整版 view 嘅內容（由置底 4 格直達，主頁唔再顯示）。
@@ -468,6 +473,7 @@
     if (sync) {
       const SP = L().SYNC_PLAN, t = UI();
       sync.innerHTML = `
+        <div class="warn backdate">${t.backdateWarn}</div>
         <div class="unofficial-badge">⚠️ ${esc(SP.effective)}</div>
         <p>${esc(SP.summary)}</p>
         <ol class="steps">${SP.points.map(p => `<li>${esc(p)}</li>`).join("")}</ol>
@@ -476,11 +482,12 @@
         <p><a href="${esc(SP.source.url)}" target="_blank" rel="noopener">${esc(SP.source.label)} — ${esc(t.openOfficialLink)}</a></p>`;
     }
 
-    // 單項兌換表
+    // 單項銜接表
     const conv = $("#bt-conv-body");
     if (conv) {
       const CT = L().CONVERSION_TABLE, t = UI();
       conv.innerHTML = `
+        <div class="warn backdate">${t.backdateWarn}</div>
         <div class="unofficial-badge">${esc(CT.unofficialTag)}</div>
         <p>${esc(CT.intro)}</p>
         <div class="warn">${esc(CT.excludedNote)}</div>
