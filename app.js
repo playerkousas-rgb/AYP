@@ -51,15 +51,7 @@
     });
   }
 
-  /* ═══════════ 頂層 TOC 導航 / 靜態文字 ═══════════ */
-  function bindToc() {
-    $$("nav.toc a[href^='#']").forEach(a => a.addEventListener("click", e => {
-      const id = a.getAttribute("href").slice(1);
-      const el = document.getElementById(id);
-      if (el) { e.preventDefault(); smoothTo(el); }
-    }));
-  }
-
+  /* ═══════════ 靜態文字 ═══════════ */
   function renderStaticText() {
     const t = UI(); const app = L().APP;
     document.documentElement.lang = L().htmlLang;
@@ -71,11 +63,6 @@
     setText("app-tag", app.tagline);
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", app.description);
-
-    // nav
-    const navMap = { "nav-quick": t.nav.quick, "nav-beginner": t.nav.beginner, "nav-f1": t.nav.f1, "nav-f2": t.nav.f2,
-      "nav-f3": t.nav.f3, "nav-f4": t.nav.f4, "nav-f5": t.nav.f5, "nav-res": t.nav.res, "nav-comp": t.nav.comp };
-    Object.keys(navMap).forEach(id => setText(id, navMap[id]));
 
     setHtml("hero-lead", t.heroLead);
     setHtml("mini1", t.mini1); setHtml("mini2", t.mini2); setHtml("mini3", t.mini3);
@@ -114,13 +101,12 @@
 
     setText("sources-title", t.sourcesTitle);
 
-    setText("bottom-tools-title", t.bottomToolsTitle);
-    setText("bottom-tools-sub", t.bottomToolsSub);
     setText("bt-sync-summary", L().SYNC_PLAN.title);
     setText("bt-conv-summary", L().CONVERSION_TABLE.title);
     const startFormsAction = L().BOTTOM_ACTIONS.find(b => b.id === "start-forms");
     if (startFormsAction) setText("bt-forms-summary", startFormsAction.label);
     setText("bt-oa-summary", L().OA_LOOKUP.title);
+    $$(".tv-back-label").forEach(el => { el.textContent = t.backHome; });
 
     const bottombar = $("#bottombar"); if (bottombar) bottombar.setAttribute("aria-label", t.quickNavAria);
 
@@ -372,82 +358,43 @@
   }
 
   /* ════════════════════════════════════════════
-     置底工具列（常駐）：5 分鐘精靈／轉入試算／兌換／升團／快速工具
+     置底 4 格工具（常駐）：㩒即成版切換去該工具 view
      ════════════════════════════════════════════ */
   function renderBottomBar() {
     const c = $("#bottombar"); if (!c) return;
-    const QN = L().QUICKNAV;
-    c.innerHTML = QN.map(q =>
-      `<a class="bb-btn" href="#${esc(q.id)}" data-bb="${esc(q.id)}"><span class="bb-ico">${q.icon}</span><span>${esc(q.label)}</span></a>`
+    const BA = L().BOTTOM_ACTIONS;
+    c.innerHTML = BA.map(b =>
+      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
     ).join("");
-    $$("[data-bb]", c).forEach(a => a.addEventListener("click", e => {
-      e.preventDefault();
-      const id = a.getAttribute("href").slice(1);
-      if (id === "bottom-tools") { openSheet(); return; }
-      const el = document.getElementById(id);
-      if (el) smoothTo(el);
+    $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.tv;
+      showView((document.body.dataset.view || "home") === key ? "home" : key);
     }));
+    syncViewUI();
   }
 
   /* ════════════════════════════════════════════
-     🧰 快速工具彈層：一㩒即見 4 個選項，撳選項直達＋打開對應卡
+     APP 式整版 view 切換：home ＋ 4 工具
      ════════════════════════════════════════════ */
-  function renderSheet() {
-    const grid = $("#sheet-grid"); if (!grid) return;
-    const BA = L().BOTTOM_ACTIONS, t = UI();
-    const title = $("#sheet-title");
-    if (title) title.textContent = "🧰 " + t.bottomToolsTitle;
-    const sub = $("#sheet-sub");
-    if (sub) sub.textContent = t.bottomToolsSub;
-    const sheet = $("#tool-sheet");
-    if (sheet) sheet.setAttribute("aria-label", t.bottomToolsTitle);
-    const x = $("#sheet-x");
-    if (x) x.setAttribute("aria-label", t.closeSheet || "Close");
-    grid.innerHTML = BA.map(b =>
-      `<button class="sheet-opt" data-sheet-target="${esc(b.target)}"><span class="so-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
-    ).join("");
-    $$("[data-sheet-target]", grid).forEach(btn => btn.addEventListener("click", () => {
-      const key = btn.dataset.sheetTarget;
-      closeSheet();
-      const target = document.querySelector(`.part[data-key="${key}"]`);
-      if (target) {
-        if (typeof target.open === "boolean") target.open = true;
-        smoothTo(target);
-        target.classList.add("flash");
-        setTimeout(() => target.classList.remove("flash"), 1350);
-      }
-    }));
+  function showView(key) {
+    document.body.dataset.view = (key === "home") ? "home" : key;
+    syncViewUI();
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {}
+    try { window.scrollTo(0, 0); } catch (e) {}
   }
-  function openSheet() {
-    const sheet = $("#tool-sheet"), bd = $("#sheet-backdrop");
-    if (sheet) sheet.classList.add("open");
-    if (bd) bd.classList.add("open");
-    $$("#bottombar [data-bb]").forEach(a => a.classList.toggle("active", a.dataset.bb === "bottom-tools"));
-    try { document.body.style.overflow = "hidden"; } catch (e) {}
+  function syncViewUI() {
+    const cur = document.body.dataset.view || "home";
+    $$("#bottombar [data-tv]").forEach(a => a.classList.toggle("active", a.dataset.tv === cur));
   }
-  function closeSheet() {
-    const sheet = $("#tool-sheet"), bd = $("#sheet-backdrop");
-    if (sheet) sheet.classList.remove("open");
-    if (bd) bd.classList.remove("open");
-    try { document.body.style.overflow = ""; } catch (e) {}
-    updateSpy();
-  }
-  function bindSheet() {
-    const bd = $("#sheet-backdrop");
-    if (bd) bd.addEventListener("click", closeSheet);
-    const x = $("#sheet-x");
-    if (x) x.addEventListener("click", closeSheet);
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape") closeSheet();
-    });
+  function bindViews() {
+    $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("home")));
   }
 
   /* ════════════════════════════════════════════
      🧰 底部快速工具：同步方案／單項兌換表／開展表格／查執行處
      ════════════════════════════════════════════ */
   function renderBottomTools() {
-    // 註：舊版頁身 #bottom-grid 跳轉掣已抽走（縮短頁面），導航改由
-    // 置頂分類列＋置底工具列常駐負責。此處只渲染 4 張工具內容卡。
+    // 4 個工具整版 view 嘅內容（由置底 4 格直達，主頁唔再顯示）。
 
     // 同步方案
     const sync = $("#bt-sync-body");
@@ -535,33 +482,6 @@
     });
   }
 
-  /* ═══════════ 置頂分類列＋置底列：目前位置高亮（scrollspy） ═══════════ */
-  const SPY_ORDER = ["quick", "beginner", "f1", "f2", "f3", "f4", "f5", "res", "comp", "bottom-tools"];
-  function updateSpy() {
-    const y = (window.scrollY || 0) + 140;
-    let cur = SPY_ORDER[0];
-    SPY_ORDER.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.offsetTop <= y) cur = id;
-    });
-    $$("nav.toc a").forEach(a => {
-      const id = a.getAttribute("href").slice(1);
-      a.classList.toggle("active", id === cur || (cur === "bottom-tools" && id === "comp"));
-    });
-    $$("#bottombar [data-bb]").forEach(a => {
-      a.classList.toggle("active", a.dataset.bb === cur);
-    });
-  }
-  let spyTick = false;
-  function bindSpy() {
-    window.addEventListener("scroll", () => {
-      if (spyTick) return; spyTick = true;
-      const raf = window.requestAnimationFrame || (fn => setTimeout(fn, 60));
-      raf(() => { spyTick = false; updateSpy(); });
-    }, { passive: true });
-    updateSpy();
-  }
-
   /* ═══════════ 常規區塊 ═══════════ */
   function renderCommon() {
     const t = UI();
@@ -607,7 +527,6 @@
   function renderAll() {
     renderStaticText();
     renderBottomBar();
-    renderSheet();
     renderWizard();
     renderBeginner();
     renderTldr();
@@ -623,15 +542,13 @@
     renderBottomTools();
     renderCommon();
     bindPartToggles();
-    updateSpy();
+    syncViewUI();
   }
 
   /* ═══════════ 初始 ═══════════ */
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindFloatBtns();
-    bindToc();
-    bindSpy();
-    bindSheet();
+    bindViews();
   });
 })();

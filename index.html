@@ -27,7 +27,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans H
 a{color:#0a5c36;font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
 
 header{background:linear-gradient(135deg,#0a5c36,#064020);color:#fff;padding:1.3rem 1rem 1.6rem;text-align:center;position:relative}
-#fab-lang{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.95);color:#0a5c36;border:2px solid #fff;
+#fab-lang{position:fixed;top:calc(.7rem + env(safe-area-inset-top));right:.7rem;background:rgba(255,255,255,.95);color:#0a5c36;border:2px solid #fff;
   width:44px;height:44px;justify-content:center;font-size:.82rem;padding:0;z-index:70}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--bronze) 0 33%,var(--silver) 33% 66%,var(--gold) 66% 100%)}
 .brand{display:flex;align-items:center;justify-content:center;gap:.8rem}
@@ -36,13 +36,20 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;ba
 .brand .tag{margin:.3rem 0 0;font-size:.85rem;opacity:.92}
 .badge-base{display:inline-block;margin-top:.6rem;background:rgba(255,255,255,.16);padding:.15rem .7rem;border-radius:20px;font-size:.74rem}
 
-nav.toc{position:sticky;top:0;z-index:60;background:rgba(245,245,243,.97);border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:.1rem;padding:.3rem .5rem;backdrop-filter:blur(4px)}
-nav.toc a{white-space:nowrap;padding:.4rem .7rem;border-radius:8px;color:#0a5c36;font-weight:600;font-size:.84rem;text-decoration:none}
-nav.toc a:hover{background:#e4ece6}
-nav.toc a.hot{color:#8a5a00}
-nav.toc a.active{background:#0a5c36;color:#fff;text-decoration:none}
-html{scroll-padding-top:70px}
-section[id]{scroll-margin-top:64px}
+/* ── APP 式整版 view：主頁＋4 工具，body[data-view] 切換 ── */
+.toolview{display:none}
+body[data-view="bt-sync"] #view-bt-sync,body[data-view="bt-conv"] #view-bt-conv,
+body[data-view="bt-forms"] #view-bt-forms,body[data-view="bt-oa"] #view-bt-oa{display:block}
+body[data-view="bt-sync"] main>:not(.toolview),body[data-view="bt-conv"] main>:not(.toolview),
+body[data-view="bt-forms"] main>:not(.toolview),body[data-view="bt-oa"] main>:not(.toolview){display:none}
+.tv-head{position:sticky;top:.5rem;z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);padding:.5rem .6rem;margin:.6rem 0 .7rem;display:flex;align-items:center;gap:.6rem}
+.tv-head b{color:#0a5c36;font-size:.98rem;line-height:1.4}
+.tv-back{flex:none;border:2px solid #0a5c36;background:#fff;color:#0a5c36;border-radius:10px;
+  padding:.35rem .6rem;font-weight:700;font-size:.85rem;cursor:pointer;min-height:44px;white-space:nowrap}
+.tv-back:hover{background:#e7f3ea}
+html{scroll-padding-top:16px}
+section[id]{scroll-margin-top:12px}
 
 main{max-width:880px;margin:0 auto;padding:.3rem .9rem calc(7rem + env(safe-area-inset-bottom))}
 .hero-note{background:#fff7e6;border:1px solid #f2e0b0;border-radius:12px;padding:.8rem 1rem;margin:.8rem 0;font-size:.95rem}
@@ -200,7 +207,7 @@ ol.todo li.done label span:last-child{text-decoration:line-through}
 /* ── 置底工具列（常駐） ── */
 .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.97);
   border-top:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 -2px 12px rgba(0,0,0,.08);
-  display:grid;grid-template-columns:repeat(5,minmax(60px,120px));justify-content:center;gap:.15rem;
+  display:grid;grid-template-columns:repeat(4,minmax(70px,140px));justify-content:center;gap:.15rem;
   padding:.25rem .4rem calc(.3rem + env(safe-area-inset-bottom))}
 .bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;
   border:none;border-radius:12px;background:transparent;color:#0a5c36;
@@ -208,27 +215,6 @@ ol.todo li.done label span:last-child{text-decoration:line-through}
 .bb-btn .bb-ico{font-size:1.3rem;line-height:1}
 .bb-btn:hover{background:#e7f3ea;text-decoration:none}
 .bb-btn.active{background:#0a5c36;color:#fff}
-
-/* ── 🧰 快速工具彈層（一㩒即見 4 選項） ── */
-.sheet-backdrop{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .22s}
-.sheet-backdrop.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:120;background:#fff;border-radius:18px 18px 0 0;
-  box-shadow:0 -6px 24px rgba(0,0,0,.25);max-width:640px;margin:0 auto;
-  padding:.6rem .9rem calc(1rem + env(safe-area-inset-bottom));
-  transform:translateY(105%);transition:transform .25s ease-out}
-.sheet.open{transform:translateY(0)}
-.sheet-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
-.sheet-head b{font-size:1rem;color:#0a5c36}
-.sheet-head small{display:block;color:var(--muted);font-weight:400;font-size:.75rem}
-.sheet-x{margin-left:auto;border:2px solid var(--line);background:#fff;border-radius:10px;min-width:44px;min-height:44px;
-  font-size:1rem;cursor:pointer;color:#555}
-.sheet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem}
-.sheet-opt{display:flex;align-items:center;gap:.6rem;border:2px solid var(--line);border-radius:14px;background:#fff;
-  padding:.75rem .7rem;font-weight:700;font-size:.88rem;color:#0a5c36;cursor:pointer;text-align:left;min-height:64px}
-.sheet-opt .so-ico{font-size:1.5rem;flex:none}
-.sheet-opt:hover{border-color:#0a5c36;background:#f3f8f4}
-.part.flash{animation:partFlash 1.3s ease}
-@keyframes partFlash{0%,45%{box-shadow:0 0 0 3px rgba(212,175,55,.95);border-color:#d4af37}100%{box-shadow:none}}
 
 /* ── 浮動掣 ── */
 .fab{position:fixed;right:.9rem;z-index:80;border:none;border-radius:50px;font-weight:800;cursor:pointer;
@@ -258,8 +244,6 @@ img{max-width:100%;height:auto}
   .joinrow{flex-direction:column;gap:.1rem}
   .joinrow b{min-width:0}
   table.map,table.forms{font-size:.9rem}
-  nav.toc a{padding:.55rem .8rem;font-size:.9rem;scroll-snap-align:start}
-  nav.toc{scroll-snap-type:x proximity}
   h2.sec{font-size:1.1rem}
   .pn-body .lbl{min-width:76px}
 }
@@ -267,10 +251,10 @@ img{max-width:100%;height:auto}
   table.conv{font-size:.84rem}
   .bb-btn{font-size:.66rem;min-height:56px}
 }
-@media print{nav.toc,header::after,.fab,#fab-top,#fab-lang,.bottombar,.sheet,.sheet-backdrop{display:none}}
+@media print{header::after,.fab,#fab-top,#fab-lang,.bottombar{display:none}}
 </style>
 </head>
-<body>
+<body data-view="home">
 
 <header>
   <button class="fab" id="fab-lang" aria-label="切換語言 / Switch language">EN</button>
@@ -281,18 +265,6 @@ img{max-width:100%;height:auto}
   </div>
   <span class="badge-base" id="baseline-foot"></span>
 </header>
-
-<nav class="toc" aria-label="頁面分類">
-  <a href="#quick" class="hot" id="nav-quick">⚡ 5分鐘精靈</a>
-  <a href="#beginner" id="nav-beginner">🌱 零基礎</a>
-  <a href="#f1" id="nav-f1">① 轉入童軍</a>
-  <a href="#f2" id="nav-f2">② 兌換</a>
-  <a href="#f3" id="nav-f3">③ 升團接駁</a>
-  <a href="#f4" id="nav-f4">④ 正常流程</a>
-  <a href="#f5" class="hot" id="nav-f5">⑤ 其他情況</a>
-  <a href="#res" id="nav-res">時間表/表格/辭典</a>
-  <a href="#comp" id="nav-comp">完成後</a>
-</nav>
 
 <main>
 
@@ -414,28 +386,37 @@ img{max-width:100%;height:auto}
     </div>
   </section>
 
-  <!-- ══ 🧰 快速工具（同步方案／兌換表／開展表格／查執行處） ══ -->
-  <section id="bottom-tools">
-    <h2 class="sec"><span class="n hot">🧰</span> <span id="bottom-tools-title">快速工具</span> <small id="bottom-tools-sub">同步方案・單項兌換表・開展表格・查執行處</small></h2>
-    <div class="part" data-key="bt-sync">
-      <summary><span class="ico">📋</span> <span id="bt-sync-summary">同步方案（試行）</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-sync-body"></div></div>
+  <!-- ══ 🧰 4 個工具整版 view（置底直達，主頁唔再顯示） ══ -->
+  <section class="toolview" id="view-bt-sync">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返主頁</span></button>
+      <b id="bt-sync-summary">同步完成方案（試行安排）</b>
     </div>
+    <div id="bt-sync-body"></div>
+  </section>
 
-    <div class="part" data-key="bt-conv">
-      <summary><span class="ico">🔁</span> <span id="bt-conv-summary">單項兌換表</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-conv-body"></div></div>
+  <section class="toolview" id="view-bt-conv">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返主頁</span></button>
+      <b id="bt-conv-summary">單項兌換表（非官方整理）</b>
     </div>
+    <div id="bt-conv-body"></div>
+  </section>
 
-    <div class="part" data-key="bt-forms">
-      <summary><span class="ico">📝</span> <span id="bt-forms-summary">AYP開展表格</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-forms-body"></div></div>
+  <section class="toolview" id="view-bt-forms">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返主頁</span></button>
+      <b id="bt-forms-summary">AYP開展表格</b>
     </div>
+    <div id="bt-forms-body"></div>
+  </section>
 
-    <div class="part" data-key="bt-oa">
-      <summary><span class="ico">🏢</span> <span id="bt-oa-summary">查執行處／組長</span><span class="chev">▾</span></summary>
-      <div class="part-body"><div id="bt-oa-body"></div></div>
+  <section class="toolview" id="view-bt-oa">
+    <div class="tv-head">
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返主頁</span></button>
+      <b id="bt-oa-summary">查執行處 / 執行處支部組長</b>
     </div>
+    <div id="bt-oa-body"></div>
   </section>
 
   <!-- 來源 -->
@@ -455,16 +436,7 @@ img{max-width:100%;height:auto}
   </div>
 </main>
 
-<div class="sheet-backdrop" id="sheet-backdrop"></div>
-<div class="sheet" id="tool-sheet" role="dialog" aria-modal="true" aria-label="快速工具">
-  <div class="sheet-head">
-    <div><b id="sheet-title">🧰 快速工具</b><small id="sheet-sub"></small></div>
-    <button class="sheet-x" id="sheet-x" aria-label="關閉">✕</button>
-  </div>
-  <div class="sheet-grid" id="sheet-grid"></div>
-</div>
-
-<nav class="bottombar" id="bottombar" aria-label="快速跳去頁面各部分"></nav>
+<nav class="bottombar" id="bottombar" aria-label="底部工具列"></nav>
 
 <button class="fab" id="fab-top" aria-label="返頂部">↑</button>
 

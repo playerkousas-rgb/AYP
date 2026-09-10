@@ -13,6 +13,7 @@ const { window } = dom;
 let errors = [];
 window.addEventListener("error", (e) => errors.push(e.message));
 try { window.eval(dataJs + "\n;" + appJs); } catch (e) { errors.push("eval error: " + e.message); }
+window.scrollTo = function () {};
 window.document.dispatchEvent(new window.Event("DOMContentLoaded", { bubbles: true }));
 
 function has(id) { return !!window.document.getElementById(id); }
@@ -82,49 +83,36 @@ ok("置底列＋返頂掣存在", has("bottombar") && has("fab-top"));
 ok("fab-lang 喺 header 入面（頂部）", !!window.document.querySelector("header #fab-lang"));
 ok("fab-lang 唔喺底部浮動掣區", !window.document.querySelector("#fab-top ~ #fab-lang, #fab-wizard ~ #fab-lang"));
 
-// 🧭 置頂分類列（常駐）
-ok("置頂分類列有 9 個分類", window.document.querySelectorAll("nav.toc a").length === 9);
-ok("置頂分類列喺 header 下面", (() => {
-  const header = window.document.querySelector("header");
-  const toc = window.document.querySelector("nav.toc");
-  return header && toc && (header.nextElementSibling === toc);
-})());
+// 📱 APP 式整版 view：主頁順序睇＋置底 4 工具直達
+ok("無置頂跳轉列（主頁順序睇）", !window.document.querySelector("nav.toc"));
+ok("預設係主頁 view", (window.document.body.dataset.view || "home") === "home");
+ok("4 個工具整版 view", window.document.querySelectorAll(".toolview").length === 4);
 
-// 📌 置底工具列（常駐）：5 分鐘精靈／轉入試算／兌換／升團／快速工具
-ok("置底列有 4-5 個掣", window.document.querySelectorAll("#bottombar .bb-btn").length >= 4 &&
-  window.document.querySelectorAll("#bottombar .bb-btn").length <= 5);
-ok("置底列掣可撳唔報錯", (() => {
-  const btn = window.document.querySelector("#bottombar [data-bb='f1']");
+// 📌 置底 4 格工具：㩒即成版切換
+ok("置底 4 格工具掣", window.document.querySelectorAll("#bottombar .bb-btn").length === 4);
+ok("撳置底格切到工具 view", (() => {
+  const btn = window.document.querySelector("#bottombar [data-tv='bt-conv']");
   if (!btn) return false;
   btn.click();
-  return true;
+  return window.document.body.dataset.view === "bt-conv" && btn.classList.contains("active");
 })());
-
-// 🧰 快速工具彈層：一㩒彈 4 選項
-ok("工具彈層有 4 個選項", window.document.querySelectorAll("#tool-sheet .sheet-opt").length === 4);
-ok("撳置底「快速工具」會彈層", (() => {
-  const btn = window.document.querySelector("#bottombar [data-bb='bottom-tools']");
-  if (!btn) return false;
+ok("撳返同一格返主頁", (() => {
+  const btn = window.document.querySelector("#bottombar [data-tv='bt-conv']");
   btn.click();
-  return window.document.getElementById("tool-sheet").classList.contains("open");
+  return window.document.body.dataset.view === "home" && !btn.classList.contains("active");
 })());
-ok("撳彈層選項會閂層＋閃目標卡", (() => {
-  const opt = window.document.querySelector("#tool-sheet [data-sheet-target='bt-sync']");
-  const target = window.document.querySelector(".part[data-key='bt-sync']");
-  if (!opt || !target) return false;
-  opt.click();
-  return !window.document.getElementById("tool-sheet").classList.contains("open") && target.classList.contains("flash");
-})());
-ok("撳 Esc 會閂彈層", (() => {
-  window.document.querySelector("#bottombar [data-bb='bottom-tools']").click();
-  const sheet = window.document.getElementById("tool-sheet");
-  if (!sheet.classList.contains("open")) return false;
-  window.document.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
-  return !sheet.classList.contains("open");
+ok("工具 view 內返主頁掣", (() => {
+  window.document.querySelector("#bottombar [data-tv='bt-oa']").click();
+  const back = window.document.querySelector("#view-bt-oa [data-tv-home]");
+  if (!back) return false;
+  back.click();
+  return window.document.body.dataset.view === "home";
 })());
 
-// 🧰 快速工具內容卡（同步方案／單項兌換表／開展表格／查執行處；頁身跳轉掣已抽走）
-ok("快速工具 4 張內容卡", window.document.querySelectorAll("#bottom-tools .part").length === 4);
+// 🧰 4 工具 view 內容（同步方案／單項兌換表／開展表格／查執行處）
+ok("4 工具 view 標題齊全", ["bt-sync-summary", "bt-conv-summary", "bt-forms-summary", "bt-oa-summary"].every(id => {
+  const el = window.document.getElementById(id); return el && el.textContent.length > 2;
+}));
 ok("同步方案有試行字眼", /試行|trial/i.test(window.document.getElementById("bt-sync-body").textContent));
 ok("同步方案有通知組長警語", /通知.*組長|inform.*Unit Leader/i.test(window.document.getElementById("bt-sync-body").textContent));
 ok("單項兌換表有非官方標籤", /非官方整理|Unofficial compilation/.test(window.document.getElementById("bt-conv-body").textContent));
@@ -137,8 +125,8 @@ ok("單項兌換表無列出已取消嘅獨木舟國際賽艇章項目（表格�
 ok("AYP開展表格含 AYP/01", /AYP\/01/.test(window.document.getElementById("bt-forms-body").textContent));
 ok("AYP開展表格有下載連結", window.document.querySelectorAll("#bt-forms-body a[href*='form01.pdf']").length >= 1);
 ok("查執行處有 uul_list.pdf 連結", window.document.querySelectorAll("#bt-oa-body a[href*='uul_list.pdf']").length >= 1);
-ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-forms", "bt-oa"].every(k =>
-  !!window.document.querySelector(".part[data-key='" + k + "']")));
+ok("4 工具 view 返主頁掣齊全", ["view-bt-sync", "view-bt-conv", "view-bt-forms", "view-bt-oa"].every(id =>
+  !!window.document.querySelector("#" + id + " [data-tv-home]")));
 
 // 互動：精靈揀身份+情況 → 出行動卡
 {
@@ -161,11 +149,12 @@ ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-fo
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切去英文後標題變英文", /AYP Scout Bridging Guide/.test(window.document.title));
   ok("切去英文後 html lang=en", window.document.documentElement.lang === "en");
-  ok("切去英文後置底列變短標籤", (() => {
+  ok("切去英文後置底變 4 工具英文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
-    return /Wizard/.test(txt) && /Calc/.test(txt) && /Convert/.test(txt) && /Bridge/.test(txt) && !/5-Min Wizard/.test(txt);
+    return /Sync Plan/.test(txt) && /Conversion/.test(txt) && /Start Forms/.test(txt) && /Find OA/.test(txt);
   })());
-  ok("切去英文後彈層標題變英文", /Quick Tools/.test(window.document.getElementById("sheet-title").textContent));
+  ok("切去英文後工具 view 標題＋返主頁變英文", /Simultaneous Completion Scheme/.test(window.document.getElementById("bt-sync-summary").textContent) &&
+    /Home/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
   ok("切去英文後 TI 有內容", innerLen("ti-inner") > 150);
   ok("切去英文後 FAQ 有內容", innerLen("faq-list") > 50);
   ok("切去英文後 disclaimer 有內容", innerLen("disclaimer") > 50);
@@ -175,7 +164,10 @@ ok("4 張工具卡齊全（sync/conv/forms/oa）", ["bt-sync", "bt-conv", "bt-fo
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切返中文後標題變回中文", /AYP 童軍接駁指南/.test(window.document.title));
   ok("切返中文後同步方案變回中文", /同步完成方案/.test(window.document.getElementById("bt-sync-summary").textContent));
-  ok("切返中文後置底列變回中文", /5分鐘精靈/.test(window.document.getElementById("bottombar").textContent));
+  ok("切返中文後置底變回 4 工具中文標籤", (() => {
+    const txt = window.document.getElementById("bottombar").textContent;
+    return /同步方案/.test(txt) && /單項兌換表/.test(txt) && /開展表格/.test(txt) && /查執行處/.test(txt);
+  })());
 }
 
 let pass = 0, fail = 0;
