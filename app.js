@@ -7,6 +7,7 @@
   const $$ = (s, p) => Array.from((p || document).querySelectorAll(s));
   const OPEN_KEY = "ayp-guide-open-v2";
   const LANG_KEY = "ayp-guide-lang-v1";
+  const FIRST_VISIT_KEY = "ayp-guide-first-visit-v1";
 
   function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
   function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
@@ -366,7 +367,7 @@
     const c = $("#topbar"); if (!c) return;
     const TT = L().TOP_TABS;
     c.innerHTML = TT.map(q =>
-      `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${q.icon}</span><span class="tb-lbl">${esc(q.label)}</span></button>`
     ).join("");
     $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tt;
@@ -382,7 +383,7 @@
     const c = $("#bottombar"); if (!c) return;
     const BA = L().BOTTOM_ACTIONS;
     c.innerHTML = BA.map(b =>
-      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
+      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span class="bb-lbl">${esc(b.label)}</span></button>`
     ).join("");
     $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tv;
@@ -612,10 +613,21 @@
     syncViewUI();
   }
 
-  /* ═══════════ 初始 ═══════════ */
+  /* ═══════════ 初始＋首次自動進精靈 ═══════════ */
+  function isFirstVisit() {
+    try { return !localStorage.getItem(FIRST_VISIT_KEY); } catch (e) { return false; }
+  }
+  function markVisited() {
+    try { localStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (e) {}
+  }
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindFloatBtns();
     bindViews();
+    // 第一次進APP自動進入精靈了解需要
+    if (isFirstVisit()) {
+      showView("quick");
+      markVisited();
+    }
   });
 })();
