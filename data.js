@@ -246,17 +246,15 @@ const LOCALES = {
     { id: "conv-table", icon: "🔁", label: "單項兌換表", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "AYP開展表格", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "查執行處／組長", target: "bt-oa" },
+    { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
   ],
 
   TOP_TABS: [
-    { id: "home", icon: "🏠", label: "主頁", target: "home" },
-    { id: "beginner", icon: "🌱", label: "零基礎", target: "beginner" },
+    { id: "quick", icon: "⚡", label: "精靈", target: "quick" },
     { id: "f1", icon: "①", label: "轉入", target: "f1" },
     { id: "f2", icon: "②", label: "兌換", target: "f2" },
     { id: "f3", icon: "③", label: "升團", target: "f3" },
-    { id: "f4", icon: "④", label: "流程", target: "f4" },
     { id: "f5", icon: "⑤", label: "其他", target: "f5" },
-    { id: "res", icon: "📚", label: "資源", target: "res" },
   ],
 
   SYNC_PLAN: {
@@ -498,8 +496,8 @@ const LOCALES = {
   DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條，以及「同步完成方案」等試行安排、單科對應、轉處細節，以 AYP 總辦事處及香港童軍總會（P95/2026 等通告、AYP 童軍執行處網頁）最新公開發表為準。所有操作細節隨時可能更新，辦理前請向你所屬執行處支部組長／童軍領袖核實。",
 
   UI: {
-    heroLead: "⚡ <b>趕時間？5 分鐘搞掂：</b>下面答 2 條問題 → 即出你嘅行動卡。有時間先慢慢睇詳細版。",
-    mini1: "① 答 2 條問題<br>出行動卡", mini2: "② 做 3 個 Check<br>問領袖＋查支部", mini3: "③ 跟行動卡做<br>剔住完成進度",
+    heroLead: "🌱 <b>正常流程：由零開始考 AYP，跟住做就得。</b>唔肯定自己咩情況？㩒上面 ⚡精靈 答 2 條問題搵路。",
+    mini1: "① 跟行動卡做<br>逐步剔進度", mini2: "② 展開詳情睇<br>Check/步驟/時間表", mini3: "③ 交表問組長<br>用下面工具查",
     quickTitle: "5 分鐘精靈：你咩情況？下一步做咩？",
     beginnerTitle: "零基礎 3 個 Check", beginnerSub: "當你咩都唔知——點查、問邊個、睇咩，逐步教",
     beginnerIntro: "無論你行邊條路，都要先過呢 3 關：宣誓未？有冇支部？組長啱唔啱？每張卡都有「照讀對白」俾你問領袖。",
@@ -516,11 +514,10 @@ const LOCALES = {
     f41Summary: "由頭開始：通用步驟 ＋ 各支部可考咩",
     f5Title: "其他可能情況", f5Tag: "(功能⑤)",
     f5Sub: "反方向／補充情況",
-    resTitle: "幾時起步・表格・辭典・FAQ",
     resTlSummary: "幾時起步時間表",
-    resFmSummary: "常用表格一覽", resFmNote: "實際表格以童軍執行處網頁及青少年活動署最新版本為準。",
     resGlSummary: "術語小辭典",
     resFaqSummary: "常見問題 FAQ",
+    faqViewTitle: "FAQ＋術語辭典",
     compTitle: "完成之後：領獎／證書", compSummary: "完成章級後點領獎？",
     sourcesTitle: "官方資料來源",
     footerLine1: "AYP 童軍接駁指南 ·",
@@ -573,7 +570,7 @@ const LOCALES = {
     conversionCancelSource: "取消名單來源：",
     formsDownload: "下載表格",
     oaRegionsTitle: "地域辦事處電話",
-    backHome: "返主頁",
+    backHome: "返正常流程",
   },
 },
 
@@ -810,17 +807,15 @@ const LOCALES = {
     { id: "conv-table", icon: "🔁", label: "Conversion", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "Start Forms", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "Find OA", target: "bt-oa" },
+    { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
   ],
 
   TOP_TABS: [
-    { id: "home", icon: "🏠", label: "Home", target: "home" },
-    { id: "beginner", icon: "🌱", label: "Start", target: "beginner" },
+    { id: "quick", icon: "⚡", label: "Wizard", target: "quick" },
     { id: "f1", icon: "①", label: "Transfer", target: "f1" },
     { id: "f2", icon: "②", label: "Convert", target: "f2" },
     { id: "f3", icon: "③", label: "Advance", target: "f3" },
-    { id: "f4", icon: "④", label: "Join", target: "f4" },
     { id: "f5", icon: "⑤", label: "More", target: "f5" },
-    { id: "res", icon: "📚", label: "Resources", target: "res" },
   ],
 
   SYNC_PLAN: {
@@ -1062,8 +1057,8 @@ const LOCALES = {
   DISCLAIMER: "This app is an unofficial aid tool. The official rules of The Hong Kong Award for Young People, as well as trial arrangements such as the \"Simultaneous Completion Scheme\", Section mapping, and transfer details, are subject to the latest public announcements from the Award Office and the Scout Association of Hong Kong (circulars such as P95/2026, and the AYP Scout Operating Authority webpage). Operational details may be updated at any time — please verify with your User Unit Leader / Scout leader before proceeding.",
 
   UI: {
-    heroLead: "⚡ <b>In a hurry? Sorted in 5 minutes:</b> answer 2 questions below → get your personal action card instantly. Read the detailed version later if you have time.",
-    mini1: "① Answer 2 questions<br>Get an action card", mini2: "② Do 3 Checks<br>Ask leaders + check your Unit", mini3: "③ Follow the action card<br>Tick off your progress",
+    heroLead: "🌱 <b>Standard process: start AYP from zero by following the action card.</b> Not sure which situation fits you? Tap ⚡ Wizard above and answer 2 questions.",
+    mini1: "① Follow the action card<br>Tick off step by step", mini2: "② Expand for details<br>Checks/steps/timeline", mini3: "③ Forms & leaders<br>Use tools below",
     quickTitle: "5-Minute Wizard: What's your situation? What's next?",
     beginnerTitle: "3 Checks for Beginners", beginnerSub: "When you don't know anything — how to check, who to ask, what to look at, step by step",
     beginnerIntro: "Whichever route you take, you need to pass these 3 checks first: made your Promise? Have a User Unit? Is the leader the right one? Every card includes a \"script to read aloud\" when asking your leader.",
@@ -1080,11 +1075,10 @@ const LOCALES = {
     f41Summary: "Starting from scratch: general steps + what each Section can take",
     f5Title: "Other possible situations", f5Tag: "(Feature ⑤)",
     f5Sub: "Reverse direction / additional situations",
-    resTitle: "When to start · Forms · Glossary · FAQ",
     resTlSummary: "Timeline: when to start",
-    resFmSummary: "Commonly used forms", resFmNote: "Actual forms are subject to the latest versions on the Scout Operating Authority website and from the Programme Branch.",
     resGlSummary: "Glossary of terms",
     resFaqSummary: "Frequently Asked Questions",
+    faqViewTitle: "FAQ & Glossary",
     compTitle: "After completion: receiving your Award/certificate", compSummary: "How do I receive my Award after completing a level?",
     sourcesTitle: "Official sources",
     footerLine1: "AYP Scout Bridging Guide ·",
@@ -1137,7 +1131,7 @@ const LOCALES = {
     conversionCancelSource: "Cancellation list source: ",
     formsDownload: "Download form",
     oaRegionsTitle: "Regional office phone numbers",
-    backHome: "Home",
+    backHome: "Normal Flow",
   },
 },
 

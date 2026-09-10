@@ -89,12 +89,10 @@
     setText("f5-title", t.f5Title); setText("f5-tag", t.f5Tag);
     setText("f5-sub", t.f5Sub);
 
-    setText("res-title", t.resTitle);
     setText("res-tl-summary", t.resTlSummary);
-    setText("res-fm-summary", t.resFmSummary);
-    setText("res-fm-note", t.resFmNote);
     setText("res-gl-summary", t.resGlSummary);
     setText("res-faq-summary", t.resFaqSummary);
+    setText("bt-faq-summary", t.faqViewTitle);
 
     setText("comp-title", t.compTitle);
     setText("comp-summary", t.compSummary);
@@ -339,6 +337,7 @@
     }));
     $$("#wz-result a[href^='#']", root).forEach(a => a.addEventListener("click", e => {
       const id = a.getAttribute("href").slice(1);
+      if (id === "f4") { e.preventDefault(); showView("normal"); openDetail("f4-1"); return; }
       if (VIEWS.indexOf(id) !== -1) { e.preventDefault(); showView(id); return; }
       const el = document.getElementById(id);
       if (el) { e.preventDefault(); smoothTo(el); }
@@ -357,7 +356,7 @@
        <ol class="steps">${b.how.map(h => `<li>${h}</li>`).join("")}</ol>
        <div class="say"><b>${esc(t.askLabel)}</b><br>${esc(b.ask)}</div>
        <div class="tip">${esc(t.ifNotPrefix)}${esc(b.ifNot)}</div>`,
-      i === 0)).join("");
+      false)).join("");
   }
 
   /* ════════════════════════════════════════════
@@ -369,7 +368,10 @@
     c.innerHTML = TT.map(q =>
       `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
     ).join("");
-    $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => showView(btn.dataset.tt)));
+    $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.tt;
+      showView((document.body.dataset.view || "normal") === key ? "normal" : key);
+    }));
     syncViewUI();
   }
 
@@ -384,7 +386,7 @@
     ).join("");
     $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tv;
-      showView((document.body.dataset.view || "home") === key ? "home" : key);
+      showView((document.body.dataset.view || "normal") === key ? "normal" : key);
     }));
     syncViewUI();
   }
@@ -392,10 +394,12 @@
   /* ════════════════════════════════════════════
      APP 式整版 view 切換：home ＋ 4 工具
      ════════════════════════════════════════════ */
-  const VIEWS = ["home", "beginner", "f1", "f2", "f3", "f4", "f5", "res", "bt-sync", "bt-conv", "bt-forms", "bt-oa"];
+  const VIEWS = ["normal", "quick", "f1", "f2", "f3", "f5", "bt-sync", "bt-conv", "bt-forms", "bt-oa", "bt-faq"];
   function showView(key) {
-    document.body.dataset.view = (key === "home") ? "home" : key;
+    document.body.dataset.view = (VIEWS.indexOf(key) !== -1) ? key : "normal";
     syncViewUI();
+    if (key === "quick") renderWizard();
+    if (key === "normal") renderNormalCard();
     try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
   }
@@ -405,7 +409,50 @@
     $$("#topbar [data-tt]").forEach(a => a.classList.toggle("active", a.dataset.tt === cur));
   }
   function bindViews() {
-    $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("home")));
+    $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("normal")));
+  }
+  function openDetail(key) {
+    const d = document.querySelector(`.part[data-key="${key}"]`);
+    if (!d) return;
+    if (typeof d.open === "boolean") d.open = true;
+    smoothTo(d);
+  }
+
+  /* ════════════════════════════════════════════
+     正常流程行動卡（預設 view 核心，與精靈 fresh 共用進度）
+     ════════════════════════════════════════════ */
+  function renderNormalCard() {
+    const c = $("#normal-card"); if (!c) return;
+    const p = L().PLANS.fresh, t = UI();
+    const todo = loadTodo(); const key = "wz-fresh";
+    const checked = todo[key] || [];
+    const doneCount = p.steps.filter((_, i) => checked[i]).length;
+    c.innerHTML = `<div class="plan-card">
+      <div class="plan-head"><span class="plan-ico">${p.icon}</span>
+        <div><b>📍 ${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
+      <div class="plan-progress">${esc(t.progressLabel(doneCount, p.steps.length))}</div>
+      <ol class="todo">${p.steps.map((s, i) => `
+        <li class="${checked[i] ? "done" : ""}"><label>
+          <input type="checkbox" data-todo="${key}:${i}" ${checked[i] ? "checked" : ""}>
+          <span class="todo-n">${i + 1}</span><span>${esc(s)}</span>
+        </label></li>`).join("")}</ol>
+      <div class="plan-meta">
+        <div><small>${esc(t.whoLabel)}</small><b>${esc(p.who)}</b></div>
+        <div><small>${esc(t.formsLabel)}</small><b>${esc(p.forms)}</b></div>
+        <div><small>${esc(t.timeLabel)}</small><b>${esc(p.time)}</b></div>
+      </div>
+      <div class="warn">⚠️ ${esc(p.warn)}</div>
+      <div class="plan-actions">
+        <button class="btn primary" data-normal-detail>${esc(p.linkLabel)} ↓</button>
+      </div>
+    </div>`;
+    $$("[data-todo]", c).forEach(box => box.addEventListener("change", () => {
+      const parts = box.dataset.todo.split(":");
+      const td = loadTodo(); td[parts[0]] = td[parts[0]] || []; td[parts[0]][+parts[1]] = box.checked;
+      saveTodo(td); renderNormalCard();
+    }));
+    const det = $("[data-normal-detail]", c);
+    if (det) det.addEventListener("click", () => openDetail("f4-1"));
   }
 
   /* ════════════════════════════════════════════
@@ -547,6 +594,7 @@
     renderTopBar();
     renderBottomBar();
     renderWizard();
+    renderNormalCard();
     renderBeginner();
     renderTldr();
     renderCopyright();
