@@ -7,12 +7,14 @@
   const $$ = (s, p) => Array.from((p || document).querySelectorAll(s));
   const OPEN_KEY = "ayp-guide-open-v2";
   const LANG_KEY = "ayp-guide-lang-v1";
+  const VISIT_KEY = "ayp-guide-visited-v1";
+  const FIRST_VISIT_KEY = "ayp-guide-first-visit-v1";
 
   function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
   function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
   function smoothTo(el, block) { if (!el) return; try { if (typeof el.scrollIntoView === "function") el.scrollIntoView({ behavior: "smooth", block: block || "start" }); } catch (e) {} }
   function smoothTop() { try { if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {} }
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
   /* ═══════════ 語言 / Language ═══════════ */
   function detectDefaultLang() {
@@ -360,13 +362,13 @@
   }
 
   /* ════════════════════════════════════════════
-     置頂指南列（常駐）：主頁＋7 指南，㩒即成版切換
+     置頂指南列（常駐）：5欄與底部對齊，放大
      ════════════════════════════════════════════ */
   function renderTopBar() {
     const c = $("#topbar"); if (!c) return;
     const TT = L().TOP_TABS;
     c.innerHTML = TT.map(q =>
-      `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${q.icon}</span><span class="tb-lbl">${esc(q.label)}</span></button>`
     ).join("");
     $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tt;
@@ -376,13 +378,13 @@
   }
 
   /* ════════════════════════════════════════════
-     置底 4 格工具（常駐）：㩒即成版切換去該工具 view
+     置底 5格工具（常駐）：滿寬放大，與頂部對齊
      ════════════════════════════════════════════ */
   function renderBottomBar() {
     const c = $("#bottombar"); if (!c) return;
     const BA = L().BOTTOM_ACTIONS;
     c.innerHTML = BA.map(b =>
-      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span>${esc(b.label)}</span></button>`
+      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span class="bb-lbl">${esc(b.label)}</span></button>`
     ).join("");
     $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tv;
@@ -511,7 +513,7 @@
       oa.innerHTML = `
         <p>${esc(OA.intro)}</p>
         <ul class="oa-links">${OA.links.map(l =>
-          `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul>
+          `<li><a href="${esc(l.url)}\" target=\"_blank\" rel=\"noopener\">${esc(l.label)}</a></li>`).join("")}</ul>
         <p><b>${esc(OA.regionsTitle)}</b></p>
         <table class="oa-regions"><tbody>${OA.regions.map(r =>
           `<tr><td>${esc(r.name)}</td><td>${esc(r.tel)}</td></tr>`).join("")}</tbody></table>
@@ -612,10 +614,26 @@
     syncViewUI();
   }
 
-  /* ═══════════ 初始 ═══════════ */
+  /* ═══════════ 初始＋首次自動進精靈 ═══════════ */
+  function isFirstVisit() {
+    try {
+      return !localStorage.getItem(VISIT_KEY) && !localStorage.getItem(FIRST_VISIT_KEY);
+    } catch (e) { return false; }
+  }
+  function markVisited() {
+    try {
+      localStorage.setItem(VISIT_KEY, "1");
+      localStorage.setItem(FIRST_VISIT_KEY, "1");
+    } catch (e) {}
+  }
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindFloatBtns();
     bindViews();
+    // 第一次進APP自動進入精靈了解需要
+    if (isFirstVisit()) {
+      showView("quick");
+      markVisited();
+    }
   });
 })();
