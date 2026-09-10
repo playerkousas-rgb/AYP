@@ -248,6 +248,17 @@ const LOCALES = {
     { id: "oa-lookup", icon: "🏢", label: "查執行處／組長", target: "bt-oa" },
   ],
 
+  TOP_TABS: [
+    { id: "home", icon: "🏠", label: "主頁", target: "home" },
+    { id: "beginner", icon: "🌱", label: "零基礎", target: "beginner" },
+    { id: "f1", icon: "①", label: "轉入", target: "f1" },
+    { id: "f2", icon: "②", label: "兌換", target: "f2" },
+    { id: "f3", icon: "③", label: "升團", target: "f3" },
+    { id: "f4", icon: "④", label: "流程", target: "f4" },
+    { id: "f5", icon: "⑤", label: "其他", target: "f5" },
+    { id: "res", icon: "📚", label: "資源", target: "res" },
+  ],
+
   SYNC_PLAN: {
     title: "同步完成方案（試行安排）",
     effective: "生效日期：2026-08-15 起試行",
@@ -551,6 +562,7 @@ const LOCALES = {
     baselineFoot: "資料基準日：2026 年 9 月（P95/2026）",
 
     quickNavAria: "底部工具列",
+    topBarAria: "頂部指南列",
     unofficialBadge: "⚠️ 非官方整理，須向執行處組長核實",
     verifyBeforeAct: "辦理前請核實：",
     openOfficialLink: "查看官方原文 →",
@@ -798,6 +810,17 @@ const LOCALES = {
     { id: "conv-table", icon: "🔁", label: "Conversion", target: "bt-conv" },
     { id: "start-forms", icon: "📝", label: "Start Forms", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "Find OA", target: "bt-oa" },
+  ],
+
+  TOP_TABS: [
+    { id: "home", icon: "🏠", label: "Home", target: "home" },
+    { id: "beginner", icon: "🌱", label: "Start", target: "beginner" },
+    { id: "f1", icon: "①", label: "Transfer", target: "f1" },
+    { id: "f2", icon: "②", label: "Convert", target: "f2" },
+    { id: "f3", icon: "③", label: "Advance", target: "f3" },
+    { id: "f4", icon: "④", label: "Join", target: "f4" },
+    { id: "f5", icon: "⑤", label: "More", target: "f5" },
+    { id: "res", icon: "📚", label: "Resources", target: "res" },
   ],
 
   SYNC_PLAN: {
@@ -1103,6 +1126,7 @@ const LOCALES = {
     baselineFoot: "Data baseline: September 2026 (Circular P95/2026)",
 
     quickNavAria: "Bottom tool bar",
+    topBarAria: "Top guide bar",
     unofficialBadge: "⚠️ Unofficial compilation — must be verified with your User Unit Leader",
     verifyBeforeAct: "Verify before acting: ",
     openOfficialLink: "View official source →",

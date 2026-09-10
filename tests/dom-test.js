@@ -83,10 +83,24 @@ ok("置底列＋返頂掣存在", has("bottombar") && has("fab-top"));
 ok("fab-lang 喺 header 入面（頂部）", !!window.document.querySelector("header #fab-lang"));
 ok("fab-lang 唔喺底部浮動掣區", !window.document.querySelector("#fab-top ~ #fab-lang, #fab-wizard ~ #fab-lang"));
 
-// 📱 APP 式整版 view：主頁順序睇＋置底 4 工具直達
-ok("無置頂跳轉列（主頁順序睇）", !window.document.querySelector("nav.toc"));
+// 📱 APP 式整版 view：置頂指南＋置底工具，主頁短
+ok("置頂指南列 8 格", window.document.querySelectorAll("#topbar .tb-btn").length === 8);
 ok("預設係主頁 view", (window.document.body.dataset.view || "home") === "home");
+ok("主頁只含精靈＋頁尾（中間唔長）", (() => {
+  const home = window.document.getElementById("view-home");
+  return home && !!home.querySelector("#wizard") && !!home.querySelector("#disclaimer") &&
+    !home.querySelector("#f1") && !home.querySelector("#beginner-list .part");
+})());
 ok("4 個工具整版 view", window.document.querySelectorAll(".toolview").length === 4);
+ok("7 個指南 view 區段", ["beginner", "f1", "f2", "f3", "f4", "f5", "res"].every(id => !!window.document.getElementById(id)));
+ok("撳置頂格切到指南 view", (() => {
+  const btn = window.document.querySelector("#topbar [data-tt='f1']");
+  if (!btn) return false;
+  btn.click();
+  const okView = window.document.body.dataset.view === "f1" && btn.classList.contains("active");
+  window.document.querySelector("#topbar [data-tt='home']").click();
+  return okView && window.document.body.dataset.view === "home";
+})());
 
 // 📌 置底 4 格工具：㩒即成版切換
 ok("置底 4 格工具掣", window.document.querySelectorAll("#bottombar .bb-btn").length === 4);
@@ -136,6 +150,10 @@ ok("4 工具 view 返主頁掣齊全", ["view-bt-sync", "view-bt-conv", "view-bt
   ok("行動卡出現", !!res.querySelector(".plan-card"));
   ok("行動卡 3 步待辦", res.querySelectorAll(".todo li").length === 3);
   ok("行動卡有搵邊個", /搵邊個|Who to ask/.test(res.textContent));
+  const plink = res.querySelector(".plan-actions a");
+  plink.click();
+  ok("行動卡連結跨 view 跳轉", window.document.body.dataset.view === "f1");
+  window.document.querySelector("#topbar [data-tt='home']").click();
   const box = res.querySelector("[data-todo]");
   box.checked = true;
   box.dispatchEvent(new window.Event("change", { bubbles: true }));
@@ -155,6 +173,10 @@ ok("4 工具 view 返主頁掣齊全", ["view-bt-sync", "view-bt-conv", "view-bt
   })());
   ok("切去英文後工具 view 標題＋返主頁變英文", /Simultaneous Completion Scheme/.test(window.document.getElementById("bt-sync-summary").textContent) &&
     /Home/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
+  ok("切去英文後置頂變指南英文標籤", (() => {
+    const txt = window.document.getElementById("topbar").textContent;
+    return /Transfer/.test(txt) && /Resources/.test(txt) && /Home/.test(txt);
+  })());
   ok("切去英文後 TI 有內容", innerLen("ti-inner") > 150);
   ok("切去英文後 FAQ 有內容", innerLen("faq-list") > 50);
   ok("切去英文後 disclaimer 有內容", innerLen("disclaimer") > 50);
@@ -167,6 +189,10 @@ ok("4 工具 view 返主頁掣齊全", ["view-bt-sync", "view-bt-conv", "view-bt
   ok("切返中文後置底變回 4 工具中文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
     return /同步方案/.test(txt) && /單項兌換表/.test(txt) && /開展表格/.test(txt) && /查執行處/.test(txt);
+  ok("切返中文後置頂變回指南中文標籤", (() => {
+    const txt = window.document.getElementById("topbar").textContent;
+    return /轉入/.test(txt) && /資源/.test(txt) && /主頁/.test(txt);
+  })());
   })());
 }
 

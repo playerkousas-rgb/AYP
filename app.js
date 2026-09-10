@@ -109,6 +109,7 @@
     $$(".tv-back-label").forEach(el => { el.textContent = t.backHome; });
 
     const bottombar = $("#bottombar"); if (bottombar) bottombar.setAttribute("aria-label", t.quickNavAria);
+    const topbar = $("#topbar"); if (topbar) topbar.setAttribute("aria-label", t.topBarAria);
 
     const fabT = $("#fab-top"); if (fabT) fabT.setAttribute("aria-label", t.fabTopAria);
     const langBtn = $("#fab-lang");
@@ -337,7 +338,9 @@
       renderWizard();
     }));
     $$("#wz-result a[href^='#']", root).forEach(a => a.addEventListener("click", e => {
-      const el = document.getElementById(a.getAttribute("href").slice(1));
+      const id = a.getAttribute("href").slice(1);
+      if (VIEWS.indexOf(id) !== -1) { e.preventDefault(); showView(id); return; }
+      const el = document.getElementById(id);
       if (el) { e.preventDefault(); smoothTo(el); }
     }));
   }
@@ -355,6 +358,19 @@
        <div class="say"><b>${esc(t.askLabel)}</b><br>${esc(b.ask)}</div>
        <div class="tip">${esc(t.ifNotPrefix)}${esc(b.ifNot)}</div>`,
       i === 0)).join("");
+  }
+
+  /* ════════════════════════════════════════════
+     置頂指南列（常駐）：主頁＋7 指南，㩒即成版切換
+     ════════════════════════════════════════════ */
+  function renderTopBar() {
+    const c = $("#topbar"); if (!c) return;
+    const TT = L().TOP_TABS;
+    c.innerHTML = TT.map(q =>
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span>${q.icon} ${esc(q.label)}</span></button>`
+    ).join("");
+    $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => showView(btn.dataset.tt)));
+    syncViewUI();
   }
 
   /* ════════════════════════════════════════════
@@ -376,6 +392,7 @@
   /* ════════════════════════════════════════════
      APP 式整版 view 切換：home ＋ 4 工具
      ════════════════════════════════════════════ */
+  const VIEWS = ["home", "beginner", "f1", "f2", "f3", "f4", "f5", "res", "bt-sync", "bt-conv", "bt-forms", "bt-oa"];
   function showView(key) {
     document.body.dataset.view = (key === "home") ? "home" : key;
     syncViewUI();
@@ -385,6 +402,7 @@
   function syncViewUI() {
     const cur = document.body.dataset.view || "home";
     $$("#bottombar [data-tv]").forEach(a => a.classList.toggle("active", a.dataset.tv === cur));
+    $$("#topbar [data-tt]").forEach(a => a.classList.toggle("active", a.dataset.tt === cur));
   }
   function bindViews() {
     $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("home")));
@@ -526,6 +544,7 @@
   /* ═══════════ 全部重繪（切換語言時用） ═══════════ */
   function renderAll() {
     renderStaticText();
+    renderTopBar();
     renderBottomBar();
     renderWizard();
     renderBeginner();
