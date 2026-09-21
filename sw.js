@@ -1,11 +1,14 @@
 /* Service Worker — AYP 童軍接駁指南（離線可用） */
-const CACHE = "ayp-guide-v6";
+/* 注意：每次改動快取清單（新增／刪除資產）都必須遞增 CACHE 版本號，
+   否則舊用戶會繼續用舊快取。見 docs/部署瘦身與防增肥規範.md */
+const CACHE = "ayp-guide-v7";
 const ASSETS = [
   "./",
   "./index.html",
   "./data.js",
   "./app.js",
   "./manifest.webmanifest",
+  "./assets/logo-192.avif",
   "./assets/logo-192.png",
   "./assets/logo-512.png",
   "./assets/apple-touch-icon.png",
@@ -36,11 +39,19 @@ self.addEventListener("fetch", (e) => {
       if (hit) return hit;
       return fetch(e.request)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
+          // 只快取健康回應，避免把 404／空 body 凍結進離線快取
+          if (res && res.ok && (res.type === "basic" || res.type === "default")) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, copy));
+          }
           return res;
         })
-        .catch(() => caches.match("./index.html"));
+        .catch(() =>
+          // 離線／網路失敗：回落主頁；保證永遠回一個有效 Response
+          caches.match("./index.html").then((pg) =>
+            pg || new Response("offline", { status: 503, statusText: "Offline" })
+          )
+        );
     })
   );
 });

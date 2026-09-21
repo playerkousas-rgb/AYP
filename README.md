@@ -90,27 +90,49 @@ AYP/
 ├── data.js               (雙語資料庫 LOCALES = { "zh-HK": {...}, "en": {...} }：轉入/兌換/升團/流程/其他情況/資源)
 ├── app.js                (主程式：語言切換 setLang()、互動決策、開合狀態、渲染)
 ├── manifest.webmanifest  (PWA)
-├── sw.js                 (Service Worker)
-├── package.json
-├── docs/定位規格.md
-├── assets/               (logo 各尺寸)
+├── sw.js                 (Service Worker，CACHE 版本制；改資產必遞增版本)
+├── package.json          (零執行依賴；dev 僅 jsdom)
+├── vercel.json           (buildCommand→dist、--omit=dev、快取/安全 headers)
+├── .vercelignore         (上傳黑名單：tests/docs/備份檔等)
+├── .gitignore
+├── scripts/
+│   ├── lint.js           (語法/風格守門，零依賴)
+│   ├── check.js          (完整性/防增肥守門：引用雙向核對、雙語鍵一致、體積預算)
+│   └── build.js          (產 dist/ 並逐檔 sha256 校驗)
+├── docs/
+│   ├── 定位規格.md
+│   └── 部署瘦身與防增肥規範.md  (瘦身規則/圖片 AVIF 規範/預算/changelog)
+├── assets/               (icon 用瘦 PNG；頁內圖用 AVIF＋PNG 回退)
 └── tests/
-    ├── dom-test.js       (jsdom 快速 DOM 測試，97 項)
+    ├── dom-test.js       (jsdom 快速 DOM 測試，102 項)
     └── guide.spec.js     (Playwright 回歸測試)
 ```
 
 ## 🧪 測試
 
 ```bash
-# 快速（無需瀏覽器，用 jsdom）
-npm run test:dom          # 或 node tests/dom-test.js
+# 守門（零依賴，任何環境/Vercel 建置都會跑）
+npm run lint              # 語法＋風格（無 console.log／http://／BOM…）
+npm run check             # 完整性＋防增肥預算（引用核對、雙語鍵、體積上限）
+npm run build             # lint＋check＋產 dist/ 並逐檔校驗
+npm run preview           # build 後本機 serve dist/ 預覽
 
-# 完整（需瀏覽器）
+# 快速（無需瀏覽器，用 jsdom；devDependency 已含 jsdom）
+npm run test:dom          # 或 npm test（102 項）
+
+# 完整（需瀏覽器；playwright 刻意唔入 package.json，避免肥 build）
 python3 -m http.server 8000 --bind 0.0.0.0
 npm install --no-save --package-lock=false @playwright/test
 npx playwright install --with-deps chromium
 npx playwright test tests/guide.spec.js --workers=1
 ```
+
+## 🪶 瘦身／部署（防增肥）
+
+- 部署只上傳 `dist/`（核心 5 檔＋assets）；`.vercelignore` 擋起 tests／docs／備份檔。
+- 體積預算、圖片 AVIF/PNG 規範、sw.js 版本紀律、改動 checklist，全部見
+  [`docs/部署瘦身與防增肥規範.md`](docs/部署瘦身與防增肥規範.md)。
+- 2026-09-21 瘦身：assets 由 ~1.2MB 降至 ~105KB（−91%），部署總和 ~286KB。
 
 ## ⚠️ 免責聲明
 

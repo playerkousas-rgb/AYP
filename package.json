@@ -1,12 +1,19 @@
 {
   "name": "ayp-scout-guide",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AYP 童軍接駁指南 — 非官方靜態 PWA",
   "private": true,
   "scripts": {
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test:dom": "node tests/dom-test.js",
+    "preview": "npm run build && python3 -m http.server 8000 --bind 0.0.0.0 --directory dist",
+    "check": "node scripts/check.js",
+    "lint": "node scripts/lint.js",
+    "build": "node scripts/lint.js && node scripts/check.js && node scripts/build.js",
     "test": "node tests/dom-test.js",
+    "test:dom": "node tests/dom-test.js",
     "test:full": "playwright test tests/guide.spec.js --workers=1"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.0"
   }
 }

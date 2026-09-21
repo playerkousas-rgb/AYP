@@ -1,0 +1,28 @@
+# ── Vercel 上傳黑名單：只上傳建置所需檔案（見 docs/部署瘦身與防增肥規範.md）──
+# 版本控制／平台中繼
+.git
+.github
+.vercel
+# 依賴與本機產物（Vercel 會自行 npm install）
+node_modules
+dist
+coverage
+# 測試／文件／筆記：建置不需要，不佔部署配額
+tests
+docs
+*.md
+# 備份／暫存／日誌死重
+*.bak
+*.tmp
+*.old
+*.orig
+*.log
+*~
+.DS_Store
+# 上傳／測試產物資料夾
+uploads/
+playwright-report/
+test-results/
+# 環境變數
+.env
+.env.*
