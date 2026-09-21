@@ -44,6 +44,15 @@
       <div class="part-body">${bodyHtml}</div></details>`;
   }
 
+  // 還原靜態 <details class="part"> 嘅已儲存開合狀態（f4-1／res-tl／ti-1 等）
+  function applyStaticOpenState() {
+    const state = loadOpen();
+    $$("details.part").forEach(d => {
+      const k = d.dataset.key;
+      if (k && state[k] !== undefined) d.open = !!state[k];
+    });
+  }
+
   // 開合狀態事件綁定
   function bindPartToggles() {
     $$("details.part").forEach(d => {
@@ -520,7 +529,7 @@
       oa.innerHTML = `
         <p>${esc(OA.intro)}</p>
         <ul class="oa-links">${OA.links.map(l =>
-          `<li><a href="${esc(l.url)}\" target=\"_blank\" rel=\"noopener\">${esc(l.label)}</a></li>`).join("")}</ul>
+          `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul>
         <p><b>${esc(OA.regionsTitle)}</b></p>
         <table class="oa-regions"><tbody>${OA.regions.map(r =>
           `<tr><td>${esc(r.name)}</td><td>${esc(r.tel)}</td></tr>`).join("")}</tbody></table>
@@ -617,6 +626,7 @@
     renderExtras("#extra-list-2", L().EXTRA_CASES_2);
     renderBottomTools();
     renderCommon();
+    applyStaticOpenState();
     bindPartToggles();
     syncViewUI();
   }

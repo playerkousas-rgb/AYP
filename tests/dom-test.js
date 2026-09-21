@@ -245,6 +245,26 @@ ok("5 工具 view 返正常流程掣齊全", ["view-bt-sync", "view-bt-conv", "v
   ok("切返中文後返正常流程變回中文", /返正常流程/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
 }
 
+// 🐛 回歸守護：開合卡必須全部係 <details>（div.part 係舊 bug：唔可以收合／唔記狀態）
+ok("無 div.part 殘留（全部可收合卡均為 details）",
+  window.document.querySelectorAll("div.part").length === 0 &&
+  window.document.querySelectorAll("details.part").length >= 10);
+ok("預設展開嘅靜態卡保持展開（零倒退）",
+  ["ti-1", "ti-2", "c2a", "c2b", "f3-1", "res-faq", "res-gl"].every(k => {
+    const d = window.document.querySelector(`details.part[data-key="${k}"]`);
+    return !!d && d.open;
+  }));
+ok("預設收埋兼未被測試開啟嘅卡保持收埋", ["res-tl", "comp"].every(k => {
+  const d = window.document.querySelector(`details.part[data-key="${k}"]`);
+  return !!d && !d.open;
+}));
+ok("openDetail 可以打開 f4-1（收合機制正常）",
+  window.document.querySelector('details.part[data-key="f4-1"]').open === true);
+// 🖼️ 頭像 AVIF＋PNG 雙重來源（支援 AVIF 用 AVIF，否則回退 PNG）
+ok("header 標誌有 AVIF source＋PNG 回退",
+  !!window.document.querySelector("header picture source[type='image/avif'][srcset*='logo-192.avif']") &&
+  !!window.document.querySelector("header picture img[src='assets/logo-192.png']"));
+
 let pass = 0, fail = 0;
 checks.forEach(([c, n]) => { if (c) pass++; else { fail++; console.log("✗ FAIL:", n); } });
 console.log(`\n${pass} 通過 / ${fail} 失敗`);

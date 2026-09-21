@@ -289,7 +289,7 @@ img{max-width:100%;height:auto}
 <header>
   <button class="fab" id="fab-lang" aria-label="切換語言 / Switch language">EN</button>
   <div class="brand">
-    <img src="assets/logo-192.png" alt="標誌">
+    <picture><source srcset="assets/logo-192.avif" type="image/avif"><img src="assets/logo-192.png" alt="標誌" width="54" height="54" decoding="async"></picture>
     <div><h1 id="app-title">AYP 童軍接駁指南</h1>
       <p class="tag" id="app-tag">情況主導：同步完成／銜接・轉處接駁・升團・正常流程</p></div>
   </div>
@@ -376,14 +376,14 @@ img{max-width:100%;height:auto}
     <div class="tldr" data-tldr="f1"></div>
     <div class="warn backdate" id="f1-backdate"></div>
     <p id="f1-hint">撳「① 揀章級」＋「② 剔已批核嘅科」👇</p>
-    <div class="part" data-key="ti-1" open>
+    <details class="part" data-key="ti-1" open>
       <summary><span class="ico">🧮</span> <span id="ti1-summary">我轉入後仲欠咩？</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="ti-inner"></div></div>
-    </div>
-    <div class="part" data-key="ti-2">
+    </details>
+    <details class="part" data-key="ti-2" open>
       <summary><span class="ico">🧾</span> <span id="ti2-summary">轉入童軍執行處嘅行政手續</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="ti-steps"></div></div>
-    </div>
+    </details>
   </section>
 
   <!-- ══ 功能2：銜接（同步完成／認可） ══ -->
@@ -392,27 +392,27 @@ img{max-width:100%;height:auto}
     <div class="tldr" data-tldr="f2"></div>
     <div class="warn backdate" id="f2-backdate"></div>
 
-    <div class="part" data-key="c2a">
+    <details class="part" data-key="c2a" open>
       <summary><span class="ico">🏅</span> <span id="c2a-summary">成個章銜接：童軍進度性獎章 同步完成 AYP</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-sync"></div></div>
-    </div>
-    <div class="part" data-key="c2b">
+    </details>
+    <details class="part" data-key="c2b" open>
       <summary><span class="ico">🧩</span> <span id="c2b-summary">單科銜接／認可參考：童軍活動 / 徽章 → AYP 各科</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="convert-map"></div></div>
-    </div>
+    </details>
   </section>
 
   <!-- ══ 功能3：升團接駁 ══ -->
   <section class="guideview" id="f3">
     <h2 class="sec"><span class="n hot">3</span> <span id="f3-title">邊個支部考到咩・升團後要點做</span> <small id="f3-tag">(功能③)</small></h2>
     <div class="tldr" data-tldr="f3"></div>
-    <div class="part" data-key="f3-1">
+    <details class="part" data-key="f3-1" open>
       <summary><span class="ico">🪜</span> <span id="f31-summary">童軍 → 深資 → 樂行：每階段 AYP 點跟進</span><span class="chev">▾</span></summary>
       <div class="part-body">
         <div id="paths"></div>
         <div class="warn" id="f3-warn">⚠️ AYP 跟「參加者」同「執行處」，唔係跟童軍支部 —— 只要一直喺香港童軍總會執行處，升團唔會令 AYP 進度清零，升團後更新所屬執行處支部資料就得；但由學校／其他執行處轉入，就必須辦理「轉換執行處」手續（FORM AYP/09）。</div>
       </div>
-    </div>
+    </details>
   </section>
 
   <!-- ══ 功能5：其他情況 ══ -->
@@ -484,15 +484,15 @@ img{max-width:100%;height:auto}
       <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
       <b id="bt-faq-summary">FAQ＋術語辭典</b>
     </div>
-<div class="part" data-key="res-faq">
+<details class="part" data-key="res-faq" open>
       <summary><span class="ico">❓</span> <span id="res-faq-summary">常見問題 FAQ</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="faq-list"></div></div>
-    </div>
+    </details>
 
-<div class="part" data-key="res-gl">
+<details class="part" data-key="res-gl" open>
       <summary><span class="ico">📖</span> <span id="res-gl-summary">術語小辭典</span><span class="chev">▾</span></summary>
       <div class="part-body"><div id="glossary-list"></div></div>
-    </div>
+    </details>
   </section>
 
 </main>
