@@ -7,9 +7,10 @@
 node_modules
 dist
 coverage
-# 測試／文件／筆記：建置不需要，不佔部署配額
+# 測試／文件／筆記／設計原稿：建置不需要，不佔部署配額
 tests
 docs
+design
 *.md
 # 備份／暫存／日誌死重
 *.bak

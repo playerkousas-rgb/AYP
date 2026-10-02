@@ -97,12 +97,14 @@ AYP/
 ├── .gitignore
 ├── scripts/
 │   ├── lint.js           (語法/風格守門，零依賴)
-│   ├── check.js          (完整性/防增肥守門：引用雙向核對、雙語鍵一致、體積預算)
-│   └── build.js          (產 dist/ 並逐檔 sha256 校驗)
+│   ├── check.js          (完整性/防增肥守門：引用雙向核對、雙語鍵一致、體積預算、圖示格式)
+│   ├── build.js          (產 dist/ 並逐檔 sha256 校驗)
+│   └── make-icons.js     (design/*.svg → assets/ 圖示；一次性 npm i --no-save @napi-rs/image)
+├── design/               (圖示向量原稿：icon.svg 512 全出血、favicon.svg 32；唔進部署)
 ├── docs/
 │   ├── 定位規格.md
 │   └── 部署瘦身與防增肥規範.md  (瘦身規則/圖片 AVIF 規範/預算/changelog)
-├── assets/               (icon 用瘦 PNG；頁內圖用 AVIF＋PNG 回退)
+├── assets/               (圖示由 make-icons.js 產生：favicon／header 用 AVIF＋PNG 回退；manifest／iOS 必須 PNG)
 └── tests/
     ├── dom-test.js       (jsdom 快速 DOM 測試，102 項)
     └── guide.spec.js     (Playwright 回歸測試)
@@ -133,6 +135,7 @@ npx playwright test tests/guide.spec.js --workers=1
 - 體積預算、圖片 AVIF/PNG 規範、sw.js 版本紀律、改動 checklist，全部見
   [`docs/部署瘦身與防增肥規範.md`](docs/部署瘦身與防增肥規範.md)。
 - 2026-09-21 瘦身：assets 由 ~1.2MB 降至 ~105KB（−91%），部署總和 ~286KB。
+- 2026-10-02 圖示重設計：圖示改由 `design/*.svg` 經 `scripts/make-icons.js` 產生，assets 再由 ~105KB 降至 ~11.6KB（−89%），部署總和 ~193KB。
 
 ## ⚠️ 免責聲明
 

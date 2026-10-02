@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>AYP 童軍接駁指南 — App 圖示（全出血，maskable 安全）</title>
+  <!--
+    App 圖示原稿（512×512）。由 scripts/make-icons.js 轉成：
+    logo-512.png／logo-192.png／apple-touch-icon.png（平台硬性要求 PNG）＋ logo-192.avif（頁內 logo）。
+    規則：
+    ① 全出血方形、無圓角、無白邊、無透明 —— iOS／Android 會自行套圓角遮罩（雙重圓角＝錯）。
+    ② 所有圖案必須落在中心半徑 0.40 × 512 ＝ 204.8 的 maskable 安全圈內（make-icons.js 會自動驗證）。
+    ③ 純平面色、無漸層／陰影濾鏡 —— 調色盤 PNG 同 AVIF 都壓得最瘦。
+    色票 ＝ index.html 品牌 token：綠 #0a5c36、金、銅 #b87333、銀。
+  -->
+  <rect id="bg" width="512" height="512" fill="#0a5c36"/>
+  <g transform="translate(256 216)">
+    <!-- 三級緞帶（銅／金／銀；以獎牌中心為軸，銀喺最面） -->
+    <path transform="rotate(24)" d="M-37 0H37V214L0 186L-37 214Z" fill="#b87333"/>
+    <path transform="rotate(-24)" d="M-37 0H37V214L0 186L-37 214Z" fill="#e2b73c"/>
+    <path d="M-37 0H37V214L0 186L-37 214Z" fill="#aab1b8"/>
+    <!-- 獎牌：深金外圈＋金面＋內環 -->
+    <circle r="142" fill="#b88a1c"/>
+    <circle r="130" fill="#e2b73c"/>
+    <circle r="112" fill="none" stroke="#b88a1c" stroke-width="4"/>
+    <!-- 童軍百合花（fleur-de-lis）：中瓣＋兩側捲瓣＋橫帶＋三尾 -->
+    <defs>
+      <g id="lily">
+        <path d="M0 -86C20 -64 30 -36 24 -10C21 4 15 16 11 28H-11C-15 16 -21 4 -24 -10C-30 -36 -20 -64 0 -86Z"/>
+        <path d="M9 30C6 -22 40 -52 62 -33C82 -16 80 10 70 30C66 22 64 12 63 4C62 -8 56 -17 46 -15C35 -13 31 -1 29 10C28 18 20 26 9 30Z"/>
+        <path transform="scale(-1 1)" d="M9 30C6 -22 40 -52 62 -33C82 -16 80 10 70 30C66 22 64 12 63 4C62 -8 56 -17 46 -15C35 -13 31 -1 29 10C28 18 20 26 9 30Z"/>
+        <rect x="-46" y="24" width="92" height="16" rx="4"/>
+        <path d="M-12 38C-12 56 -6 72 0 88C6 72 12 56 12 38Z"/>
+        <path d="M-28 38C-44 50 -44 70 -28 78C-33 67 -31 52 -20 38Z"/>
+        <path transform="scale(-1 1)" d="M-28 38C-44 50 -44 70 -28 78C-33 67 -31 52 -20 38Z"/>
+      </g>
+    </defs>
+    <use href="#lily" fill="#b88a1c" transform="translate(4 4) scale(1.08)"/>
+    <use href="#lily" fill="#fff" transform="translate(0 -1) scale(1.08)"/>
+  </g>
+</svg>

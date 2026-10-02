@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>AYP 童軍接駁指南 — Favicon（32×32 簡化版）</title>
+  <!--
+    Favicon 原稿（32×32）。由 scripts/make-icons.js 轉成 favicon-32.avif（主）＋ favicon-32.png（回退）。
+    細尺寸專用簡化：獎牌放大、百合花加粗並加深金陰影（白對金對比低）、緞帶縮成三個色塊、
+    圓角方形帶透明角（瀏覽器分頁／書籤直接顯示，唔會再被套遮罩）。
+    為何必須 32×32：Chrome 桌面按 16／32px 計分，單一尺寸以 32×32 最高分，AVIF 先會贏過 PNG 回退。
+  -->
+  <rect width="32" height="32" rx="7" fill="#0a5c36"/>
+  <g transform="translate(16 13)">
+    <path transform="rotate(24)" d="M-3.6 0H3.6V17.4L0 14.8L-3.6 17.4Z" fill="#b87333"/>
+    <path transform="rotate(-24)" d="M-3.6 0H3.6V17.4L0 14.8L-3.6 17.4Z" fill="#e2b73c"/>
+    <path d="M-3.6 0H3.6V17.4L0 14.8L-3.6 17.4Z" fill="#aab1b8"/>
+    <circle r="11.6" fill="#b88a1c"/>
+    <circle r="10.2" fill="#e2b73c"/>
+    <defs>
+      <g id="lily">
+        <path d="M0 -86C20 -64 30 -36 24 -10C21 4 15 16 11 28H-11C-15 16 -21 4 -24 -10C-30 -36 -20 -64 0 -86Z"/>
+        <path d="M9 30C6 -22 40 -52 62 -33C82 -16 80 10 70 30C66 22 64 12 63 4C62 -8 56 -17 46 -15C35 -13 31 -1 29 10C28 18 20 26 9 30Z"/>
+        <path transform="scale(-1 1)" d="M9 30C6 -22 40 -52 62 -33C82 -16 80 10 70 30C66 22 64 12 63 4C62 -8 56 -17 46 -15C35 -13 31 -1 29 10C28 18 20 26 9 30Z"/>
+        <rect x="-46" y="24" width="92" height="20" rx="5"/>
+        <path d="M-14 40C-14 54 -6 66 0 76C6 66 14 54 14 40Z"/>
+      </g>
+    </defs>
+    <use href="#lily" fill="#b88a1c" transform="translate(0.4 0.55) scale(0.089) translate(0 5)"/>
+    <use href="#lily" fill="#fff" transform="scale(0.089) translate(0 5)"/>
+  </g>
+</svg>

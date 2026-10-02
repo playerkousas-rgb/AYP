@@ -138,6 +138,67 @@ console.log("\n[10] 依賴政策");
 const pkg = JSON.parse(read("package.json"));
 ok(!pkg.dependencies || Object.keys(pkg.dependencies).length === 0, "無執行期 dependencies（靜態站零運行依賴）");
 
+/* ── 11. 圖示格式守門（平台硬性限制；理由與實測見 docs §2）── */
+console.log("\n[11] 圖示格式（平台限制）");
+const bytesOf = (f) => fs.readFileSync(path.join(ROOT, "assets", f));
+const PNG_SIG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const isPng = (b) => b.length > 33 && b.subarray(0, 8).equals(PNG_SIG);
+const isAvif = (b) => b.length > 12 && b.subarray(4, 12).toString("latin1") === "ftypavif";
+const pngSize = (b) => [b.readUInt32BE(16), b.readUInt32BE(20)];
+const pngHasAlpha = (b) => { // RGBA／灰階＋alpha，或調色盤 tRNS 有非 255 嘅項
+  if (b[25] === 4 || b[25] === 6) return true;
+  for (let o = 8; o < b.length; o += 12 + b.readUInt32BE(o)) {
+    const len = b.readUInt32BE(o);
+    if (b.toString("latin1", o + 4, o + 8) === "tRNS" && b.subarray(o + 8, o + 8 + len).some((v) => v !== 255)) return true;
+  }
+  return false;
+};
+for (const f of assetFiles.filter((x) => x.endsWith(".avif"))) ok(isAvif(bytesOf(f)), `assets/${f} 副檔名同內容一致（ftypavif）`);
+
+let man = null;
+try { man = JSON.parse(manifest); } catch (e) { ok(false, "manifest 可解析（圖示守門需要）", e.message); }
+if (man) {
+  const icons = man.icons || [];
+  const hasPurpose = (ic, p) => (ic.purpose || "any").split(/\s+/).includes(p);
+  for (const ic of icons) { // Chromium kLimitedMimeTypes：安裝圖示只收 PNG／SVG／WebP，AVIF 會被當作冇圖示
+    const f = String(ic.src).replace(/^\.?\/?assets\//, "");
+    ok(["image/png", "image/webp", "image/svg+xml"].includes(ic.type), `manifest 圖示 ${f} 類型 ${ic.type} ∈ PNG／WebP／SVG`, "Chrome 唔收 AVIF");
+    if (ic.type === "image/png" && assetFiles.includes(f)) {
+      const b = bytesOf(f), [w, h] = isPng(b) ? pngSize(b) : [0, 0];
+      ok(`${w}x${h}` === ic.sizes, `manifest 圖示 ${f} 實際 ${w}×${h} ＝ 宣告 ${ic.sizes}`);
+    }
+  }
+  ok(icons.some((i) => i.sizes === "192x192" && hasPurpose(i, "any")), "manifest 有 192×192 any 圖示");
+  ok(icons.some((i) => i.sizes === "512x512" && hasPurpose(i, "any")), "manifest 有 512×512 any 圖示");
+  ok(icons.some((i) => hasPurpose(i, "maskable")), "manifest 有 maskable 圖示（Android 自適應圖示）");
+}
+
+const touch = html.match(/<link[^>]*rel="apple-touch-icon"[^>]*href="assets\/([A-Za-z0-9._-]+)"/);
+ok(!!touch, "index.html 有 apple-touch-icon");
+if (touch && assetFiles.includes(touch[1])) {
+  const b = bytesOf(touch[1]);
+  ok(isPng(b), `apple-touch-icon ${touch[1]} 必須 PNG`, "iOS 主畫面圖示只有 PNG 可靠");
+  if (isPng(b)) {
+    const [w, h] = pngSize(b);
+    ok(w === h && w >= 120, `apple-touch-icon ${w}×${h} 為方形且 ≥ 120px`);
+    ok(!pngHasAlpha(b), "apple-touch-icon 不透明", "iOS 會將透明填黑");
+  }
+}
+
+const favLinks = [...html.matchAll(/<link[^>]*rel="icon"[^>]*>/g)].map((m) => m[0]);
+const iAvif = favLinks.findIndex((l) => /type="image\/avif"[^>]*sizes="32x32"|sizes="32x32"[^>]*type="image\/avif"/.test(l));
+const iPng = favLinks.findIndex((l) => /type="image\/png"[^>]*sizes="32x32"|sizes="32x32"[^>]*type="image\/png"/.test(l));
+ok(iAvif !== -1 && iPng !== -1 && iAvif < iPng, "favicon：32×32 AVIF 主＋32×32 PNG 回退，且 AVIF 宣告喺前", "Chrome 同分先宣告者贏；Google 搜尋唔認 AVIF，PNG 要留");
+for (const l of favLinks) {
+  const f = (l.match(/href="assets\/([^"]+)"/) || [])[1], sz = (l.match(/sizes="(\d+x\d+)"/) || [])[1];
+  if (!f || !assetFiles.includes(f)) continue;
+  if (/image\/avif/.test(l)) ok(isAvif(bytesOf(f)), `favicon ${f} 係有效 AVIF`);
+  if (/image\/png/.test(l)) {
+    const b = bytesOf(f);
+    ok(isPng(b) && pngSize(b).join("x") === sz, `favicon ${f} 係 PNG 且實際尺寸 ＝ 宣告 ${sz}`);
+  }
+}
+
 /* ── 總結 ── */
 console.log(`\n══ check 結果：${fails === 0 ? "全部通過" : fails + " 項失敗"}（警告 ${warns}）══\n`);
 process.exit(fails ? 1 : 0);

@@ -19,7 +19,7 @@ const ok = (cond, name, extra) => {
 
 /* ── 1. JS 語法（node --check）── */
 console.log("\n[1] JS 語法");
-const jsFiles = ["app.js", "data.js", "sw.js", "scripts/check.js", "scripts/lint.js", "scripts/build.js",
+const jsFiles = ["app.js", "data.js", "sw.js", "scripts/check.js", "scripts/lint.js", "scripts/build.js", "scripts/make-icons.js",
   "tests/dom-test.js", "tests/guide.spec.js"].filter(exists);
 for (const f of jsFiles) {
   const r = cp.spawnSync(process.execPath, ["--check", path.join(ROOT, f)], { encoding: "utf8" });
@@ -50,7 +50,7 @@ ok(!/http:\/\//.test(read("manifest.webmanifest")), "manifest 無明文 http://"
 console.log("\n[4] 文字檔衛生");
 const textFiles = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "package.json",
   "vercel.json", ".vercelignore", ".gitignore", "README.md",
-  "scripts/check.js", "scripts/lint.js", "scripts/build.js"];
+  "scripts/check.js", "scripts/lint.js", "scripts/build.js", "scripts/make-icons.js"];
 for (const f of textFiles.filter(exists)) {
   const b = fs.readFileSync(path.join(ROOT, f));
   ok(!b.slice(0, 3).equals(Buffer.from([0xef, 0xbb, 0xbf])), `${f} 無 BOM`);
