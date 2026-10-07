@@ -19,7 +19,7 @@ const ok = (cond, name, extra) => {
 
 /* ── 1. JS 語法（node --check）── */
 console.log("\n[1] JS 語法");
-const jsFiles = ["app.js", "data.js", "sw.js", "scripts/check.js", "scripts/lint.js", "scripts/build.js",
+const jsFiles = ["app.js", "data.js", "sw.js", "analytics.js", "scripts/check.js", "scripts/lint.js", "scripts/build.js",
   "tests/dom-test.js", "tests/guide.spec.js"].filter(exists);
 for (const f of jsFiles) {
   const r = cp.spawnSync(process.execPath, ["--check", path.join(ROOT, f)], { encoding: "utf8" });
@@ -36,7 +36,7 @@ for (const f of ["package.json", "manifest.webmanifest", "vercel.json"]) {
 
 /* ── 3. 生產檔禁用項 ── */
 console.log("\n[3] 生產檔禁用項");
-for (const f of ["app.js", "data.js", "sw.js"]) {
+for (const f of ["app.js", "data.js", "sw.js", "analytics.js"]) {
   const s = read(f);
   ok(!/console\.log\s*\(/.test(s), `${f} 無 console.log`);
   ok(!/debugger\b/.test(s), `${f} 無 debugger`);
@@ -48,7 +48,7 @@ ok(!/http:\/\//.test(read("manifest.webmanifest")), "manifest 無明文 http://"
 
 /* ── 4. 文字檔衛生：無 BOM／無 CRLF／結尾換行 ── */
 console.log("\n[4] 文字檔衛生");
-const textFiles = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "package.json",
+const textFiles = ["index.html", "app.js", "data.js", "sw.js", "analytics.js", "manifest.webmanifest", "package.json",
   "vercel.json", ".vercelignore", ".gitignore", "README.md",
   "scripts/check.js", "scripts/lint.js", "scripts/build.js"];
 for (const f of textFiles.filter(exists)) {
