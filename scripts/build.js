@@ -10,7 +10,7 @@ const crypto = require("crypto");
 
 const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
-const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest"];
+const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
 const assets = fs.readdirSync(path.join(ROOT, "assets")).filter((f) => !f.startsWith("."));
 const DEPLOY = [...CORE, ...assets.map((f) => "assets/" + f)];
 

@@ -1,12 +1,13 @@
 /* Service Worker — AYP 童軍接駁指南（離線可用） */
 /* 注意：每次改動快取清單（新增／刪除資產）都必須遞增 CACHE 版本號，
    否則舊用戶會繼續用舊快取。見 docs/部署瘦身與防增肥規範.md */
-const CACHE = "ayp-guide-v8";
+const CACHE = "ayp-guide-v9";
 const ASSETS = [
   "./",
   "./index.html",
   "./data.js",
   "./app.js",
+  "./analytics.js",
   "./manifest.webmanifest",
   "./assets/logo-192.avif",
   "./assets/logo-192.png",

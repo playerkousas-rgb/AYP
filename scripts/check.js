@@ -25,7 +25,7 @@ const BUDGET_ASSET_SINGLE = 120000; // 單一資產上限
 
 /* ── 0. 必備檔案 ── */
 console.log("\n[0] 必備部署檔案");
-const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest"];
+const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
 for (const f of CORE) ok(exists(f), `存在 ${f}`);
 
 /* ── 1. 資產清單 ── */
