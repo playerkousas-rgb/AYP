@@ -207,7 +207,9 @@
           </div>
         </div>`;
       }).join("")}
-      <div class="warn">⚠️ ${esc(SC.caveat)}</div>`;
+      <div class="warn">⚠️ ${esc(SC.caveat)}</div>
+      <div class="plan-actions"><button class="btn primary" data-go-view="bt-sync">🔗 ${LANG === "en" ? "Open 2026 Sync Interactive Checklist & EA Logger →" : "打開 2026「同步完成方案」互動對接核對器 →"}</button></div>`;
+    $$("[data-go-view]", c).forEach(b => b.addEventListener("click", () => showView(b.dataset.goView)));
   }
   function renderConvertMap() {
     const c = $("#convert-map"); if (!c) return;
@@ -218,7 +220,9 @@
           <td class="ayp"><b>${esc(r.ayp)}</b><small>${esc(t.applicableLabel)}${esc(r.lv)}</small></td>
           <td class="sc">${esc(r.scout)}</td></tr>`).join("")}
       </tbody></table>
-      <div class="warn">⚠️ ${esc(SM.caveat)}</div>`;
+      <div class="warn">⚠️ ${esc(SM.caveat)}</div>
+      <div class="plan-actions"><button class="btn primary" data-go-view="bt-conv">🔍 ${LANG === "en" ? "Open Interactive Badge ↔ 5 Sections Search Matcher →" : "打開「跨支部徽章 ↔ 五科即時搜尋配對器」→"}</button></div>`;
+    $$("[data-go-view]", c).forEach(b => b.addEventListener("click", () => showView(b.dataset.goView)));
   }
 
   /* ════════════════════════════════════════════
@@ -472,61 +476,744 @@
   }
 
   /* ════════════════════════════════════════════
+     🚀 2026 實戰強化互動工具包（計數機／同步核對／徽章搜尋／評語庫／UUL清單）
+     ════════════════════════════════════════════ */
+  const CALC_KEY = "ayp-calc-v1";
+  const SYNC_CHK_KEY = "ayp-sync-chk-v1";
+  const EA_LOG_KEY = "ayp-ea-log-v1";
+  const UUL_CHK_KEY = "ayp-uul-chk-v1";
+
+  function loadJson(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch (e) { return def; } }
+  function saveJson(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  function addDays(dateStr, days) {
+    if (!dateStr) return null;
+    const d = new Date(dateStr + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0, 10);
+  }
+  function diffDaysFromToday(dateStr) {
+    if (!dateStr) return null;
+    const target = new Date(dateStr + "T00:00:00");
+    if (isNaN(target.getTime())) return null;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((target - today) / 86400000);
+  }
+  function copyTextWithToast(text, toastEl, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    if (toastEl) {
+      toastEl.innerHTML = `<span class="toast-msg">${esc(msg)}</span>`;
+      setTimeout(() => { if (toastEl) toastEl.innerHTML = ""; }, 3500);
+    }
+  }
+
+  /* ── 頂部 4 大實戰神器快跳橫幅 ── */
+  function renderPowerBanner() {
+    const c = $("#power-banner"); if (!c) return;
+    const isEn = LANG === "en";
+    c.innerHTML = `
+      <div class="power-banner">
+        <div class="power-banner-head">
+          <b>🚀 ${isEn ? "2026 Interactive Toolkit (What the Official Site Doesn't Have)" : "2026 互動實戰工具箱（童軍新官網冇嘅 4 大神器）"}</b>
+          <span class="power-badge">${isEn ? "Members + Leaders/UUL" : "成員 ＋ 領袖/UUL 雙線適用"}</span>
+        </div>
+        <div class="power-grid">
+          <button class="pw-btn" data-pw-jump="calc">
+            <b>🧮 ${isEn ? "Hours, Weeks & Deadlines" : "時數・週數・死線計算器"}</b>
+            <small>${isEn ? "Auto-calc completion date, age 23/25 & Gold 2-mo deadline" : "自動計最快完成日、23/25歲死線、金章提前2個月交表"}</small>
+          </button>
+          <button class="pw-btn" data-pw-view="bt-sync">
+            <b>🔗 ${isEn ? "2026 Sync Scheme Checker" : "2026 同步完成對接核對"}</b>
+            <small>${isEn ? "Tick off Scout items → check missing AYP steps & EA log" : "高級章→銅／總領袖→銀逐項剔＋野外EA紀錄產生器"}</small>
+          </button>
+          <button class="pw-btn" data-pw-view="bt-conv">
+            <b>🔍 ${isEn ? "Badge ↔ 5 Sections Matcher" : "跨支部徽章 ↔ 五科搜尋"}</b>
+            <small>${isEn ? "Instant badge search + 8 cancelled badges alert" : "秒查童軍/深資/樂行徽章對接＋8個已取消徽章防伏"}</small>
+          </button>
+          <button class="pw-btn" data-pw-view="bt-forms">
+            <b>✍️ ${isEn ? "Comment Builder & Forms" : "評語產生器 ＋ AYP/01-14"}</b>
+            <small>${isEn ? "Bilingual Assessor comments + UUL 3-stage checklists" : "一鍵生成防退件具體評語＋全套2026新表格＋UUL清單"}</small>
+          </button>
+        </div>
+      </div>`;
+    $$("[data-pw-jump='calc']", c).forEach(b => b.addEventListener("click", () => {
+      const el = $("#calc-sec"); if (el) smoothTo(el);
+    }));
+    $$("[data-pw-view]", c).forEach(b => b.addEventListener("click", () => {
+      showView(b.dataset.pwView);
+    }));
+  }
+
+  /* ── 神器 1：🧮 AYP 時數・週數・死線計算器 ＋ 個人進度追蹤 ── */
+  function defaultCalcState() {
+    return {
+      path: "bronze",
+      mainSec: "service",
+      startDate: "",
+      birthDate: "",
+      goldTargetDate: "",
+      sec: {
+        service: { h: 0, w: 0 },
+        skill: { h: 0, w: 0 },
+        physical: { h: 0, w: 0 },
+        expedition: { done: false },
+        residential: { done: false }
+      }
+    };
+  }
+
+  function renderCalculator() {
+    const c = $("#calc-box"); if (!c) return;
+    const PW = L().POWER; if (!PW) return;
+    const lb = PW.labels, paths = PW.paths, FS = L().FIVE_SECTIONS;
+    const secTitle = $("#calc-sec-title");
+    if (secTitle) secTitle.textContent = PW.calcTitle.replace(/^🧮\s*/, "");
+
+    let st = loadJson(CALC_KEY, defaultCalcState());
+    if (!paths[st.path]) st.path = "bronze";
+    if (!st.sec) st.sec = defaultCalcState().sec;
+    const p = paths[st.path];
+
+    // Age & 23/25 deadline calculation
+    let ageHtml = "";
+    if (st.birthDate) {
+      const bd = new Date(st.birthDate + "T00:00:00");
+      if (!isNaN(bd.getTime())) {
+        const now = new Date();
+        let months = (now.getFullYear() - bd.getFullYear()) * 12 + (now.getMonth() - bd.getMonth());
+        if (now.getDate() < bd.getDate()) months--;
+        const yrs = Math.floor(months / 12), mos = Math.max(0, months % 12);
+        const dl23 = `${bd.getFullYear() + 23}-${String(bd.getMonth() + 1).padStart(2, "0")}-${String(bd.getDate()).padStart(2, "0")}`;
+        const dl25 = `${bd.getFullYear() + 25}-${String(bd.getMonth() + 1).padStart(2, "0")}-${String(bd.getDate()).padStart(2, "0")}`;
+        const d23 = diffDaysFromToday(dl23), d25 = diffDaysFromToday(dl25);
+        let eligMsg = "";
+        if (yrs < (p.specialAge || p.minAge)) {
+          eligMsg = LANG === "en"
+            ? `⚠️ Below minimum age (${p.minAge}) for ${p.name}. Activities before reaching eligible age & Record Book issue cannot be backdated.`
+            : `⚠️ 目前未滿 ${p.name} 最低年齡（${p.minAge} 歲${p.specialAge ? `／特別安排 ${p.specialAge} 歲` : ""}），未夠齡及未獲發紀錄簿前嘅活動不可追溯。`;
+        } else if (p.specialAge && yrs === p.specialAge) {
+          eligMsg = LANG === "en"
+            ? `💡 Age 13 Bronze Special Arrangement applies: complete Orientation, apply for OA discretionary approval, and participate in a group with eligible peers.`
+            : `💡 符合「13 歲銅章特別安排」：須完成迎新講座、由執行處按個別情況酌情批准，並與適齡朋友以小組形式進行活動。`;
+        } else {
+          eligMsg = LANG === "en"
+            ? `✅ Meets minimum age requirement (≥${p.minAge}) for ${p.name}.`
+            : `✅ 符合 ${p.name} 最低年齡要求（≥${p.minAge} 歲）。`;
+        }
+        ageHtml = `<div class="diag-box age">
+          <h4>${esc(lb.ageCheckTitle)}</h4>
+          <ul>
+            <li><b>${esc(lb.ageNow(yrs, mos))}</b> — ${esc(eligMsg)}</li>
+            <li>${esc(lb.deadline23)}<b>${esc(dl23)}</b> ${d23 !== null ? esc(lb.daysLeft(d23)) : ""}</li>
+            <li>${esc(lb.deadline25)}<b>${esc(dl25)}</b> ${d25 !== null ? esc(lb.daysLeft(d25)) : ""}</li>
+          </ul>
+        </div>`;
+      }
+    }
+
+    // Gold 2-month pre-submission calculation
+    let goldHtml = "";
+    if (p.isGold) {
+      const refDate = st.goldTargetDate || st.startDate;
+      const regDl = refDate ? addDays(refDate, -60) : null;
+      const uulDl = refDate ? addDays(refDate, -75) : null;
+      goldHtml = `<div class="diag-box gold-dl">
+        <h4>${esc(lb.goldDeadlineTitle)}</h4>
+        <p style="margin:.2rem 0">${LANG === "en"
+          ? "Gold participants must submit FORM AYP/02–06 + activity plan signed by UUL to the Regional Office AT LEAST 2 MONTHS before starting any Section:"
+          : "新官網規定：金章參加者必須於各科活動開始「最少兩個月前」，將 UUL 簽署確認嘅 AYP/02–06 及活動計劃書交抵地域辦事處（轉交青少年活動署確認及安排約見）："}</p>
+        ${refDate ? `<ul>
+          <li>${esc(lb.goldUulDate)}<b>${esc(uulDl)}</b></li>
+          <li>${esc(lb.goldRegionalDate)}<b>${esc(regDl)}</b></li>
+        </ul>` : `<p style="margin:.2rem 0;font-weight:700">${LANG === "en" ? "👆 Enter a Planned Gold Section Start Date above to calculate exact submission deadlines." : "👆 請喺上方輸入「金章預計科目開始日」，即刻幫你倒推最遲交表日期！"}</p>`}
+      </div>`;
+    }
+
+    const threeSecs = ["service", "skill", "physical"];
+    const secCardsHtml = threeSecs.map(k => {
+      const isMain = p.splitMain && st.mainSec === k;
+      const reqH = isMain ? p.mainH : p.subH;
+      const reqW = isMain ? p.mainW : p.subW;
+      const curH = Math.max(0, Number((st.sec[k] && st.sec[k].h) || 0));
+      const curW = Math.max(0, Number((st.sec[k] && st.sec[k].w) || 0));
+      const pctH = Math.min(100, Math.round((curH / reqH) * 100));
+      const pctW = Math.min(100, Math.round((curW / reqW) * 100));
+      const earliest = st.startDate ? addDays(st.startDate, reqW * 7) : null;
+      const dLeft = earliest ? diffDaysFromToday(earliest) : null;
+      const isTrap = curH >= reqH && curW < reqW;
+      const isDone = curH >= reqH && curW >= reqW;
+      const roleTag = p.splitMain ? (isMain ? lb.mainTag : lb.subTag) : lb.equalTag;
+
+      return `<div class="sec-track-card ${isMain ? "is-main" : ""} ${isDone ? "is-done" : ""}">
+        <div class="sec-track-top">
+          <div class="sec-track-title"><span>${FS[k].icon}</span><span>${esc(FS[k].name)}</span></div>
+          <span class="role-pill ${isMain ? "" : "sub"}">${esc(roleTag)}（≥${reqH}h / ≥${reqW}w）</span>
+        </div>
+        <div class="sec-req-meta">${esc(lb.reqFormat(reqH, reqW))}</div>
+        <div class="sec-date-badge">
+          ${earliest ? `${esc(lb.earliestDate)}<b>${esc(earliest)}</b> ${esc(lb.daysLeft(dLeft))}` : esc(lb.setStartFirst)}
+        </div>
+        <div class="track-inputs">
+          <div>
+            <label>${esc(lb.hoursLogged)}（目標 ${reqH}h）</label>
+            <input type="number" min="0" max="500" step="0.5" data-calc-h="${k}" value="${curH}">
+          </div>
+          <div>
+            <label>${esc(lb.weeksLogged)}（目標 ${reqW}w）</label>
+            <input type="number" min="0" max="200" step="1" data-calc-w="${k}" value="${curW}">
+          </div>
+        </div>
+        <div class="bar-pair">
+          <div class="mini-bar-wrap">
+            <small><span>⏳ ${curH} / ${reqH}h</span><b>${pctH}%</b></small>
+            <div class="mini-bar"><div style="width:${pctH}%"></div></div>
+          </div>
+          <div class="mini-bar-wrap">
+            <small><span>🗓️ ${curW} / ${reqW}w</span><b>${pctW}%</b></small>
+            <div class="mini-bar ${isTrap ? "warn-bar" : ""}"><div style="width:${pctW}%"></div></div>
+          </div>
+        </div>
+        ${isTrap ? `<div class="warn" style="margin-top:.45rem">${esc(lb.trapWarn(reqW - curW))}</div>` : ""}
+        ${isDone ? `<div class="ok-box" style="margin-top:.45rem">${esc(lb.secDone)}</div>` : ""}
+      </div>`;
+    }).join("");
+
+    const expDone = !!(st.sec.expedition && st.sec.expedition.done);
+    const resDone = !!(st.sec.residential && st.sec.residential.done);
+
+    c.innerHTML = `
+      <div class="calc-shell">
+        <p class="lead" style="margin:.1rem 0 .6rem">${esc(PW.calcIntro)}</p>
+        <div>
+          <b style="color:#0a5c36;font-size:.9rem">${esc(lb.pickPath)}</b>
+          <div class="chips">${Object.keys(paths).map(k =>
+            `<button class="chip ${st.path === k ? "active" : ""}" data-calc-path="${k}">${esc(paths[k].name)}</button>`
+          ).join("")}</div>
+        </div>
+        <div class="tip" style="margin:.4rem 0">${esc(p.note)}</div>
+
+        ${p.splitMain ? `
+          <div style="margin:.6rem 0">
+            <b style="color:#0a5c36;font-size:.9rem">${esc(lb.pickMain)}</b>
+            <div class="chips">${threeSecs.map(k =>
+              `<button class="chip ${st.mainSec === k ? "active" : ""}" data-calc-main="${k}">${FS[k].icon} ${esc(FS[k].name)}（${p.mainH}h / ${p.mainW}w）</button>`
+            ).join("")}</div>
+          </div>` : `<div class="ok-box">${esc(lb.noSplitHint)}</div>`}
+
+        <div class="calc-grid">
+          <div class="field-box">
+            <label for="calc-start-date">${esc(lb.startDate)}</label>
+            <input type="date" id="calc-start-date" value="${esc(st.startDate)}">
+          </div>
+          <div class="field-box">
+            <label for="calc-birth-date">${esc(lb.birthDate)}</label>
+            <input type="date" id="calc-birth-date" value="${esc(st.birthDate)}">
+          </div>
+          ${p.isGold ? `
+          <div class="field-box">
+            <label for="calc-gold-date">${esc(lb.goldTargetDate)}</label>
+            <input type="date" id="calc-gold-date" value="${esc(st.goldTargetDate)}">
+          </div>` : ""}
+        </div>
+
+        ${ageHtml}
+        ${goldHtml}
+
+        <div class="sec-track-list">
+          ${secCardsHtml}
+
+          <div class="sec-track-card ${expDone ? "is-done" : ""}">
+            <div class="sec-track-top">
+              <div class="sec-track-title"><span>${FS.expedition.icon}</span><span>${esc(FS.expedition.name)}</span></div>
+              <span class="role-pill sub">${LANG === "en" ? "Required Journey" : "指定訓練及旅程"}</span>
+            </div>
+            <div class="sec-req-meta">${esc(p.expText)}</div>
+            <label style="display:flex;align-items:center;gap:.5rem;margin-top:.4rem;cursor:pointer;font-weight:700;color:#0a5c36">
+              <input type="checkbox" id="calc-exp-done" style="width:20px;height:20px;accent-color:#0a5c36" ${expDone ? "checked" : ""}>
+              <span>${esc(lb.expDoneLabel)}</span>
+            </label>
+          </div>
+
+          ${p.resText ? `
+          <div class="sec-track-card ${resDone ? "is-done" : ""}">
+            <div class="sec-track-top">
+              <div class="sec-track-title"><span>${FS.residential.icon}</span><span>${esc(FS.residential.name)}</span></div>
+              <span class="role-pill">${LANG === "en" ? "Gold Only (5D4N)" : "金章專屬（5日4夜）"}</span>
+            </div>
+            <div class="sec-req-meta">${esc(p.resText)}</div>
+            <label style="display:flex;align-items:center;gap:.5rem;margin-top:.4rem;cursor:pointer;font-weight:700;color:#0a5c36">
+              <input type="checkbox" id="calc-res-done" style="width:20px;height:20px;accent-color:#0a5c36" ${resDone ? "checked" : ""}>
+              <span>${esc(lb.resDoneLabel)}</span>
+            </label>
+          </div>` : ""}
+        </div>
+
+        <div class="plan-actions">
+          <button class="btn primary" id="calc-copy-btn">${esc(lb.copySummaryBtn)}</button>
+          <button class="btn ghost" id="calc-reset-btn">${esc(lb.resetCalcBtn)}</button>
+        </div>
+        <div id="calc-toast"></div>
+      </div>`;
+
+    $$("[data-calc-path]", c).forEach(b => b.addEventListener("click", () => {
+      st.path = b.dataset.calcPath; saveJson(CALC_KEY, st); renderCalculator();
+    }));
+    $$("[data-calc-main]", c).forEach(b => b.addEventListener("click", () => {
+      st.mainSec = b.dataset.calcMain; saveJson(CALC_KEY, st); renderCalculator();
+    }));
+    const sd = $("#calc-start-date", c);
+    if (sd) sd.addEventListener("change", () => { st.startDate = sd.value; saveJson(CALC_KEY, st); renderCalculator(); });
+    const bd = $("#calc-birth-date", c);
+    if (bd) bd.addEventListener("change", () => { st.birthDate = bd.value; saveJson(CALC_KEY, st); renderCalculator(); });
+    const gd = $("#calc-gold-date", c);
+    if (gd) gd.addEventListener("change", () => { st.goldTargetDate = gd.value; saveJson(CALC_KEY, st); renderCalculator(); });
+
+    $$("[data-calc-h]", c).forEach(inp => inp.addEventListener("change", () => {
+      const k = inp.dataset.calcH;
+      st.sec[k] = st.sec[k] || { h: 0, w: 0 };
+      st.sec[k].h = Math.max(0, Number(inp.value) || 0);
+      saveJson(CALC_KEY, st); renderCalculator();
+    }));
+    $$("[data-calc-w]", c).forEach(inp => inp.addEventListener("change", () => {
+      const k = inp.dataset.calcW;
+      st.sec[k] = st.sec[k] || { h: 0, w: 0 };
+      st.sec[k].w = Math.max(0, Number(inp.value) || 0);
+      saveJson(CALC_KEY, st); renderCalculator();
+    }));
+    const expBox = $("#calc-exp-done", c);
+    if (expBox) expBox.addEventListener("change", () => {
+      st.sec.expedition = { done: expBox.checked }; saveJson(CALC_KEY, st); renderCalculator();
+    });
+    const resBox = $("#calc-res-done", c);
+    if (resBox) resBox.addEventListener("change", () => {
+      st.sec.residential = { done: resBox.checked }; saveJson(CALC_KEY, st); renderCalculator();
+    });
+
+    const resetBtn = $("#calc-reset-btn", c);
+    if (resetBtn) resetBtn.addEventListener("click", () => {
+      saveJson(CALC_KEY, defaultCalcState()); renderCalculator();
+    });
+    const copyBtn = $("#calc-copy-btn", c);
+    if (copyBtn) copyBtn.addEventListener("click", () => {
+      const lines = [
+        `【AYP 進度報告 / AYP Progress Report】`,
+        `章級路徑 Path: ${p.name}`,
+        `正式開展日 Start Date: ${st.startDate || "未填 / Not set"}`,
+      ];
+      threeSecs.forEach(k => {
+        const isMain = p.splitMain && st.mainSec === k;
+        const reqH = isMain ? p.mainH : p.subH;
+        const reqW = isMain ? p.mainW : p.subW;
+        const curH = (st.sec[k] && st.sec[k].h) || 0;
+        const curW = (st.sec[k] && st.sec[k].w) || 0;
+        const earliest = st.startDate ? addDays(st.startDate, reqW * 7) : "-";
+        lines.push(`- ${FS[k].name}: ${curH}/${reqH}h, ${curW}/${reqW}w (最快完成 Earliest: ${earliest})`);
+      });
+      lines.push(`- ${FS.expedition.name}: ${expDone ? "✅ 已完成 Completed" : "⏳ 進行中 In progress"}`);
+      if (p.resText) lines.push(`- ${FS.residential.name}: ${resDone ? "✅ 已完成 Completed" : "⏳ 進行中 In progress"}`);
+      copyTextWithToast(lines.join("\n"), $("#calc-toast", c), lb.copiedToast);
+    });
+  }
+
+  /* ════════════════════════════════════════════
      🧰 底部快速工具：同步方案／單項銜接表／開展表格／查執行處
      ════════════════════════════════════════════ */
-  function renderBottomTools() {
-    // 4 個工具整版 view 嘅內容（由置底 4 格直達，主頁唔再顯示）。
+  let syncRouteKey = "bronze";
+  let convSearchQuery = "";
+  let convBranchIdx = "all";
+  let convSecFilter = "all";
+  let formSearchQuery = "";
+  let formCatFilter = "all";
+  let cmtSecId = "service";
+  let cmtLvKey = "bronze";
+  let cmtActName = "";
+  let cmtHours = 26;
+  let cmtWeeks = 26;
 
-    // 同步方案
+  function renderBottomTools() {
+    const PW = L().POWER, t = UI();
+
+    /* ── 工具 1：📋 2026 同步完成方案 ＋ 互動逐項核對器 ＋ EA 考驗人員紀錄產生器 ── */
     const sync = $("#bt-sync-body");
-    if (sync) {
-      const SP = L().SYNC_PLAN, t = UI();
+    if (sync && PW) {
+      const SP = L().SYNC_PLAN, SC = PW.syncChecker;
+      const chkState = loadJson(SYNC_CHK_KEY, {});
+      const eaState = loadJson(EA_LOG_KEY, {
+        memberName: "", awardRoute: "童軍高級獎章 → AYP 銅章", assessorName: "",
+        assessorRole: "EA / JEA / CRS", assessorUnit: "", assessorContact: "",
+        examItems: "探索A.2.c＋標準A.2.e＋高級A.2.f.I", examDates: "", examResult: "合格 Pass"
+      });
+      const curRoute = SC.routes[syncRouteKey] || SC.routes.bronze;
+      const doneItems = curRoute.items.filter(it => !!chkState[it.id]);
+      const missingItems = curRoute.items.filter(it => !chkState[it.id]);
+
       sync.innerHTML = `
         <div class="warn backdate">${t.backdateWarn}</div>
+        <div class="tool-card">
+          <h3 style="margin:.1rem 0 .3rem;color:#0a5c36">${esc(SC.title)}</h3>
+          <p class="hint" style="margin:0 0 .6rem">${esc(SC.sub)}</p>
+
+          <div class="chips">
+            ${Object.keys(SC.routes).map(rk =>
+              `<button class="chip ${syncRouteKey === rk ? "active" : ""}" data-sync-route="${rk}">${esc(SC.routes[rk].label)}</button>`
+            ).join("")}
+          </div>
+
+          <div class="sync-summary-banner">
+            <div>
+              <b>${esc(curRoute.badgePair)}</b>
+              <div style="font-size:.82rem;color:#444;margin-top:.15rem">
+                ${LANG === "en"
+                  ? `Completed ${doneItems.length} / ${curRoute.items.length} requirements`
+                  : `已剔選完成 ${doneItems.length} / ${curRoute.items.length} 項對接要求`}
+              </div>
+            </div>
+            <button class="btn primary" id="sync-copy-btn" style="min-height:40px;padding:.45rem .85rem;font-size:.85rem">
+              📋 ${LANG === "en" ? "Copy Sync Status" : "複製核對進度"}
+            </button>
+          </div>
+          <div id="sync-toast"></div>
+
+          <ol class="todo">
+            ${curRoute.items.map((it, idx) => `
+              <li class="${chkState[it.id] ? "done" : ""}">
+                <label>
+                  <input type="checkbox" data-sync-chk="${esc(it.id)}" ${chkState[it.id] ? "checked" : ""}>
+                  <span class="todo-n">${idx + 1}</span>
+                  <span>
+                    <span class="chk-cat-tag">${esc(it.cat)}</span>
+                    <b>${esc(it.title)}</b>
+                    <small style="display:block;color:#555;margin-top:.2rem">${esc(it.detail)}</small>
+                  </span>
+                </label>
+              </li>`).join("")}
+          </ol>
+
+          ${missingItems.length === 0
+            ? `<div class="ok-box">🎉 ${LANG === "en" ? "All items for this sync route are checked! Submit to your UUL for dual sign-off." : "此同步路線全部要求已齊備！請連同紀錄簿交予執行處支部組長 (UUL) 辦理雙線審批。"}</div>`
+            : `<div class="warn">🔎 <b>${LANG === "en" ? `Still missing (${missingItems.length} items):` : `目前尚欠 (${missingItems.length} 項)：`}</b>
+                <ul style="margin:.3rem 0;padding-left:1.2rem">${missingItems.map(m => `<li><b>${esc(m.cat)}</b>：${esc(m.title)}</li>`).join("")}</ul>
+              </div>`}
+
+          <div class="tip" style="margin-top:.7rem">
+            <a class="btn primary" href="${esc(SC.eformUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:.4rem">${esc(SC.eformBtn)} ↗</a>
+            <div style="font-size:.82rem">${esc(SC.eformNote)}</div>
+          </div>
+        </div>
+
+        <details class="part" data-key="ea-logger" open>
+          <summary><span class="ico">🏕️</span> <span class="sum-text"><b>${esc(SC.eaLoggerTitle)}</b><small>${esc(SC.eaLoggerDesc)}</small></span><span class="chev">▾</span></summary>
+          <div class="part-body">
+            <div class="calc-grid">
+              ${Object.keys(SC.eaFields).map(fk => `
+                <div class="field-box">
+                  <label>${esc(SC.eaFields[fk])}</label>
+                  <input type="text" data-ea-field="${fk}" value="${esc(eaState[fk] || "")}">
+                </div>`).join("")}
+            </div>
+            <div class="plan-actions">
+              <button class="btn primary" id="ea-copy-btn">${esc(SC.eaCopyBtn)}</button>
+            </div>
+            <div id="ea-toast"></div>
+          </div>
+        </details>
+
         <div class="unofficial-badge">⚠️ ${esc(SP.effective)}</div>
         <p>${esc(SP.summary)}</p>
         <ol class="steps">${SP.points.map(p => `<li>${esc(p)}</li>`).join("")}</ol>
         <div class="warn">${esc(SP.notifyLeader)}</div>
         <div class="warn">${esc(SP.verify)}</div>
         <p><a href="${esc(SP.source.url)}" target="_blank" rel="noopener">${esc(SP.source.label)} — ${esc(t.openOfficialLink)}</a></p>`;
+
+      $$("[data-sync-route]", sync).forEach(b => b.addEventListener("click", () => {
+        syncRouteKey = b.dataset.syncRoute; renderBottomTools();
+      }));
+      $$("[data-sync-chk]", sync).forEach(box => box.addEventListener("change", () => {
+        const s = loadJson(SYNC_CHK_KEY, {});
+        s[box.dataset.syncChk] = box.checked;
+        saveJson(SYNC_CHK_KEY, s); renderBottomTools();
+      }));
+      const syncCopy = $("#sync-copy-btn", sync);
+      if (syncCopy) syncCopy.addEventListener("click", () => {
+        const txt = [
+          `【2026 童軍↔AYP 同步完成核對清單】`,
+          `路線：${curRoute.badgePair}`,
+          `完成度：${doneItems.length} / ${curRoute.items.length}`,
+          ...curRoute.items.map(it => `${chkState[it.id] ? "✅" : "⬜"} [${it.cat}] ${it.title}`)
+        ].join("\n");
+        copyTextWithToast(txt, $("#sync-toast", sync), PW.labels.copiedToast);
+      });
+      $$("[data-ea-field]", sync).forEach(inp => inp.addEventListener("input", () => {
+        const s = loadJson(EA_LOG_KEY, eaState);
+        s[inp.dataset.eaField] = inp.value;
+        saveJson(EA_LOG_KEY, s);
+      }));
+      const eaCopy = $("#ea-copy-btn", sync);
+      if (eaCopy) eaCopy.addEventListener("click", () => {
+        const s = loadJson(EA_LOG_KEY, eaState);
+        const lines = [
+          `【2026 童軍同步完成試行方案 — 野外鍛鍊科考驗人員紀錄】`,
+          ...Object.keys(SC.eaFields).map(fk => `${SC.eaFields[fk]}：${s[fk] || "-"}`)
+        ];
+        copyTextWithToast(lines.join("\n"), $("#ea-toast", sync), PW.labels.copiedToast);
+      });
     }
 
-    // 單項銜接表
+    /* ── 工具 2：🔁 跨支部徽章 ↔ AYP 五科即時搜尋與防伏配對器 ── */
     const conv = $("#bt-conv-body");
-    if (conv) {
-      const CT = L().CONVERSION_TABLE, t = UI();
+    if (conv && PW) {
+      const CT = L().CONVERSION_TABLE;
+      const q = convSearchQuery.trim().toLowerCase();
+      const matchedCancelled = PW.cancelledBadges.filter(b =>
+        q && (b.name.toLowerCase().includes(q) || b.en.toLowerCase().includes(q) || q.includes("護養") || q.includes("愛護動物") || q.includes("營地管理") || q.includes("國際友誼"))
+      );
+
+      const secKeys = ["all", "服務科", "技能科", "康樂體育科", "野外鍛鍊科", "團體生活科"];
+      const filteredGroups = CT.groups.map((g, idx) => {
+        if (convBranchIdx !== "all" && String(idx) !== String(convBranchIdx)) return null;
+        const rows = g.rows.filter(r => {
+          if (convSecFilter !== "all" && !r.ayp.includes(convSecFilter) && !(convSecFilter === "服務科" && r.ayp.includes("Service")) && !(convSecFilter === "技能科" && r.ayp.includes("Skills")) && !(convSecFilter === "康樂體育科" && r.ayp.includes("Physical")) && !(convSecFilter === "野外鍛鍊科" && r.ayp.includes("Journey")) && !(convSecFilter === "團體生活科" && r.ayp.includes("Residential"))) {
+            return false;
+          }
+          if (!q) return true;
+          return g.branch.toLowerCase().includes(q) || r.ayp.toLowerCase().includes(q) || r.items.toLowerCase().includes(q);
+        });
+        if (rows.length === 0) return null;
+        return { ...g, rows };
+      }).filter(Boolean);
+
       conv.innerHTML = `
         <div class="warn backdate">${t.backdateWarn}</div>
+        <div class="tool-card">
+          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">🔍 ${LANG === "en" ? "Interactive Badge ↔ AYP 5-Section Search & Matcher" : "跨支部徽章 ↔ AYP 五科即時搜尋配對器"}</h3>
+          <div class="filter-row">
+            <input type="search" class="search-input" id="conv-search-inp" placeholder="${LANG === "en" ? "Search badge/activity (e.g. First Aid, Canoe, Pioneering, R-A102...)" : "輸入徽章或活動名稱搜尋（例：急救、獨木舟、先鋒工程、攝影、R-A102、大露營...）"}" value="${esc(convSearchQuery)}">
+            ${convSearchQuery ? `<button class="btn ghost" id="conv-clear-btn" style="min-height:42px;padding:.4rem .8rem">✕</button>` : ""}
+          </div>
+          <div class="chips">
+            <button class="chip ${convBranchIdx === "all" ? "active" : ""}" data-conv-br="all">${LANG === "en" ? "All Sections" : "全部支部"}</button>
+            ${CT.groups.map((g, idx) => `<button class="chip ${String(convBranchIdx) === String(idx) ? "active" : ""}" data-conv-br="${idx}">${esc(g.branch.split("參考")[0].split("reference")[0])}</button>`).join("")}
+          </div>
+          <div class="chips">
+            ${secKeys.map(sk => `<button class="chip ${convSecFilter === sk ? "active" : ""}" data-conv-sec="${sk}">${sk === "all" ? (LANG === "en" ? "All 5 AYP Sections" : "全部五科") : esc(sk)}</button>`).join("")}
+          </div>
+
+          ${matchedCancelled.length > 0 ? `
+            <div class="badge-cancel-alert">
+              <b>🚫 ${LANG === "en" ? "CANCELLED BADGE ALERT (Circular P013/26, 2026-08-15):" : "防中伏警告：你搜尋嘅徽章已於 2026-08-15 通告 (P013/26) 正式取消！"}</b>
+              <ul style="margin:.3rem 0;padding-left:1.2rem">
+                ${matchedCancelled.map(b => `<li><b>${esc(b.name)}（${esc(b.group)} / ${esc(b.en)}）</b> — ${LANG === "en" ? "No longer issued; do NOT use for new AYP declarations." : "總會已停止簽發，切勿再用嚟申報新嘅 AYP 項目！"}</li>`).join("")}
+              </ul>
+            </div>` : ""}
+
+          ${filteredGroups.length === 0
+            ? `<div class="wz-empty">${LANG === "en" ? "No matching badges found. Try another keyword or clear filters." : "搵唔到符合條件嘅徽章／項目，請試下其他關鍵字或重設篩選。"}</div>`
+            : filteredGroups.map(g => `
+              <div class="conv-group">
+                <h4>${esc(g.branch)}</h4>
+                <table class="conv"><tbody>
+                  ${g.rows.map(r => `<tr><td class="ayp-col">${esc(r.ayp)}</td><td>${esc(r.items)}</td></tr>`).join("")}
+                </tbody></table>
+                ${g.note ? `<p class="hint">${esc(g.note)}</p>` : ""}
+              </div>`).join("")}
+        </div>
+
+        <h3 style="color:#0a5c36;margin:1.2rem 0 .4rem">${esc(PW.redlinesTitle)}</h3>
+        ${PW.redlines.map((rl, i) => part("rl-" + i,
+          `<span class="ico">${rl.icon}</span><span class="sum-text"><b>${esc(rl.title)}</b></span>`,
+          `<p>${esc(rl.body)}</p>`, true)).join("")}
+
         <div class="unofficial-badge">${esc(CT.unofficialTag)}</div>
         <p>${esc(CT.intro)}</p>
         <div class="warn">${esc(CT.excludedNote)}</div>
-        ${CT.groups.map(g => `
-          <div class="conv-group">
-            <h4>${esc(g.branch)}</h4>
-            <table class="conv"><tbody>
-              ${g.rows.map(r => `<tr><td class="ayp-col">${esc(r.ayp)}</td><td>${esc(r.items)}</td></tr>`).join("")}
-            </tbody></table>
-            ${g.note ? `<p class="hint">${esc(g.note)}</p>` : ""}
-          </div>`).join("")}
         <p class="hint">${esc(CT.footnote)}</p>
         <p>${esc(t.conversionOfficialBase)}<a href="${esc(CT.officialSource.url)}" target="_blank" rel="noopener">${esc(CT.officialSource.label)}</a></p>
         <p>${esc(t.conversionCancelSource)}<a href="${esc(CT.cancelSource.url)}" target="_blank" rel="noopener">${esc(CT.cancelSource.label)}</a></p>`;
+
+      const sInp = $("#conv-search-inp", conv);
+      if (sInp) sInp.addEventListener("input", () => {
+        convSearchQuery = sInp.value;
+        const pos = sInp.selectionStart;
+        renderBottomTools();
+        const nextInp = $("#conv-search-inp", conv);
+        if (nextInp) { nextInp.focus(); try { nextInp.setSelectionRange(pos, pos); } catch (e) {} }
+      });
+      const clr = $("#conv-clear-btn", conv);
+      if (clr) clr.addEventListener("click", () => { convSearchQuery = ""; renderBottomTools(); });
+      $$("[data-conv-br]", conv).forEach(b => b.addEventListener("click", () => {
+        convBranchIdx = b.dataset.convBr; renderBottomTools();
+      }));
+      $$("[data-conv-sec]", conv).forEach(b => b.addEventListener("click", () => {
+        convSecFilter = b.dataset.convSec; renderBottomTools();
+      }));
     }
 
-    // 開展表格（AYP/01 等）
+    /* ── 工具 3：📝 2026 全套官方表格 (AYP/01–14) 搜尋器 ＋ ✍️ 評核員具體評語產生器 ── */
     const forms2 = $("#bt-forms-body");
-    if (forms2) {
-      const FORMS = L().FORMS, t = UI();
-      forms2.innerHTML = `<table class="forms"><tbody>` + FORMS.map(f =>
-        `<tr><td class="no">${esc(f.no)}</td><td><b>${esc(f.name)}</b><small>${esc(f.note)}</small>${f.url ? `<br><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(t.formsDownload)} →</a>` : ""}</td></tr>`
-      ).join("") + `</tbody></table>`;
+    if (forms2 && PW) {
+      const CB = PW.commentBuilder;
+      const cats = ["all", "參加及轉換", "訓練及評核", "章級完成", "支部及行政"];
+      const fq = formSearchQuery.trim().toLowerCase();
+      const matchedForms = PW.fullForms.filter(f => {
+        if (formCatFilter !== "all" && f.cat !== formCatFilter) return false;
+        if (!fq) return true;
+        return f.code.toLowerCase().includes(fq) || f.name.toLowerCase().includes(fq) || f.note.toLowerCase().includes(fq);
+      });
+
+      const secObj = CB.secOptions.find(s => s.id === cmtSecId) || CB.secOptions[0];
+      const lvNameZh = { bronze: "銅章級", silver: "銀章級", gold: "金章級" }[cmtLvKey] || "銅章級";
+      const lvNameEn = { bronze: "Bronze Award", silver: "Silver Award", gold: "Gold Award" }[cmtLvKey] || "Bronze Award";
+      const genZh = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+      const genEn = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
+
+      forms2.innerHTML = `
+        <div class="tool-card">
+          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">📋 ${LANG === "en" ? "2026 Full Official Forms Finder (AYP/01–AYP/14 + e-Forms)" : "2026 全套官方表格搜尋器（AYP/01–AYP/14 ＋ 試行意向 e-Form）"}</h3>
+          <div class="filter-row">
+            <input type="search" class="search-input" id="form-search-inp" placeholder="${LANG === "en" ? "Search form code or purpose (e.g. AYP/07, AYP/08, Gold, transfer...)" : "輸入表格編號或用途（例：AYP/07、AYP/08、金章、轉處、統計...）"}" value="${esc(formSearchQuery)}">
+          </div>
+          <div class="chips">
+            ${cats.map(cKey => `<button class="chip ${formCatFilter === cKey ? "active" : ""}" data-form-cat="${cKey}">${cKey === "all" ? (LANG === "en" ? "All Categories (16)" : "全部類別 (16)") : esc(cKey)}</button>`).join("")}
+          </div>
+          <table class="forms"><tbody>
+            ${matchedForms.map(f => `
+              <tr>
+                <td class="no"><b>${esc(f.code)}</b><small>${esc(f.cat)}</small></td>
+                <td>
+                  <b>${esc(f.name)}</b>
+                  <small>${esc(f.note)}</small>
+                  <a href="${esc(f.url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:.2rem">${esc(t.formsDownload)} ↗</a>
+                </td>
+              </tr>`).join("")}
+          </tbody></table>
+        </div>
+
+        <div class="tool-card">
+          <h3 style="margin:.1rem 0 .3rem;color:#0a5c36">${esc(CB.title)}</h3>
+          <p class="hint" style="margin:0 0 .6rem">${esc(CB.sub)}</p>
+          <div class="calc-grid">
+            <div class="field-box">
+              <label>${LANG === "en" ? "① Section" : "① 揀科目"}</label>
+              <select id="cmt-sec-sel">
+                ${CB.secOptions.map(s => `<option value="${s.id}" ${s.id === cmtSecId ? "selected" : ""}>${esc(s.name)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field-box">
+              <label>${LANG === "en" ? "② Award Level" : "② 揀章級"}</label>
+              <select id="cmt-lv-sel">
+                <option value="bronze" ${cmtLvKey === "bronze" ? "selected" : ""}>🥉 銅章 Bronze</option>
+                <option value="silver" ${cmtLvKey === "silver" ? "selected" : ""}>🥈 銀章 Silver</option>
+                <option value="gold" ${cmtLvKey === "gold" ? "selected" : ""}>🥇 金章 Gold</option>
+              </select>
+            </div>
+            <div class="field-box">
+              <label>${LANG === "en" ? "③ Activity Name (optional)" : "③ 具體活動名稱（可自訂）"}</label>
+              <input type="text" id="cmt-act-inp" placeholder="${esc(secObj.defaultAct)}" value="${esc(cmtActName)}">
+            </div>
+            <div class="field-box">
+              <label>${LANG === "en" ? "④ Hours & Weeks" : "④ 累積時數 ／ 持續星期數"}</label>
+              <div style="display:flex;gap:.4rem">
+                <input type="number" id="cmt-h-inp" min="1" max="300" value="${cmtHours}" title="Hours">
+                <input type="number" id="cmt-w-inp" min="1" max="150" value="${cmtWeeks}" title="Weeks">
+              </div>
+            </div>
+          </div>
+
+          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">🇭🇰 中文具體評語範本（可直接抄寫落紀錄簿）：</b>
+          <div class="cmt-output" id="cmt-zh-out">${esc(genZh)}</div>
+          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">🇬🇧 English Specific Assessor Comment Template:</b>
+          <div class="cmt-output" id="cmt-en-out">${esc(genEn)}</div>
+
+          <div class="plan-actions">
+            <button class="btn primary" id="cmt-copy-zh">📋 ${LANG === "en" ? "Copy Chinese Comment" : "複製中文評語"}</button>
+            <button class="btn ghost" id="cmt-copy-en">📋 ${LANG === "en" ? "Copy English Comment" : "複製英文評語"}</button>
+          </div>
+          <div id="cmt-toast"></div>
+        </div>`;
+
+      const fInp = $("#form-search-inp", forms2);
+      if (fInp) fInp.addEventListener("input", () => {
+        formSearchQuery = fInp.value;
+        const pos = fInp.selectionStart;
+        renderBottomTools();
+        const nextInp = $("#form-search-inp", forms2);
+        if (nextInp) { nextInp.focus(); try { nextInp.setSelectionRange(pos, pos); } catch (e) {} }
+      });
+      $$("[data-form-cat]", forms2).forEach(b => b.addEventListener("click", () => {
+        formCatFilter = b.dataset.formCat; renderBottomTools();
+      }));
+
+      const secSel = $("#cmt-sec-sel", forms2);
+      if (secSel) secSel.addEventListener("change", () => { cmtSecId = secSel.value; renderBottomTools(); });
+      const lvSel = $("#cmt-lv-sel", forms2);
+      if (lvSel) lvSel.addEventListener("change", () => {
+        cmtLvKey = lvSel.value;
+        if (cmtLvKey === "bronze") { cmtHours = 26; cmtWeeks = 26; }
+        if (cmtLvKey === "silver") { cmtHours = 26; cmtWeeks = 26; }
+        if (cmtLvKey === "gold") { cmtHours = 52; cmtWeeks = 52; }
+        renderBottomTools();
+      });
+      const actInp = $("#cmt-act-inp", forms2);
+      if (actInp) actInp.addEventListener("input", () => {
+        cmtActName = actInp.value;
+        const zOut = $("#cmt-zh-out", forms2), eOut = $("#cmt-en-out", forms2);
+        if (zOut) zOut.textContent = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+        if (eOut) eOut.textContent = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
+      });
+      const hInp = $("#cmt-h-inp", forms2), wInp = $("#cmt-w-inp", forms2);
+      const onHW = () => {
+        cmtHours = Number(hInp.value) || 26;
+        cmtWeeks = Number(wInp.value) || 26;
+        const zOut = $("#cmt-zh-out", forms2), eOut = $("#cmt-en-out", forms2);
+        if (zOut) zOut.textContent = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+        if (eOut) eOut.textContent = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
+      };
+      if (hInp) hInp.addEventListener("input", onHW);
+      if (wInp) wInp.addEventListener("input", onHW);
+
+      const cpZh = $("#cmt-copy-zh", forms2), cpEn = $("#cmt-copy-en", forms2);
+      if (cpZh) cpZh.addEventListener("click", () => copyTextWithToast($("#cmt-zh-out", forms2).textContent, $("#cmt-toast", forms2), PW.labels.copiedToast));
+      if (cpEn) cpEn.addEventListener("click", () => copyTextWithToast($("#cmt-en-out", forms2).textContent, $("#cmt-toast", forms2), PW.labels.copiedToast));
     }
 
-    // 查執行處／組長
+    /* ── 工具 4：🏢 查執行處／組長 ＋ 🏕️ 領袖／UUL 三階段防退件核對清單 ── */
     const oa = $("#bt-oa-body");
-    if (oa) {
-      const OA = L().OA_LOOKUP;
+    if (oa && PW) {
+      const OA = L().OA_LOOKUP, UC = PW.uulChecklists;
+      const uulState = loadJson(UUL_CHK_KEY, {});
       oa.innerHTML = `
+        <div class="tool-card">
+          <h3 style="margin:.1rem 0 .3rem;color:#0a5c36">${esc(UC.title)}</h3>
+          <p class="hint" style="margin:0 0 .6rem">${esc(UC.sub)}</p>
+          ${UC.groups.map(grp => {
+            const doneC = grp.items.filter((_, idx) => !!uulState[grp.id + ":" + idx]).length;
+            return `<div style="margin:.8rem 0">
+              <b style="color:#0a5c36;display:block;margin-bottom:.3rem">${esc(grp.title)}（${doneC}/${grp.items.length}）</b>
+              <ol class="todo">
+                ${grp.items.map((itemText, idx) => {
+                  const k = grp.id + ":" + idx;
+                  return `<li class="${uulState[k] ? "done" : ""}">
+                    <label>
+                      <input type="checkbox" data-uul-chk="${esc(k)}" ${uulState[k] ? "checked" : ""}>
+                      <span class="todo-n">${idx + 1}</span>
+                      <span>${esc(itemText)}</span>
+                    </label>
+                  </li>`;
+                }).join("")}
+              </ol>
+            </div>`;
+          }).join("")}
+        </div>
+
         <p>${esc(OA.intro)}</p>
         <ul class="oa-links">${OA.links.map(l =>
           `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul>
@@ -534,6 +1221,12 @@
         <table class="oa-regions"><tbody>${OA.regions.map(r =>
           `<tr><td>${esc(r.name)}</td><td>${esc(r.tel)}</td></tr>`).join("")}</tbody></table>
         <div class="warn">${esc(OA.caveat)}</div>`;
+
+      $$("[data-uul-chk]", oa).forEach(box => box.addEventListener("change", () => {
+        const s = loadJson(UUL_CHK_KEY, {});
+        s[box.dataset.uulChk] = box.checked;
+        saveJson(UUL_CHK_KEY, s); renderBottomTools();
+      }));
     }
   }
 
@@ -611,8 +1304,10 @@
     renderStaticText();
     renderTopBar();
     renderBottomBar();
+    renderPowerBanner();
     renderWizard();
     renderNormalCard();
+    renderCalculator();
     renderBeginner();
     renderTldr();
     renderCopyright();

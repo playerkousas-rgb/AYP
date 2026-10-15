@@ -284,6 +284,60 @@ img{max-width:100%;height:auto}
   table.conv{font-size:.84rem}
 }
 @media print{header::after,.fab,#fab-top,#fab-lang,.bottombar,.topbar{display:none}}
+
+/* ── 🚀 2026 實戰強化互動工具包樣式 ── */
+.power-banner{background:linear-gradient(135deg,#eef7f1,#fffdf4);border:2px solid #0a5c36;border-radius:14px;padding:.75rem .85rem;margin:.7rem 0}
+.power-banner-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+.power-banner-head b{color:#0a5c36;font-size:.96rem}
+.power-badge{background:#0a5c36;color:#fff;font-size:.72rem;font-weight:800;padding:.15rem .55rem;border-radius:20px}
+.power-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.45rem}
+@media(min-width:641px){.power-grid{grid-template-columns:repeat(4,1fr)}}
+.pw-btn{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;background:#fff;border:1.5px solid #cfe0d5;border-radius:11px;padding:.55rem .65rem;cursor:pointer;text-align:left;transition:all .15s;min-height:64px}
+.pw-btn:hover{border-color:#0a5c36;background:#e7f3ea;transform:translateY(-1px)}
+.pw-btn b{color:#0a5c36;font-size:.86rem;line-height:1.25}
+.pw-btn small{color:var(--muted);font-size:.73rem;line-height:1.25}
+
+.calc-shell,.tool-card{background:#fff;border:2px solid #0a5c36;border-radius:16px;padding:1rem;margin:.7rem 0;box-shadow:0 3px 12px rgba(10,92,54,.07)}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.65rem;margin:.65rem 0}
+.field-box{background:#f8faf8;border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem}
+.field-box label{display:block;font-weight:700;font-size:.82rem;color:#0a5c36;margin-bottom:.3rem}
+.field-box input,.field-box select,.field-box textarea{width:100%;padding:.48rem .6rem;border:1.5px solid #ccd6ce;border-radius:8px;font-size:.92rem;font-family:inherit;background:#fff;color:var(--text)}
+.field-box input:focus,.field-box select:focus,.field-box textarea:focus{outline:none;border-color:#0a5c36;box-shadow:0 0 0 2px rgba(10,92,54,.15)}
+
+.sec-track-list{display:flex;flex-direction:column;gap:.65rem;margin:.75rem 0}
+.sec-track-card{border:1.5px solid var(--line);border-radius:12px;padding:.75rem .85rem;background:#fcfcfa}
+.sec-track-card.is-main{border-color:#0a5c36;background:#f4faf6}
+.sec-track-card.is-done{border-color:#2f9e63;background:#eef9f1}
+.sec-track-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.sec-track-title{font-weight:800;font-size:.98rem;color:#0a5c36;display:flex;align-items:center;gap:.4rem}
+.role-pill{font-size:.72rem;font-weight:800;padding:.12rem .5rem;border-radius:20px;background:#0a5c36;color:#fff}
+.role-pill.sub{background:#e2e8e4;color:#2c4a38}
+.sec-req-meta{font-size:.82rem;color:#444;margin:.25rem 0}
+.sec-date-badge{display:inline-block;background:#fff8e1;border:1px solid #f0dfa8;color:#5a4300;font-weight:700;font-size:.82rem;padding:.2rem .55rem;border-radius:8px;margin:.25rem 0}
+.track-inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.45rem 0}
+.track-inputs label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:.15rem;font-weight:600}
+.track-inputs input{width:100%;padding:.38rem .5rem;border:1.5px solid #ccc;border-radius:8px;font-size:.92rem;font-weight:700}
+.bar-pair{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:.35rem}
+.mini-bar-wrap small{display:flex;justify-content:space-between;font-size:.74rem;color:#555;margin-bottom:.15rem}
+.mini-bar{height:8px;background:#e6eae7;border-radius:6px;overflow:hidden}
+.mini-bar>div{height:100%;background:linear-gradient(90deg,#0a5c36,#2f9e63);border-radius:6px;transition:width .25s}
+.mini-bar.warn-bar>div{background:linear-gradient(90deg,#d4af37,#e67e22)}
+
+.diag-box{border-radius:12px;padding:.7rem .85rem;margin:.6rem 0;font-size:.88rem}
+.diag-box.age{background:#eef4ff;border:1px solid #c9d8f5;color:#1f3a6e}
+.diag-box.gold-dl{background:#fff4e5;border:2px solid #e67e22;color:#5c2d00}
+.diag-box h4{margin:0 0 .35rem;font-size:.94rem}
+.diag-box ul{margin:.25rem 0;padding-left:1.2rem}
+.diag-box li{margin:.2rem 0}
+
+.chk-cat-tag{display:inline-block;background:#eef3ef;color:#0a5c36;font-size:.72rem;font-weight:800;padding:.1rem .45rem;border-radius:6px;margin-right:.35rem}
+.sync-summary-banner{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;background:#f4faf6;border:1.5px solid #0a5c36;border-radius:12px;padding:.65rem .85rem;margin:.6rem 0}
+.filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:.6rem 0;align-items:center}
+.search-input{flex:1 1 220px;padding:.55rem .75rem;border:2px solid #0a5c36;border-radius:10px;font-size:.95rem;font-family:inherit}
+.badge-cancel-alert{background:#fdecec;border:2px solid #d64541;border-radius:12px;padding:.75rem .9rem;margin:.6rem 0;color:#7a1f2b}
+.cmt-output{background:#f8faf8;border:2px dashed #0a5c36;border-radius:12px;padding:.75rem .85rem;margin:.6rem 0;font-size:.92rem;line-height:1.65;white-space:pre-wrap}
+.toast-msg{display:inline-block;background:#0a5c36;color:#fff;font-size:.82rem;font-weight:700;padding:.35rem .75rem;border-radius:8px;margin-top:.4rem}
+
 </style>
 </head>
 <body data-view="normal">
@@ -316,7 +370,12 @@ img{max-width:100%;height:auto}
 
 
 
+  <div id="power-banner"></div>
   <div id="normal-card"></div>
+  <section id="calc-sec">
+    <h2 class="sec"><span class="n hot">🧮</span> <span id="calc-sec-title">AYP 時數・週數・死線計算器 ＋ 個人進度追蹤</span></h2>
+    <div id="calc-box"></div>
+  </section>
 
   <!-- ══ 🌱 零基礎 ══ -->
   <section id="beginner">
