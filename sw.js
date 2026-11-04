@@ -1,7 +1,6 @@
 /* Service Worker — AYP 童軍接駁指南（離線可用） */
-/* 注意：每次改動快取清單（新增／刪除資產）都必須遞增 CACHE 版本號，
-   否則舊用戶會繼續用舊快取。見 docs/部署瘦身與防增肥規範.md */
-const CACHE = "ayp-guide-v10";
+/* 應用程式或快取資產更新時遞增版本，讓既有用戶取得新內容。 */
+const CACHE = "ayp-guide-v12";
 const ASSETS = [
   "./",
   "./index.html",
@@ -26,34 +25,40 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      // Never remove caches owned by a different app on the same origin.
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith("ayp-guide-") && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
-  // 只處理同源（本地檔案）
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
-  e.respondWith(
-    caches.match(e.request).then((hit) => {
-      if (hit) return hit;
-      return fetch(e.request)
-        .then((res) => {
-          // 只快取健康回應，避免把 404／空 body 凍結進離線快取
-          if (res && res.ok && (res.type === "basic" || res.type === "default")) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(e.request, copy));
-          }
-          return res;
-        })
-        .catch(() =>
-          // 離線／網路失敗：回落主頁；保證永遠回一個有效 Response
-          caches.match("./index.html").then((pg) =>
-            pg || new Response("offline", { status: 503, statusText: "Offline" })
-          )
-        );
-    })
-  );
+  const offline = () => new Response("Offline", {
+    status: 503, statusText: "Offline", headers: { "Content-Type": "text/plain; charset=utf-8" }
+  });
+
+  if (e.request.mode === "navigate") {
+    // Prefer fresh HTML online; only navigations may fall back to the app shell.
+    e.respondWith(fetch(e.request).catch(() => caches.open(CACHE)
+      .then((c) => c.match("./index.html"))
+      .then((page) => page || offline())));
+    return;
+  }
+
+  const isAsset = ASSETS.some((asset) => new URL(asset, self.registration.scope).pathname === url.pathname);
+  if (isAsset) {
+    // A newer HTML shell must not receive stale JS from an older active worker.
+    const requestedVersion = url.searchParams.get("v");
+    if (requestedVersion && requestedVersion !== CACHE.replace(/^ayp-guide-v/, "")) {
+      e.respondWith(fetch(e.request).catch(offline));
+      return;
+    }
+    e.respondWith(caches.open(CACHE).then((c) => c.match(e.request, { ignoreSearch: true }))
+      .then((hit) => hit || fetch(e.request).catch(offline)));
+    return;
+  }
+  // Do not cache arbitrary responses, and never return HTML for a failed asset/API request.
+  e.respondWith(fetch(e.request).catch(offline));
 });
