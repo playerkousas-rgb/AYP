@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AYP童軍">
-<meta name="description" content="非官方指南：童軍 ↔ AYP 同步完成／銜接認可、轉執行處／升支部接駁、各支部正常流程。所有活動須於正式開展日後進行，不可追溯。">
+<meta name="description" content="非官方指南：童軍與 AYP 同步完成、轉執行處、升團及起步流程。資料及個別安排請向執行處核實。">
 <meta name="copyright" content="© 2026 Scout System · 資料版權屬香港青年獎勵計劃及香港童軍總會所有">
 <style>
 :root{
@@ -338,40 +338,128 @@ img{max-width:100%;height:auto}
 .cmt-output{background:#f8faf8;border:2px dashed #0a5c36;border-radius:12px;padding:.75rem .85rem;margin:.6rem 0;font-size:.92rem;line-height:1.65;white-space:pre-wrap}
 .toast-msg{display:inline-block;background:#0a5c36;color:#fff;font-size:.82rem;font-weight:700;padding:.35rem .75rem;border-radius:8px;margin-top:.4rem}
 
+
+/* AYP workspace: calm hierarchy, readable controls and consistent spacing. */
+:root{--scout-green:#1e5643;--scout-green-dark:#153d31;--text:#1d3028;--muted:#566a60;--bg:#f4f6f1;--card:#fff;--line:#dce5dd;--gold:#bd9650}
+html{scroll-behavior:smooth} body{background:var(--bg);color:var(--text);line-height:1.65}
+button,input,select,textarea{font:inherit} button{color:inherit} a{color:#205f48}
+:focus-visible{outline:3px solid #bd8540;outline-offset:3px} .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:fixed;top:.5rem;left:.5rem;z-index:200;padding:.6rem 1rem;background:#fff;border:2px solid var(--scout-green);border-radius:6px;transform:translateY(-200%)}
+.skip-link:focus{transform:translateY(0)}
+header{background:#153d31;color:#fff;text-align:left;padding:1.2rem 1.25rem 1rem}
+header::after{height:3px;background:#c6a05a}
+.header-inner,.header-meta{max-width:1080px;margin:auto}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{justify-content:flex-start;text-align:left;gap:.8rem;min-width:0}
+.brand img{width:46px;height:46px;border-radius:11px;padding:0;background:transparent}
+.brand h1{font-size:1.2rem;line-height:1.25;letter-spacing:.01em}.brand .tag{font-size:.82rem;color:#d2e3d8;opacity:1;margin:.18rem 0 0}
+.header-actions{display:flex;align-items:center;gap:.45rem;flex:none}
+#home-nav,#fab-lang{position:static;display:inline-flex;align-items:center;justify-content:center;width:auto;height:40px;min-width:44px;padding:0 .75rem;border:1px solid #90ad9b;border-radius:8px;background:transparent;color:#fff;box-shadow:none;font-size:.8rem;font-weight:700;cursor:pointer}
+#home-nav[aria-current="page"]{background:#fff;color:#153d31;border-color:#fff} #home-nav:hover,#fab-lang:hover{background:#e6f0e9;color:#153d31}
+.header-meta{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-top:.8rem;color:#c7dacf;font-size:.73rem}
+.header-meta #header-note{color:#f0d69a;font-weight:700}.badge-base{display:inline;margin:0;padding:0;background:none;border-radius:0;font-size:inherit;color:inherit}
+.topbar,.bottombar{background:#fff;backdrop-filter:none;box-shadow:none;border-color:var(--line)}
+.topbar{grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem;padding:.45rem max(.6rem,calc((100vw - 1080px)/2));}
+.tb-btn,.bb-btn{min-width:0;border:0;border-radius:9px;color:#51675b;box-shadow:none;font-weight:700;line-height:1.2}
+.tb-btn{min-height:48px;padding:.45rem .35rem;gap:.4rem;flex-direction:row}
+.tb-btn .tb-ico,.bb-btn .bb-ico{display:flex;align-items:center;justify-content:center;line-height:1;flex:none}
+.tb-ico svg,.bb-ico svg,.pw-icon svg,.wz-ico svg{display:block;width:20px;height:20px}
+.tb-btn .tb-lbl,.bb-btn .bb-lbl{font-size:.8rem;white-space:normal;overflow-wrap:anywhere}
+.tb-btn:hover,.bb-btn:hover{background:#f0f5ef;text-decoration:none}.tb-btn.active,.bb-btn.active{background:#e7f1e9;color:#174c39;box-shadow:none}
+.bottombar{grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem;padding:.45rem max(.6rem,calc((100vw - 1080px)/2)) calc(.45rem + env(safe-area-inset-bottom))}
+.bb-btn{min-height:48px;padding:.4rem .3rem;gap:.45rem;flex-direction:row}
+.tv-head{position:static;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;padding:.3rem 0 1rem;margin:1.3rem 0;gap:1rem}
+.guide-back{display:inline-flex;align-items:center;gap:.3rem;margin:.35rem 0 .35rem;padding:.45rem 0;border:0;background:transparent;color:#315e46;font-size:.83rem;font-weight:700;cursor:pointer;min-height:44px}.guide-back:hover{text-decoration:underline}.tv-head h2{margin:0;font-size:1.3rem;line-height:1.3;color:#183c2f}.tv-back{border:1px solid #a4b9aa;border-radius:8px;color:#205a43;background:#fff}
+main{max-width:1080px;padding:1.1rem 1.25rem calc(7rem + env(safe-area-inset-bottom))}
+.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin:.7rem 0 1.1rem}
+.section-heading h2,.section-heading .sec,.hero-copy h2{display:block;border:0;padding:0;margin:0;color:#173e30;font-size:clamp(1.45rem,2.2vw,2rem);line-height:1.3;letter-spacing:-.02em}
+.section-heading p,.hero-copy p{margin:.45rem 0 0;color:#586e61;font-size:.93rem}
+.quick-heading{margin-top:1rem}.guide-note{font-size:.75rem;font-weight:700;color:#456b56;background:#e5efe7;border-radius:6px;padding:.35rem .6rem;white-space:nowrap}
+.hero-note{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:1.5rem;padding:1.7rem 1.9rem;margin:.3rem 0 2rem;background:#e6efe6;border:1px solid #d5e3d6;border-radius:16px}
+.hero-copy h2{max-width:18em}.hero-copy p{max-width:40em}.ministeps{display:grid;grid-template-columns:1fr;gap:0;margin:0;border-left:1px solid #cadbce;padding-left:1.4rem}
+.ministep{display:flex;align-items:center;gap:.75rem;text-align:left;padding:.35rem 0;border:0;border-radius:0;background:transparent;font-size:.82rem;color:#39584a;line-height:1.4}.ministep br{display:none}
+.step-dot{display:inline-grid;place-items:center;width:24px;height:24px;flex:none;border:1px solid #97b5a0;border-radius:50%;font-weight:700;font-size:.72rem;color:#2a644b}
+.overview-plan{margin:0 0 2rem}.section-heading.compact{margin-bottom:.6rem}.section-heading.compact h2{font-size:1.28rem}.section-heading.compact p{font-size:.86rem}
+#quick .wizard-shell,.calc-shell,.tool-card{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:none;padding:1.3rem}
+.wz-progress{height:5px;background:#e7ede7;margin-bottom:.8rem}.wz-bar{background:#2d7655}.wz-step-label{font-size:.82rem;color:#476958;margin:.25rem 0 1.2rem}
+.wz-group{margin:1.25rem 0 1.5rem}.wz-group>b{font-size:1rem;margin-bottom:.65rem;color:#203f31}.wz-grid{gap:.65rem}
+.wz-opt{display:grid;grid-template-columns:38px minmax(0,1fr);grid-template-rows:auto auto;column-gap:.65rem;row-gap:0;align-content:center;align-items:center;text-align:left;min-height:82px;padding:.8rem;border:1px solid #d9e3da;border-radius:10px;background:#fff;box-shadow:none}
+.wz-ico{grid-row:1/3;width:38px;height:38px;display:grid;place-items:center;border-radius:9px;color:#2b6a4c;background:#edf4ee}.wz-t{font-weight:700;line-height:1.3}.wz-opt small{font-size:.75rem;color:#62766a;line-height:1.35;margin-top:.2rem}
+.wz-opt:hover{border-color:#8aae96;background:#f8fbf8}.wz-opt.active{border-color:#30785a;background:#ecf5ed;box-shadow:inset 0 0 0 1px #30785a}.wz-empty{background:#f5f8f4;border:1px dashed #c5d5c7;border-radius:9px;color:#53695c;text-align:left}
+.plan-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.2rem;margin:0}.plan-head{align-items:center;gap:.85rem}.plan-ico{display:grid;place-items:center;width:42px;height:42px;background:#edf4ee;border-radius:10px;font-size:1.3rem}.plan-ico svg{width:22px;height:22px;color:#2b6a4c}.plan-route{color:#426b54;font-weight:600;font-size:.9rem}.plan-progress{font-weight:700;color:#587264}
+ol.todo li{border-color:#e4ebe4;border-radius:9px}ol.todo li.done{opacity:1}ol.todo label{padding:.8rem}.todo-n{background:#e8f1e9;color:#285e42;border-radius:50%}.plan-meta>div{background:#f7faf6;border-color:#e6ede6;text-align:left}.plan-meta small{font-size:.76rem}.plan-meta b{font-size:.88rem}
+.part{border-color:var(--line);border-radius:10px}.part>summary{padding:1rem 1.1rem}.part .part-body{padding:.4rem 1.1rem 1.1rem;border-top:1px solid #edf1ed}.part .sum-text small{color:#607267}
+.chip{border:1px solid #cbd8ce;border-radius:8px;box-shadow:none;color:#30533e}.chip.active,.chip.tick.active{border-color:#2c7354;background:#e9f4eb;color:#174e36;box-shadow:inset 0 0 0 1px #2c7354}
+.btn{border-radius:8px;font-size:.9rem}.btn.primary{background:#1e6045;border-color:#1e6045}.btn.ghost{color:#205a43;border:1px solid #9bb7a4}.btn:hover{filter:brightness(.96)}
+h2.sec{border:0;padding:0;color:#1c4936;flex-wrap:wrap;gap:.4rem;margin:2rem 0 .7rem;font-size:1.3rem;line-height:1.35}h2.sec .n{display:none}h2.sec small{flex-basis:100%;color:#5d7165;font-size:.82rem}#f1-tag,#f2-tag,#f3-tag,#f4-tag,#f5-tag{display:none}
+.power-banner{background:transparent;border:0;border-radius:0;padding:0;margin:0 0 2rem}.power-banner-head{margin-bottom:.75rem;align-items:end}.power-banner-head h2{color:#173e30;font-size:1.28rem;margin:0}.power-banner-head p{font-size:.86rem;color:#607267;margin:.2rem 0 0}.power-badge{background:#e5efe7;color:#40684f;border-radius:6px;padding:.3rem .55rem}
+.power-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}.pw-btn{display:flex;flex-direction:row;align-items:center;gap:.8rem;min-height:76px;padding:.85rem;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:left;box-shadow:none}.pw-btn:hover{background:#f9fcf9;border-color:#96b3a0;transform:none}.pw-btn b{display:block;font-size:.9rem;color:#204e39}.pw-btn small{display:block;font-size:.78rem;color:#63776b;line-height:1.4;margin-top:.18rem}.pw-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:9px;background:#edf4ee;color:#2c6a4c}.pw-arrow{margin-left:auto;color:#668878}
+.privacy-card{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.15rem;margin:1.5rem 0;border:1px solid #d9e5d9;border-radius:10px;background:#edf3eb}.privacy-card h2{font-size:.92rem;color:#28533c;margin:0}.privacy-card p,.privacy-inline{font-size:.82rem;color:#536a5a;margin:.2rem 0}.privacy-clear{white-space:nowrap;color:#245a40;background:#fff;border:1px solid #9bb7a4;border-radius:7px;padding:.55rem .75rem;cursor:pointer;font-weight:700;font-size:.8rem}.privacy-card #privacy-result:empty{display:none}
+.reference-notice{padding:.8rem 1rem;margin:.65rem 0 1rem;border:1px solid #d7c594;border-left:4px solid #b69246;border-radius:8px;background:#fbf8ed;font-size:.86rem;color:#4e4935}.reference-notice p{margin:.3rem 0}.warn.backdate{background:#fff8e9;border-color:#d7b77a;color:#493d27}.warn.backdate b{color:#72501c}.search-input{border:1px solid #bdcfc0}.search-input:focus{outline:3px solid #bd8540;outline-offset:2px}
+.storage-warning{padding:.7rem 1rem;background:#fff2d7;color:#694b12;border:1px solid #ecd39c;border-radius:8px;font-weight:700;font-size:.88rem}.storage-warning[hidden]{display:none}
+.field-box{background:#f8faf7;border-color:#e3ebe3}.field-box input:focus,.field-box select:focus,.field-box textarea:focus{outline:3px solid #bd8540;outline-offset:2px;box-shadow:none}
+.sec-track-card{background:#fbfcfa;border-color:#e0e8e0}.sec-track-card.is-main{border-color:#7ba68a;background:#f2f8f2}.mini-bar>div{background:#347c59}.mini-bar.warn-bar>div{background:#bd9650}.wz-bar{background:#347c59}
+.copyright-bar{background:transparent;color:#62766a;border-top:1px solid var(--line);border-radius:0;padding:1.25rem 0;margin-top:2.2rem;text-align:left}.copyright-bar b{color:#345343}.copyright-bar small{opacity:1}
+#fab-top{background:#1e6045;box-shadow:none;bottom:calc(5.4rem + env(safe-area-inset-bottom))}
+@media(max-width:640px){
+  header{padding:1rem .9rem .8rem}.brand img{width:40px;height:40px}.brand h1{font-size:1rem}.brand .tag{font-size:.72rem}.header-inner{gap:.5rem}.header-actions{gap:.3rem}#home-nav,#fab-lang{height:38px;min-width:40px;padding:0 .5rem;font-size:.73rem}.header-meta{margin-top:.65rem;font-size:.68rem;gap:.3rem .5rem}
+  .topbar,.bottombar{gap:.12rem;padding-left:.35rem;padding-right:.35rem}.tb-btn,.bb-btn{flex-direction:column;min-height:57px;padding:.35rem .08rem;gap:.2rem}.tb-btn .tb-lbl,.bb-btn .bb-lbl{font-size:.7rem;line-height:1.2}.tb-ico svg,.bb-ico svg{width:19px;height:19px}
+  main{padding:.9rem .85rem calc(6.8rem + env(safe-area-inset-bottom))}.section-heading{align-items:flex-start;flex-direction:column;gap:.6rem;margin:.6rem 0 .9rem}.section-heading h2,.section-heading .sec,.hero-copy h2{font-size:1.45rem}.quick-heading{margin-top:.6rem}.guide-note{font-size:.7rem}
+  .hero-note{grid-template-columns:1fr;gap:.9rem;padding:1.2rem;margin:.2rem 0 1.6rem}.ministeps{grid-template-columns:repeat(3,minmax(0,1fr));border-left:0;border-top:1px solid #cadbce;padding:.7rem 0 0;gap:.5rem}.ministep{display:block;font-size:.73rem}.step-dot{display:grid;margin-bottom:.3rem}
+  #quick .wizard-shell,.calc-shell,.tool-card{padding:1rem}.wz-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.wz-opt{min-height:78px;padding:.65rem .55rem;grid-template-columns:30px minmax(0,1fr);gap:0 .45rem;font-size:.84rem}.wz-ico{width:30px;height:30px}.wz-ico svg{width:17px;height:17px}.wz-opt small{font-size:.7rem}.plan-card{padding:1rem}.plan-meta{grid-template-columns:1fr}.power-grid{grid-template-columns:1fr}.pw-btn{min-height:66px}.privacy-card{align-items:flex-start;flex-direction:column}.privacy-clear{white-space:normal}.tv-head h2{font-size:1.05rem}#fab-top{bottom:calc(5.4rem + env(safe-area-inset-bottom))}
+}
+@media(max-width:360px){.brand .tag{display:none}.header-meta{font-size:.65rem}.tb-btn .tb-lbl,.bb-btn .bb-lbl{font-size:.62rem}.wz-opt{font-size:.8rem}.wz-opt small{font-size:.68rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
 </style>
 </head>
 <body data-view="normal">
 
+<a class="skip-link" id="skip-link" href="#main-content">跳至主要內容</a>
 <header>
-  <button class="fab" id="fab-lang" aria-label="切換語言 / Switch language">EN</button>
-  <div class="brand">
-    <picture><source srcset="assets/logo-192.avif" type="image/avif"><img src="assets/logo-192.png" alt="標誌" width="54" height="54" decoding="async"></picture>
-    <div><h1 id="app-title">AYP 童軍接駁指南</h1>
-      <p class="tag" id="app-tag">情況主導：同步完成／銜接・轉處接駁・升團・正常流程</p></div>
+  <div class="header-inner">
+    <div class="brand">
+      <picture><source srcset="assets/logo-192.avif" type="image/avif"><img src="assets/logo-192.png" alt="" width="54" height="54" decoding="async"></picture>
+      <div><h1 id="app-title">AYP 童軍接駁指南</h1>
+        <p class="tag" id="app-tag">陪你整理 AYP 的每一步</p></div>
+    </div>
+    <div class="header-actions">
+      <button id="home-nav" type="button">總覽</button>
+      <button class="fab" id="fab-lang" type="button" aria-label="切換語言 / Switch language">EN</button>
+    </div>
   </div>
-  <span class="badge-base" id="baseline-foot"></span>
+  <div class="header-meta"><span id="header-note">非官方輔助指南</span><span class="badge-base" id="baseline-foot"></span></div>
 </header>
 
 <nav class="topbar" id="topbar" aria-label="頂部指南列"></nav>
 
-<main>
+<main id="main-content" tabindex="-1">
+<p id="view-announcer" class="sr-only" role="status" aria-live="polite"></p>
+<p id="storage-warning" class="storage-warning" role="status" hidden></p>
 
 <div id="view-normal">
 
-  <!-- 指引開場：5分鐘用法 -->
   <div class="hero-note">
-    <span id="hero-lead">⚡ <b>趕時間？5 分鐘搞掂：</b>下面答 2 條問題 → 即出你嘅行動卡。有時間先慢慢睇詳細版。</span>
-    <div class="ministeps">
-      <div class="ministep"><b>⚡</b><span id="mini1">① 答 2 條問題<br>出行動卡</span></div>
-      <div class="ministep"><b>🌱</b><span id="mini2">② 做 3 個 Check<br>問領袖＋查支部</span></div>
-      <div class="ministep"><b>✅</b><span id="mini3">③ 跟行動卡做<br>剔住完成進度</span></div>
+    <div class="hero-copy">
+      <h2 id="overview-title">由起步到銜接，陪你一步一步走。</h2>
+      <p id="hero-lead">由行動清單開始；唔肯定自己嘅情況，可以用精靈整理下一步。</p>
+    </div>
+    <div class="ministeps" aria-label="使用指南">
+      <div class="ministep"><span class="step-dot">1</span><span id="mini1">跟行動卡做<br>逐步剔進度</span></div>
+      <div class="ministep"><span class="step-dot">2</span><span id="mini2">展開詳情睇<br>檢查及步驟</span></div>
+      <div class="ministep"><span class="step-dot">3</span><span id="mini3">查找表格<br>與組長確認</span></div>
     </div>
   </div>
 
-
-
+  <section class="overview-plan" aria-labelledby="overview-plan-title">
+    <div class="section-heading compact"><div><h2 id="overview-plan-title">起步行動清單</h2><p id="overview-plan-description">從基本步驟開始，按自己的節奏跟進。</p></div></div>
+    <div id="normal-card"></div>
+  </section>
   <div id="power-banner"></div>
-  <div id="normal-card"></div>
+  <section class="privacy-card" aria-labelledby="privacy-title">
+    <div><h2 id="privacy-title">你在此裝置的資料</h2><p id="privacy-note"></p></div>
+    <div><button class="privacy-clear" id="privacy-clear" type="button">清除此裝置的指南資料</button><p id="privacy-result" role="status" aria-live="polite"></p></div>
+  </section>
   <section id="calc-sec">
     <h2 class="sec"><span class="n hot">🧮</span> <span id="calc-sec-title">AYP 時數・週數・死線計算器 ＋ 個人進度追蹤</span></h2>
     <div id="calc-box"></div>
@@ -416,23 +504,23 @@ img{max-width:100%;height:auto}
 
   <div class="disclaimer" id="disclaimer"></div>
 
-  <div class="copyright-bar">
-    <b id="copyright-app-line">AYP 童軍接駁指南</b>
-    <small id="copyright-edu"></small>
-    <small id="copyright-data"></small>
-    <small id="copyright-baseline"></small>
-    <small id="copyright-line">© 2026 Scout System</small>
-  </div>
+
 </div><!-- /#view-normal -->
 
   <!-- ══ ⚡ 5分鐘精靈 ══ -->
   <section class="guideview" id="quick">
-    <h2 class="sec"><span class="n hot">⚡</span> <span id="quick-title">5 分鐘精靈：你咩情況？下一步做咩？</span></h2>
+    <button class="guide-back" data-tv-home type="button">‹ <span class="tv-back-label">返回總覽</span></button>
+    <div class="section-heading quick-heading">
+      <div><h2 class="sec"><span id="quick-title">先了解你的情況</span></h2>
+        <p id="quick-description">揀選你嘅童軍身份同 AYP 情況，整理適合你嘅下一步。</p></div>
+      <span class="guide-note" id="quick-note">參考指引 · 以官方資料為準</span>
+    </div>
     <div class="wizard-shell"><div id="wizard"></div></div>
   </section>
 
   <!-- ══ 功能1：轉入童軍 ══ -->
   <section class="guideview" id="f1">
+    <button class="guide-back" data-tv-home type="button">‹ <span class="tv-back-label">返回總覽</span></button>
     <h2 class="sec"><span class="n hot">1</span> <span id="f1-title">由其他執行處轉入童軍 → 仲有咩要考</span> <small id="f1-tag">(功能①)</small></h2>
     <div class="tldr" data-tldr="f1"></div>
     <div class="warn backdate" id="f1-backdate"></div>
@@ -449,6 +537,7 @@ img{max-width:100%;height:auto}
 
   <!-- ══ 功能2：銜接（同步完成／認可） ══ -->
   <section class="guideview" id="f2">
+    <button class="guide-back" data-tv-home type="button">‹ <span class="tv-back-label">返回總覽</span></button>
     <h2 class="sec"><span class="n hot">2</span> <span id="f2-title">銜接情況（同步完成／認可）</span> <small id="f2-tag">(功能②)</small></h2>
     <div class="tldr" data-tldr="f2"></div>
     <div class="warn backdate" id="f2-backdate"></div>
@@ -465,6 +554,7 @@ img{max-width:100%;height:auto}
 
   <!-- ══ 功能3：升團接駁 ══ -->
   <section class="guideview" id="f3">
+    <button class="guide-back" data-tv-home type="button">‹ <span class="tv-back-label">返回總覽</span></button>
     <h2 class="sec"><span class="n hot">3</span> <span id="f3-title">邊個支部考到咩・升團後要點做</span> <small id="f3-tag">(功能③)</small></h2>
     <div class="tldr" data-tldr="f3"></div>
     <details class="part" data-key="f3-1" open>
@@ -478,6 +568,7 @@ img{max-width:100%;height:auto}
 
   <!-- ══ 功能5：其他情況 ══ -->
   <section class="guideview" id="f5">
+    <button class="guide-back" data-tv-home type="button">‹ <span class="tv-back-label">返回總覽</span></button>
     <h2 class="sec"><span class="n hot">5</span> <span id="f5-title">其他可能情況</span> <small id="f5-tag">(功能⑤)</small></h2>
     <div class="tldr" data-tldr="f5"></div>
     <div id="extra-list"></div>
@@ -486,55 +577,35 @@ img{max-width:100%;height:auto}
     <div id="extra-list-2"></div>
   </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <!-- ══ 🧰 5 個工具整版 view（置底直達） ══ -->
   <section class="toolview" id="view-bt-sync">
     <div class="tv-head">
-      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-sync-summary">同步完成方案（試行安排）</b>
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返回總覽</span></button>
+      <h2 id="bt-sync-summary">同步完成方案（試行安排）</h2>
     </div>
     <div id="bt-sync-body"></div>
   </section>
 
   <section class="toolview" id="view-bt-conv">
     <div class="tv-head">
-      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-conv-summary">單項銜接表（非官方整理）</b>
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返回總覽</span></button>
+      <h2 id="bt-conv-summary">單項銜接表（非官方整理）</h2>
     </div>
     <div id="bt-conv-body"></div>
   </section>
 
   <section class="toolview" id="view-bt-forms">
     <div class="tv-head">
-      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-forms-summary">AYP開展表格</b>
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返回總覽</span></button>
+      <h2 id="bt-forms-summary">AYP開展表格</h2>
     </div>
     <div id="bt-forms-body"></div>
   </section>
 
   <section class="toolview" id="view-bt-oa">
     <div class="tv-head">
-      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-oa-summary">查執行處 / 執行處支部組長</b>
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返回總覽</span></button>
+      <h2 id="bt-oa-summary">查執行處 / 執行處支部組長</h2>
     </div>
     <div id="bt-oa-body"></div>
   </section>
@@ -542,8 +613,8 @@ img{max-width:100%;height:auto}
   <!-- ══ ❓ FAQ＋辭典 ══ -->
   <section class="toolview" id="view-bt-faq">
     <div class="tv-head">
-      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返正常流程</span></button>
-      <b id="bt-faq-summary">FAQ＋術語辭典</b>
+      <button class="tv-back" data-tv-home>‹ <span class="tv-back-label">返回總覽</span></button>
+      <h2 id="bt-faq-summary">FAQ＋術語辭典</h2>
     </div>
 <details class="part" data-key="res-faq" open>
       <summary><span class="ico">❓</span> <span id="res-faq-summary">常見問題 FAQ</span><span class="chev">▾</span></summary>
@@ -556,15 +627,23 @@ img{max-width:100%;height:auto}
     </details>
   </section>
 
+  <div class="copyright-bar">
+    <p><span id="global-reference">非官方指南；請核實最新規條及安排：</span><a id="global-source" href="https://www.ayp.org.hk/" target="_blank" rel="noopener">AYP 官方資料</a></p>
+    <b id="copyright-app-line">AYP 童軍接駁指南</b>
+    <small id="copyright-edu"></small>
+    <small id="copyright-data"></small>
+    <small id="copyright-baseline"></small>
+    <small id="copyright-line">© 2026 Scout System</small>
+  </div>
 </main>
 
 <nav class="bottombar" id="bottombar" aria-label="底部工具列"></nav>
 
 <button class="fab" id="fab-top" aria-label="返頂部">↑</button>
 
-<script src="analytics.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script src="analytics.js?v=12"></script>
+<script src="data.js?v=12"></script>
+<script src="app.js?v=12"></script>
 <script>
 if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {})); }
 </script>

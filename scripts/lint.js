@@ -20,7 +20,7 @@ const ok = (cond, name, extra) => {
 /* ── 1. JS 語法（node --check）── */
 console.log("\n[1] JS 語法");
 const jsFiles = ["app.js", "data.js", "sw.js", "analytics.js", "scripts/check.js", "scripts/lint.js", "scripts/build.js",
-  "tests/dom-test.js", "tests/guide.spec.js"].filter(exists);
+  "tests/dom-test.js", "tests/interaction-test.js", "tests/sw-test.js", "tests/guide.spec.js"].filter(exists);
 for (const f of jsFiles) {
   const r = cp.spawnSync(process.execPath, ["--check", path.join(ROOT, f)], { encoding: "utf8" });
   ok(r.status === 0, `語法 OK：${f}`, r.status ? (r.stderr || "").trim().split("\n")[0] : undefined);

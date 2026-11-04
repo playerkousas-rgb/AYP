@@ -51,8 +51,8 @@ for (const f of assetFiles) ok(allRefs.has(f), `assets/${f} 被 index.html／man
 
 /* ── 4. Service Worker 預快取必須＝根檔案＋全部資產 ── */
 console.log("\n[4] sw.js 預快取清單一致性");
-const swAssets = [...new Set([...swJs.matchAll(/"\.\/(assets\/[A-Za-z0-9._-]+|index\.html|data\.js|app\.js|manifest\.webmanifest|)"/g)].map((m) => "./" + m[1]))];
-const expectedSw = ["./", "./index.html", "./data.js", "./app.js", "./manifest.webmanifest",
+const swAssets = [...new Set([...swJs.matchAll(/"\.\/(assets\/[A-Za-z0-9._-]+|index\.html|data\.js|app\.js|analytics\.js|manifest\.webmanifest|)"/g)].map((m) => "./" + m[1]))];
+const expectedSw = ["./", "./index.html", "./data.js", "./app.js", "./analytics.js", "./manifest.webmanifest",
   ...assetFiles.map((f) => "./assets/" + f)].sort();
 ok(JSON.stringify([...swAssets].sort()) === JSON.stringify(expectedSw),
   "sw.js ASSETS ＝ 根檔案 ＋ 全部 assets/", `sw=${swAssets.length} 項 / 應=${expectedSw.length} 項`);
@@ -93,7 +93,13 @@ console.log("\n[7] index.html 結構");
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 const dup = [...new Set(ids.filter((v, i) => ids.indexOf(v) !== i))];
 ok(dup.length === 0, "無重複 id", dup.join(",") || undefined);
-ok(/src="data\.js"/.test(html) && /src="app\.js"/.test(html), "載入 data.js＋app.js");
+const shellVersion = (swJs.match(/const CACHE = "ayp-guide-v(\d+)"/) || [])[1];
+const scriptVersions = ["analytics", "data", "app"].map((name) => {
+  const match = html.match(new RegExp(`src="${name}\\.js\\?v=(\\d+)"`));
+  return match && match[1];
+});
+ok(!!shellVersion && scriptVersions.every((version) => version === shellVersion),
+  "shell 腳本版本與 Service Worker 一致", `v${shellVersion || "?"}`);
 ok(/manifest\.webmanifest/.test(html), "連結 manifest");
 ok(/serviceWorker/.test(html) && /sw\.js/.test(html), "註冊 service worker");
 const appJs = read("app.js");

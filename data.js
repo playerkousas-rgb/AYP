@@ -1,6 +1,6 @@
 /* ===========================================================
    AYP 童軍接駁指南 / AYP Scout Bridging Guide — 資料庫（雙語版 / Bilingual）
-   資料基準日 / Baseline date：2026 年 9 月 / September 2026
+   資料基準日 / Baseline date：2026 年 10 月 / October 2026
    資料來源（全部為香港官方公開資料）：
    - 香港童軍總會 P95/2026《香港青年獎勵計劃更新安排》
    - P22/2026 + P96/2026《新修訂支部訓練綱要 2026》
@@ -23,9 +23,9 @@ const LOCALES = {
   APP: {
     name: "AYP 童軍接駁指南",
     shortName: "AYP童軍",
-    tagline: "情況主導：同步完成／銜接・轉處接駁・升團・正常流程",
-    description: "非官方指南：童軍 ↔ AYP 同步完成／銜接認可、轉執行處／升支部接駁、各支部正常流程。所有活動須於正式開展日後進行，不可追溯。",
-    baseline: "資料基準日：2026 年 10 月（P95/2026 ＋ hkayp.scouting.org.hk 新版同步）",
+    tagline: "陪你整理 AYP 的每一步",
+    description: "非官方指南：童軍與 AYP 同步完成、轉執行處、升團及起步流程。資料及個別安排請向執行處核實。",
+    baseline: "資料基準：2026 年 10 月 · 請核實最新安排",
   },
 
   COPYRIGHT: {
@@ -67,7 +67,7 @@ const LOCALES = {
         "<b>青年領袖：</b>問自己旅／團：「我份領袖／教練員委任仲有冇效？」委任過期＝唔算合資格。",
       ],
       ask: "「唔好意思，我想經童軍考 AYP，請問我宣誓未？宣誓日期係幾時？有冇紀錄可以睇？」",
-      ifNot: "未宣誓唔使驚——問旅團領袖幾時有宣誓安排，完成宣誓後先交 AYP 申請。未宣誓前做嘅活動唔會計入 AYP。",
+      ifNot: "未宣誓唔使驚——問旅團領袖幾時有宣誓安排，完成宣誓後先交 AYP 申請。未宣誓前活動能否計入，請向執行處核實。",
     },
     {
       id: "branch", icon: "🏕️", title: "Check 2：我個單位有冇「已批准嘅執行處支部」？",
@@ -105,16 +105,16 @@ const LOCALES = {
   },
 
   SYNC_CONVERT: {
-    intro: "由 2026-08-15 起試行「同步完成方案」：用同一童軍訓練／活動／紀錄／評核歷程，同步完成童軍獎章同 AYP 章級，毋須重複。",
+    intro: "由 2026-08-15 起試行「同步完成方案」：符合指定條件的童軍訓練、活動、紀錄及評核，可按安排同時用於相關童軍獎章和 AYP 章級；請核實資格及各項審批。",
     stages: [
       { scoutBadge: "童軍高級獎章", scoutInfo: "童軍支部進度性獎章", toAyp: "AYP 銅章", toAypLv: "bronze", note: "考取童軍高級獎章可同步完成 AYP 銅章。" },
       { scoutBadge: "總領袖獎章", scoutInfo: "先完成 AYP 銅章", toAyp: "AYP 漸進銀章", toAypLv: "silver", note: "完成銅章後，可透過總領袖獎章同步完成 AYP 漸進銀章。" },
     ],
-    caveat: "屬試行安排，並非「拎童軍章換 AYP 章」嘅自動一對一兌換 —— 每個對接項目仍須由執行處支部組長／認可評核員（Assessor）簽署核實先算數，而且擬用作同步完成嘅活動必須喺你正式開展該章級日期之後進行，唔可以追溯。詳細對接內容、參加／紀錄／評核指引，由香港童軍總會「香港青年獎勵計劃童軍執行處」網頁公布，辦理前請核實。",
+    caveat: "屬試行安排，並非「拎童軍章換 AYP 章」嘅自動一對一兌換 —— 每個對接項目仍須由執行處支部組長／認可評核員（Assessor）簽署核實先算數，活動日期及任何較早紀錄能否認可，須按方案和所屬執行處指引核實。詳細對接內容、參加／紀錄／評核指引，由香港童軍總會「香港青年獎勵計劃童軍執行處」網頁公布，辦理前請核實。",
   },
 
   SECTION_MAP: {
-    header: "童軍各支部活動／徽章可以「銜接（認可）」至 AYP 各科 —— 即利用童軍訓練已攞到嘅知識技能去申報 AYP，毋須重複接受同一訓練及審核。但每科仍要符合 AYP 時數／持續期／評核要求，經正式申報、由執行處支部組長／認可評核員簽署核實，唔係自動生效。",
+    header: "童軍活動或徽章可能符合 AYP 部分要求，但認可並非自動。各科的活動、時數、持續期及評核，請先向執行處核實並按適用程序申報。",
     rows: [
       { ayp: "服務科", scout: "童軍急救／拯溺專科徽章、營地服務、童軍區／地域社區服務計劃、服務獎章等", lv: "銅銀金" },
       { ayp: "技能科", scout: "童軍專科徽章（通訊、電腦、工藝、語言、攝影、露營、觀鳥等，視乎性質）、深資／樂行個人興趣項目", lv: "銅銀金" },
@@ -122,7 +122,7 @@ const LOCALES = {
       { ayp: "野外鍛鍊科", scout: "童軍遠足／露營／探險旅程 —— 必須由童軍執行處認可嘅野外鍛鍊科導師主持訓練及評核", lv: "銅銀金（旅程長度按級別）" },
       { ayp: "團體生活科（金）", scout: "童軍大型交流／露營／大露營（總會／地域／區／旅主辦，5 日 4 夜或以上）", lv: "金" },
     ],
-    caveat: "以上為「銜接（認可）」嘅參考方向，唔係自動一對一兌換。官方舊《各支部進度性獎章及徽章與 AYP 參照表》（P103/2016）屬舊《訓練綱要》版本，因新綱要 2026-08-15 起實施已更新；最新單科認可以童軍執行處公布及「同步完成方案」為準。切勿假設「考咗童軍章＝自動等於完成 AYP 某科」——每科都要經 AYP 正式申報，並由執行處支部組長／認可評核員簽署核實先算數。",
+    caveat: "以上為「銜接（認可）」嘅參考方向，唔係自動一對一兌換。官方舊《各支部進度性獎章及徽章與 AYP 參照表》（P103/2016）屬舊《訓練綱要》版本，現行適用性須核實；單科認可以童軍執行處最新公布為準。切勿假設「考咗童軍章＝自動等於完成 AYP 某科」——每科都要經 AYP 正式申報，並由執行處支部組長／認可評核員簽署核實先算數。",
   },
 
   SECTION_PATHS: {
@@ -134,13 +134,13 @@ const LOCALES = {
     },
     venture: {
       name: "深資童軍", age: "約 15–20 歲", color: "#7a1f2b",
-      aypStart: "按年齡可揀銅／銀／金起步（漸進或直接）；15 歲報銀、16 歲報金。",
+      aypStart: "可按年齡及資格選擇起步級別；一般銀章 15 歲、金章 16 歲起，漸進路徑可能有例外。",
       sync: "深資童軍嘅「活動／探險」等訓練可以銜接（認可）至 AYP 各科（參考單項銜接表）。",
       toNext: "升樂行童軍後：AYP 進度照跟住你；樂行童軍嘅「社區服務／個人興趣／認識世界」等可銜接 AYP 高級別科目。",
     },
     rover: {
-      name: "樂行童軍", age: "約 18–25 歲（未滿 23 歲可參加）", color: "#0a3a5c",
-      aypStart: "可揀銅／直接銀／直接金作為開始級別（視年齡）；最後參加限期 23 歲生日當天。",
+      name: "樂行童軍", age: "約 18–25 歲（AYP 參加年齡須核實）", color: "#0a3a5c",
+      aypStart: "可按年齡及資格選擇開始級別；首次參加年齡及升級安排，請向所屬執行處核實。",
       sync: "樂行童軍嘅服務、個人興趣、國際視野（大露營等）可以銜接（認可）至 AYP 各科，尤其服務／技能／團體生活。",
       toNext: "樂行後可成為領袖／導師；若屬青年領袖並持有效委任，可另行直入金章（見其他情況 E）。",
     },
@@ -149,9 +149,9 @@ const LOCALES = {
   JOIN_FLOW: {
     commonSteps: [
       "做「零基礎 3 個 Check」：問旅團領袖——①我宣誓未？②我哋旅／區／地域有冇已批准嘅執行處支部？③邊個係合資格組長？（旅冇支部可經直屬區／地域支部，唔使轉旅。）",
-      "完成「參加者迎新講座」：實體迎新講座繼續舉行，網上迎新講座影片亦即將推出（詳情留意童軍執行處網站公布）。完成後才可辦理參加申請及領取紀錄簿。",
+      "先完成「參加者迎新講座」，再辦理參加申請及紀錄簿手續；網上及實體安排請留意童軍執行處最新公布。",
       "填「參加申請表格」FORM AYP/01，連所需文件＋紀錄簿費用 HK$45，交俾你 check 過嗰位執行處支部組長。記得影印留底。",
-      "等接納、攞紀錄簿：所有 AYP 活動一定要登記喺紀錄簿先算數。未攞到紀錄簿前做嘅嘢，原則上唔計——所以唔好心急，攞到先開始計。",
+      "等接納並領取紀錄簿，再按所屬執行處指引記錄活動；較早活動能否計算，必須按規條及個別安排核實。",
     ],
     note: "行政程序正分階段電子化（網上申請首年與紙本並行）。交表時問組長用網上定紙本，唔使自己估。",
   },
@@ -166,13 +166,13 @@ const LOCALES = {
     {
       id: "d", icon: "🌱", title: "D. 未夠 14 歲／幼童軍升童軍，想為 AYP 鋪路",
       q: "我仲細（童軍／甚至幼童軍升童軍），想遲啲考 AYP，而家可以點準備？",
-      body: "AYP 一般銅章最低 14 歲（年滿 13 歲童軍可特別申請），未夠齡做嘅活動唔可以算做 AYP。不過你可以：專心做童軍進度性獎章（尤其「童軍高級獎章」），因為日後可同步完成 AYP 銅章；培養一個可持續嘅技能／運動習慣，方便將來做技能科／康體科。",
+      body: "AYP 一般銅章最低 14 歲（年滿 13 歲童軍可特別申請），未達適用年齡前嘅活動能否計算，請向執行處核實。你可以：專心做童軍進度性獎章（尤其「童軍高級獎章」），因為日後可同步完成 AYP 銅章；培養一個可持續嘅技能／運動習慣，方便將來做技能科／康體科。",
     },
     {
       id: "e", icon: "👔", title: "E. 青年領袖（成年）加入，直入金章",
       q: "我係青年領袖，可以考 AYP 嗎？",
       body: "年滿 18 歲而未滿 23 歲、持香港童軍總會有效領袖／教練員委任嘅青年領袖，可參加金章級訓練及考驗活動，並直接經青少年活動署辦理參加手續。同樣要先完成迎新講座，再交 FORM AYP/01 連文件及費用。",
-      caveat: "最後參加限期為 23 歲生日當天，所有活動須於 25 歲生日前完成。",
+      caveat: "首次參加年齡限制請向所屬執行處核實；活動一般須於 25 歲生日前完成。",
     },
     {
       id: "f", icon: "🌏", title: "F. 海外／國際 AYP（愛丁堡公爵國際獎）轉入香港童軍",
@@ -211,13 +211,13 @@ const LOCALES = {
 
   FAQ: [
     { q: "童軍成員係咪一定要透過童軍執行處考 AYP？", a: "唔一定。你可以喺任何一個認可執行處（學校、其他制服團隊等）考。如果你喺其他執行處想轉入童軍，見「轉入童軍」；想知點揀，問你嘅旅團領袖／執行處支部組長。" },
-    { q: "我未足 14 歲係咪唔可以考銅章？", a: "一般銅章最低 14 歲；但年滿 13 歲嘅童軍成員可經特別安排申請（須與適齡朋友小組進行）。未夠齡做嘅活動唔可以計入 AYP。" },
-    { q: "「同步完成」同「銜接（認可）」有咩分別？", a: "同步完成＝考取特定童軍獎章（童軍高級獎章／總領袖獎章）可同步攞到成個 AYP 章級，毋須分科申報（試行中，仍須組長核實）。銜接（認可）＝你用童軍活動／徽章嘅內容去申報 AYP 某一科，但要符合該科時數／持續期／評核要求、經認可評核員核實並正式申報。兩者都唔係「拎章換章」嘅自動兌換。" },
+    { q: "我未足 14 歲係咪唔可以考銅章？", a: "一般銅章最低 14 歲；但年滿 13 歲嘅童軍成員可經特別安排申請（須與適齡朋友小組進行）。較早活動能否計算請向執行處核實。" },
+    { q: "「同步完成」同「銜接（認可）」有咩分別？", a: "同步完成＝試行安排讓特定童軍獎章的相關歷程對應 AYP 章級；仍須按方案記錄及分別完成童軍和 AYP 的審批，詳情由組長核實。銜接（認可）＝你用童軍活動／徽章嘅內容去申報 AYP 某一科，但要符合該科時數／持續期／評核要求、經認可評核員核實並正式申報。兩者都唔係「拎章換章」嘅自動兌換。" },
     { q: "我由其他執行處轉入童軍，做咗嘅嘢會唔會冇咗？", a: "原則上已批核嘅科會隨紀錄簿帶住走，唔使重考；用 FORM AYP/09 連同紀錄辦理。實際以童軍執行處及兩邊支部組長核實為準。" },
-    { q: "我以前做開嘅童軍活動／服務時數，可唔可以追溯計入 AYP？", a: "原則上唔可以（No Backdating）。AYP 活動一律由你正式開展該章級（成功報名、獲發紀錄簿）當日或之後起計；開展日之前嘅舊活動、時數或徽章紀錄，唔可以追溯計入時數及次數要求。所以想做 AYP 就愈早正式報名開展愈穩陣，有疑問問執行處支部組長。" },
-    { q: "金章係咪一定要先考銅章或銀章？", a: "唔一定。只要年滿 16 歲，可以直接參加金章（直接金章：主項最少 78 小時及 78 星期，兩個副項各最少 52 小時及 52 星期）；如已完成銀章則可參加漸進金章（三科不分主副，各最少 52 小時及 52 星期）。注意金章各科須於開始最少 2 個月前提交 AYP/02–06 審批。" },
+    { q: "我以前做開嘅童軍活動／服務時數，可唔可以追溯計入 AYP？", a: "唔可以自行假設可以追溯。AYP 2023 年一般規條列出：獲發紀錄簿前三個月內、為參加計劃而進行並符合相關科目條件嘅活動，可能有例外。個別章級及同步方案要求可能不同，請先向所屬執行處核實最新安排。" },
+    { q: "金章係咪一定要先考銅章或銀章？", a: "唔一定。只要年滿 16 歲，可以直接參加金章（直接金章：主項最少 78 小時及 78 星期，兩個副項各最少 52 小時及 52 星期）；如已完成銀章則可參加漸進金章（三科不分主副，各最少 52 小時及 52 星期）。金章科目計劃及表格須預先安排，請向執行處確認適用表格及提交限期。" },
     { q: "紀錄簿幾錢？", a: "由 2026-04-01 起申請費用為 HK$45。" },
-    { q: "要幾時前完成？", a: "所有章級須於 25 歲生日前完成；最後參加限期為 23 歲生日當天。" },
+    { q: "要幾時前完成？", a: "活動一般須於 25 歲生日前完成。P95/2026 所載計劃一般首次參加限期為 23 歲生日；青年領袖另有未滿 23 歲等條件，請向執行處核實最新安排。" },
     { q: "同一個活動可唔可以同時用嚟做童軍章同 AYP？", a: "可以 —— 呢個正正係「同步完成／銜接（認可）」嘅精神，用同一訓練／活動／評核歷程。但要按 AYP 正式申報，唔係自動；詳情問執行處支部組長。" },
   ],
 
@@ -225,13 +225,13 @@ const LOCALES = {
     { term: "執行處", def: "獲香港青年獎勵計劃認可、可推行 AYP 嘅機構（香港童軍總會係其中之一；另外有學校、其他制服團隊等）。" },
     { term: "執行處支部", def: "執行處轄下實際運作 AYP 嘅單位，例如某童軍旅／區／地域所設嘅支部。" },
     { term: "執行處支部組長", def: "負責協助推行 AYP、指導參加者、核對紀錄、辦理申請／轉處嘅領袖／總監。" },
-    { term: "紀錄簿", def: "所有 AYP 章級活動必須登記其上嘅官方紀錄；未獲發紀錄簿前所做活動不計算。申請費 HK$45。" },
+    { term: "紀錄簿", def: "AYP 活動的官方紀錄；獲發前的活動不可自行假設獲認可，有限例外須按相關科目條件及執行處安排核實。申請費 HK$45。" },
     { term: "迎新講座", def: "參加前須完成，認識計劃目的、各章級及科目、導師／評核員安排；現提供網上及實體形式。" },
     { term: "導師／評核員", def: "負責指導並簽署確認你某科表現／進度嘅人；野外鍛鍊科旅程須由認可導師／評核員主持。" },
     { term: "主項／副項", def: "新制直接參加者要揀主項（時數較高）及副項；漸進者無須分主副。" },
     { term: "同步完成方案", def: "考「童軍高級獎章」同步完成 AYP 銅章；完成銅章後透過「總領袖獎章」同步完成漸進銀章（2026-08-15 起試行）。" },
     { term: "銜接（認可）", def: "將童軍活動／徽章用作申報 AYP 某科嘅官方概念 —— 唔係「拎章換章」：每科仍須符合時數／持續期／評核要求，經正式申報並由執行處支部組長／認可評核員核實。" },
-    { term: "開展日（Start Date）", def: "你正式獲接納參加該章級嘅日子。所有計入 AYP 嘅活動必須喺開展日當日或之後進行 —— 之前做嘅活動原則上唔可以追溯（No Backdating）。" },
+    { term: "開展日（Start Date）", def: "正式獲接納開展計劃或章級的參考日期。較早活動能否計算，須按最新一般規條、個別科目及所屬執行處安排核實。" },
     { term: "轉換執行處", def: "由一個執行處（例如學校）轉去另一個（例如童軍總會）嘅正式行政手續，用 FORM AYP/09 辦理。留意：呢個同童軍內部「升團／轉支部」唔同 —— 升團唔使轉處，轉處就一定要辦手續。" },
     { term: "直接參加／漸進", def: "直接參加＝跳過低級直接考銀／金；漸進＝先完成銅／銀再上一級。" },
   ],
@@ -246,10 +246,10 @@ const LOCALES = {
   ],
 
   BOTTOM_ACTIONS: [
-    { id: "sync-plan", icon: "📋", label: "同步方案（試行）", target: "bt-sync" },
-    { id: "conv-table", icon: "🔁", label: "單項銜接表", target: "bt-conv" },
-    { id: "start-forms", icon: "📝", label: "AYP開展表格", target: "bt-forms" },
-    { id: "oa-lookup", icon: "🏢", label: "查執行處／組長", target: "bt-oa" },
+    { id: "sync-plan", icon: "📋", label: "同步方案", target: "bt-sync" },
+    { id: "conv-table", icon: "🔁", label: "銜接表", target: "bt-conv" },
+    { id: "start-forms", icon: "📝", label: "表格", target: "bt-forms" },
+    { id: "oa-lookup", icon: "🏢", label: "查執行處", target: "bt-oa" },
     { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
   ],
 
@@ -264,12 +264,12 @@ const LOCALES = {
   SYNC_PLAN: {
     title: "同步完成方案（試行安排）",
     effective: "生效日期：2026-08-15 起試行",
-    summary: "由 2026-08-15 起，童軍進度性獎章同 AYP 章級嘅對應方式已經改變：唔再係「一個童軍獎章＝自動換一個 AYP 章級」咁簡單嘅一對一直接兌換，而係改為「項目與項目」（即活動／訓練／評核內容）互相對接嘅同步完成方式。",
+    summary: "由 2026-08-15 起試行童軍高級獎章對接 AYP 銅章，以及已完成銅章者透過總領袖獎章對接漸進銀章。各項活動、紀錄及評核須符合適用要求，並按最新安排核實。",
     points: [
       "【童軍高級獎章 → AYP 銅章】以服務科為主項（≥26小時及≥26週：標準＋高級獎章持續服務），技能科為副項（≥13小時及≥13週：高級獎章 B.2.a STEAM 專科徽章），康體科為副項（≥13小時及≥13週：體適能相關專科徽章或訓練），野外鍛鍊科對接探索 A.2.c＋標準 A.2.e＋高級 A.2.f.I/II。",
-      "【總領袖獎章 → AYP 漸進銀章】須先完成 AYP 銅章及年滿 15 歲（三科不分主副，各 ≥26小時及≥26週）：服務科對接 D.1.c 持續服務；技能科對接 A.3「先鋒工程」全套；康體科對接體適能專科徽章或26小時/26週訓練；野外鍛鍊科對接「歷險選項 II」。",
+      "【總領袖獎章 → AYP 漸進銀章】須先完成 AYP 銅章，並確認年齡及開展安排（三科不分主副，各 ≥26小時及≥26週）：服務科對接 D.1.c 持續服務；技能科對接 A.3「先鋒工程」全套；康體科對接體適能專科徽章或26小時/26週訓練；野外鍛鍊科對接「歷險選項 II」。",
       "【試行期野外鍛鍊特別規定】銅章開訓前須聯絡合資格 EA / JEA（或同時為童軍領袖之 CRS 遠足導師）審視前期訓練及考驗；漸進銀章須完成中階遠足訓練班及考驗（或事前聯絡 EA / CRS）。旅團必須記錄考驗人員姓名、身分、資格、單位、聯絡、項目、日期及結果。",
-      "【開展日紅線（不可追溯）】所有擬用作同步完成嘅活動，必須喺正式開展該 AYP 章級（完成迎新講座、交 AYP/01 及 $45 獲發紀錄簿）日期之後進行，並由探索獎章起使用 2026 新版《童軍訓練綱要》。",
+      "【活動日期】先確認開展日及同步方案要求，並由探索獎章起使用 2026 新版《童軍訓練綱要》。較早活動不可自行假設獲認可；如涉及一般規條例外，請向執行處確認是否適用於本試行方案。",
       "【單位參與意向登記】有意參與試行嘅童軍單位及領袖，可透過官方 Google Form 提交參與意向登記（注意：意向表唔會取代 AYP/01 報名及紀錄簿程序）。",
     ],
     notifyLeader: "⚠️ 開始同步方案前，必須主動通知你所屬嘅「執行處支部組長」，等佢確認你打算點樣同步申報，並協助核實邊啲項目已經符合對接要求——唔好自己假設或者自行斷定邊個童軍活動就自動等於邊個 AYP 科目。",
@@ -281,7 +281,7 @@ const LOCALES = {
     title: "單項銜接表（非官方整理）",
     unofficialTag: "非官方整理，須向執行處組長核實",
     intro: "以下係按 2016 年官方《各支部進度性獎章及徽章與香港青年獎勵計劃參照表》（P103/2016）為基礎，經我哋自行整理、並剔除咗 2026-08-15 通告已取消嘅專科徽章後嘅參考表，方便執行處支部組長參考點樣將童軍活動銜接（認可）至 AYP 各科。注意：官方用語係「同步完成／銜接／認可」，唔係「拎章換章」嘅自動兌換 —— 每科仍須由執行處支部組長及認可評核員（Assessor）簽署核實，並符合 AYP 時數／持續期要求。呢張表並非童軍總會官方發布嘅最新表格，只係我哋按官方舊表加工整理嘅民間參考版本。",
-    excludedNote: "已剔除因 2026-08-15《童軍支部專科徽章更新》通告（P013/26）而取消嘅 8 個專科徽章：愛護動物章（興趣組）、獨木舟國際賽艇章（技能組）、風帆賽艇舵手章（技能組）、國際友誼章（技能組）、營地管理章（服務組）、獨木舟救生章（服務組）、護養章（服務組）、護養章（教導組）。呢啲徽章總會已停止簽發，就算原有持有人仍可佩戴，都不應再用嚟申報新嘅 AYP 項目。",
+    excludedNote: "已剔除因 2026-08-15《童軍支部專科徽章更新》通告（P013/26）而取消嘅 8 個專科徽章：愛護動物章（興趣組）、獨木舟國際賽艇章（技能組）、風帆賽艇舵手章（技能組）、國際友誼章（技能組）、營地管理章（服務組）、獨木舟救生章（服務組）、護養章（服務組）、護養章（教導組）。上述組別的徽章已取消並停止發售；同名的其他組別可能仍有現行徽章。過往紀錄能否認可，請向所屬執行處核實。",
     groups: [
       {
         branch: "① 童軍支部 → AYP 銅章級參考",
@@ -332,7 +332,7 @@ const LOCALES = {
         ],
       },
     ],
-    footnote: "參加者必須最少完成兩個科別，先可以開始下一個章級嘅活動，並且必須已經成功申請成為 AYP 成員、持有紀錄簿；所有擬用作銜接嘅活動，必須喺正式開展該章級（獲發紀錄簿）日期之後進行，唔可以追溯。",
+    footnote: "2023 年一般規條載明，開始下一章級的某一科前，須完成低一級的同一科及至少另一科，並符合該章級的最低起步年齡等條件；已完成前一獎章的漸進年齡例外另須核實。此表為舊資料，活動日期、較早紀錄及最新科目要求均須向所屬執行處確認。",
     officialSource: { label: "《各支部進度性獎章及徽章與 AYP 參照表》P103/2016（舊綱要，僅供整理參考）", url: "https://www.scout.org.hk/article_attach/26708/p103-16.pdf" },
     cancelSource: { label: "P013/26《童軍支部專科徽章更新》通告（2026-08-15 取消名單）", url: "https://www.scout.org.hk/uploads/tc/circulars/23262/p013-26.pdf" },
   },
@@ -368,15 +368,15 @@ const LOCALES = {
   },
 
   TIMELINE: [
-    { age: "11–13 歲", text: "童軍支部；未足 14 歲——先專心童軍進度性獎章，日後可同步完成／銜接 AYP（記住：開展日前嘅活動唔可以追溯計入）。" },
+    { age: "11–13 歲", text: "童軍支部；一般由 14 歲起報銅章，13 歲有條件可特別申請。較早童軍活動能否認可，請先向執行處核實。" },
     { age: "13 歲", text: "符合特別安排可申請銅章（與適齡朋友小組進行）。" },
-    { age: "14 歲", text: "一般可報銅章；考「童軍高級獎章」可同步完成 AYP 銅章。" },
+    { age: "14 歲", text: "一般可報銅章；「童軍高級獎章」可按試行條件同步完成 AYP 銅章，請核實資格。" },
     { age: "15 歲", text: "可報銀章（漸進或直接）。" },
-    { age: "15–16 歲", text: "深資童軍；可揀銅／銀／金起步。" },
-    { age: "16 歲", text: "可報金章（完成銀章後行漸進路徑，或直接參加金章；金章各科須提前最少 2 個月交 AYP/02–06）。" },
+    { age: "15–16 歲", text: "深資童軍；可按年齡及資格選擇章級，漸進路徑可能有例外。" },
+    { age: "16 歲", text: "一般可按資格報金章（完成銀章後漸進或直接參加）；須提早確認各科適用表格、期限及評核安排。" },
     { age: "18–22 歲", text: "樂行童軍／青年領袖；可直入金章。" },
-    { age: "23 歲", text: "最後參加限期為 23 歲生日當天。" },
-    { age: "25 歲", text: "所有章級須於 25 歲生日前完成。" },
+    { age: "23 歲", text: "23 歲生日可作首次參加年齡參考；實際限期及已有參加者的升級安排請向所屬執行處核實。" },
+    { age: "25 歲", text: "活動一般須於 25 歲生日前完成；特殊情況須向執行處核實。" },
   ],
 
   WIZARD: {
@@ -397,11 +397,11 @@ const LOCALES = {
       { id: "sync",    icon: "🏅", label: "想用童軍章銜接",  desc: "同步完成／認可 AYP" },
     ],
     roleNote: {
-      scout: "💡 你係童軍：考「童軍高級獎章」可同步完成 AYP 銅章——係最抵嘅路。",
+      scout: "💡 你係童軍：考「童軍高級獎章」可同步完成 AYP 銅章；詳情須按試行安排核實。",
       venture: "💡 你係深資：可按年齡揀銅／銀／金起步；深資活動可對應 AYP 各科。",
-      rover: "💡 你係樂行：可揀銅／直接銀／直接金起步；記住 23 歲生日係最後參加限期。",
+      rover: "💡 你係樂行：可按年齡及資格選擇起步章級；首次參加及升級安排請向所屬執行處核實。",
       leader: "💡 你係青年領袖：持有效委任可直接報金章，經青少年活動署辦手續。",
-      young: "💡 你仲細：未夠齡做嘅嘢唔計 AYP，專心童軍進度性獎章鋪路就啱。",
+      young: "💡 你仲細：可以了解童軍進度性獎章；參加資格及較早活動能否認可，請向執行處核實。",
       unsure: "💡 唔肯定唔緊要：跟住下面 3 步做，問領袖嗰陣照讀對白就得。",
     },
   },
@@ -409,26 +409,26 @@ const LOCALES = {
   PLANS: {
     fresh: {
       icon: "🌱", pos: "你喺起點：未開始 AYP，一切由零嚟。",
-      route: "正常開始，順便行「同步完成」最抵嗰條路",
+      route: "由正常流程起步，並了解同步完成方案",
       steps: [
-        "做「零基礎 3 個 Check」：問旅團領袖你宣誓未、有冇支部、邊個係組長（約 10 分鐘問完）。",
-        "先完成「參加者迎新講座」（實體講座繼續舉行，網上迎新影片即將推出），然後交 FORM AYP/01＋HK$45 申請紀錄簿。",
-        "攞到紀錄簿先開始計！童軍就向「高級獎章」進發＝同步完成銅章。",
+        "做「零基礎 3 個 Check」：問旅團領袖你宣誓未、有冇支部、邊個係組長（請向領袖查詢）。",
+        "先完成「參加者迎新講座」，再按最新安排提交 FORM AYP/01、所需文件及紀錄簿費用。",
+        "獲發紀錄簿後按指引記錄活動；如考慮同步完成方案，先向組長確認條件。",
       ],
       who: "你旅團領袖＋執行處支部組長", forms: "AYP/01",
-      time: "約 2–4 星期辦妥手續", link: "#f4", linkLabel: "睇正常流程詳情",
-      warn: "未攞到紀錄簿前做嘅活動唔計——唔好心急，攞到先開始。",
+      time: "視乎處理安排，請向組長查詢", link: "#f4", linkLabel: "睇正常流程詳情",
+      warn: "較早活動不可自行假設獲認可；如有疑問，請向所屬執行處核實是否有例外。",
     },
     doing: {
       icon: "📝", pos: "你做緊一半：喺學校／其他處有進度，想轉入童軍。",
-      route: "轉入童軍，已批核嘅科帶住走、唔使重考",
+      route: "轉入童軍，整理已批核科目的紀錄並交組長核實",
       steps: [
         "做「零基礎 3 個 Check」，搵啱童軍嗰邊嘅執行處支部組長。",
         "交 FORM AYP/09＋原紀錄簿／已批核證明（記得影印留底），等組長確認。",
         "用下面「仲欠咩計數機」剔返已批核科，睇清楚仲爭邊科點補。",
       ],
       who: "童軍支部組長＋原執行處支部組長", forms: "AYP/09",
-      time: "約 2–4 星期處理", link: "#f1", linkLabel: "去「仲欠咩」計數機",
+      time: "視乎個案及處理安排", link: "#f1", linkLabel: "去「仲欠咩」計數機",
       warn: "已批核科原則上唔使重考，但要兩邊組長核實——文件齊就最順。",
     },
     done: {
@@ -440,7 +440,7 @@ const LOCALES = {
         "按新級別要求繼續：銀／金章完成後要交完成通知書申領。",
       ],
       who: "童軍支部組長", forms: "AYP/09",
-      time: "約 2–4 星期處理", link: "#f5", linkLabel: "睇情況 B 詳情",
+      time: "視乎個案及處理安排", link: "#f5", linkLabel: "睇情況 B 詳情",
       warn: "能否承接要童軍執行處核實——證明文件帶齊就最穩陣。",
     },
     overseas: {
@@ -477,15 +477,15 @@ const LOCALES = {
       ],
       who: "執行處支部組長", forms: "按執行處指引申報",
       time: "跟你考童軍章嘅進度", link: "#f2", linkLabel: "睇銜接詳情",
-      warn: "「考咗童軍章」唔等於自動有 AYP——每科都要經 AYP 正式申報、由支部組長／認可評核員核實；而且活動必須喺你正式開展該章級之後進行，唔可以追溯。",
+      warn: "「考咗童軍章」唔等於自動有 AYP——每科都要經 AYP 正式申報、由支部組長／認可評核員核實；活動日期及較早紀錄亦須按方案和執行處安排核實。",
     },
   },
 
   SECTION_TLDR: {
-    f1: "已批核嘅科帶住走、唔使重考。下面計數機剔返已批核科，即知仲爭咩。",
-    f2: "成個章靠「同步完成」；單科靠「銜接（認可）＋正式申報」。兩者都要經執行處／認可評核員核實，唔係自動，亦唔可以追溯開展日之前嘅活動。",
+    f1: "已批核的紀錄一般可申請承接，實際以兩邊執行處核實為準。下方可整理已批核科目。",
+    f2: "成個章靠「同步完成」；單科靠「銜接（認可）＋正式申報」。兩者都要經執行處／認可評核員核實，唔係自動，較早活動亦須先按規條及所屬執行處安排核實。",
     f3: "同一執行處內升團唔會清零 AYP 進度，只須更新支部資料；但由其他執行處轉入就必須辦 FORM AYP/09 轉處手續。",
-    f4: "3 個 Check → 迎新講座 → AYP/01＋$45 → 攞紀錄簿 → 先開始計。跟住做就得。",
+    f4: "3 個 Check → 迎新講座 → AYP/01＋$45 → 領取紀錄簿。活動安排請先向組長確認。",
     f5: "轉出、補時數、紀錄問題等特殊情況——撳開你嗰張卡睇，唔使全部睇晒。",
   },
 
@@ -496,15 +496,16 @@ const LOCALES = {
     { label: "香港童軍總會通告一覽（可按「青少年活動署」篩選最新 AYP 相關通告）", url: "https://www.scout.org.hk/tc/circulars-forms/circulars/index.html" },
     { label: "香港童軍總會 AYP 童軍執行處", url: "https://hkayp.scouting.org.hk/#home" },
     { label: "《各支部進度性獎章及徽章與 AYP 參照表》P103/2016（舊綱要參考）", url: "https://www.scout.org.hk/article_attach/26708/P103-16.pdf" },
+    { label: "AYP《一般規條》（2023；年齡及較早活動例外，請核實最新版）", url: "https://ayp.org.hk/wp-content/uploads/2023/09/3.-General-Conditions-Eng_20230911.pdf" },
     { label: "香港青年獎勵計劃總辦事處 ayp.org.hk", url: "https://www.ayp.org.hk" },
   ],
 
-  DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條，以及「同步完成方案」等試行安排、單科銜接／認可、轉處細節，以 AYP 總辦事處及香港童軍總會（P95/2026 等通告、AYP 童軍執行處網頁）最新公開發表為準。所有操作細節隨時可能更新，辦理前請向你所屬執行處支部組長／童軍領袖核實。另請注意：AYP 活動一律以正式開展日期起計，開展日之前嘅活動原則上不可追溯（No Backdating）。",
+  DISCLAIMER: "本 app 為非官方輔助工具。香港青年獎勵計劃正式規條、試行安排、單科認可及轉處細節，以 AYP 總辦事處及香港童軍總會最新公布為準。較早活動可能有條件性例外，不能自行假設獲認可；辦理前請向所屬執行處支部組長／童軍領袖核實。",
 
   UI: {
-    heroLead: "🌱 <b>正常流程：由零開始考 AYP，跟住做就得。</b>唔肯定自己咩情況？㩒上面 ⚡精靈 答 2 條問題搵路。",
-    mini1: "① 跟行動卡做<br>逐步剔進度", mini2: "② 展開詳情睇<br>Check/步驟/時間表", mini3: "③ 交表問組長<br>用下面工具查",
-    quickTitle: "5 分鐘精靈：你咩情況？下一步做咩？",
+    heroLead: "由行動清單開始；唔肯定自己嘅情況，可以用精靈整理下一步。",
+    mini1: "跟行動卡做<br>逐步剔進度", mini2: "展開詳情睇<br>檢查、步驟與時間表", mini3: "查找表格<br>與組長確認",
+    quickTitle: "先了解你的情況",
     beginnerTitle: "零基礎 3 個 Check", beginnerSub: "當你咩都唔知——點查、問邊個、睇咩，逐步教",
     beginnerIntro: "無論你行邊條路，都要先過呢 3 關：宣誓未？有冇支部？組長啱唔啱？每張卡都有「照讀對白」俾你問領袖。",
     f1Title: "由其他執行處轉入童軍 → 仲有咩要考", f1Tag: "(功能①)",
@@ -562,12 +563,12 @@ const LOCALES = {
     tldrTag: "⚡ 30 秒睇懂",
     aLabel: "A：",
     disclaimerTitle: "免責聲明",
-    baselineFoot: "資料基準日：2026 年 10 月（P95/2026 ＋ hkayp.scouting.org.hk 新版同步）",
+    baselineFoot: "資料基準：2026 年 10 月 · 請核實最新安排",
 
     quickNavAria: "底部工具列",
     topBarAria: "頂部指南列",
     unofficialBadge: "⚠️ 非官方整理，須向執行處組長核實",
-    backdateWarn: "🚫 <b>不可追溯（No Backdating）警告：</b>AYP 所有活動時數／次數，一律由你<b>正式開展該章級嘅日期</b>（成功報名、獲發紀錄簿）當日或之後起計。開展日之前嘅舊童軍活動、服務時數或徽章紀錄，原則上<b>唔可以追溯</b>計入 AYP —— 切勿以為攞住以前嘅童軍紀錄就可以直接申報。",
+    backdateWarn: "<b>較早活動：不可追溯的限制與例外（No Backdating）</b><br>童軍通告 P95/2026 指出，正式獲接納前的活動原則上不得用作完成計劃。AYP 2023 年一般規條就<b>獲發紀錄簿前三個月內、為參加計劃而進行</b>的部分活動列出有條件例外。請向所屬執行處核實現行安排及是否適用於同步方案。<br><a href='https://ayp.org.hk/wp-content/uploads/2023/09/3.-General-Conditions-Eng_20230911.pdf' target='_blank' rel='noopener'>AYP 一般規條</a> · <a href='https://www.scout.org.hk/uploads/tc/circulars/25989/p095-26.pdf' target='_blank' rel='noopener'>童軍通告 P95/2026</a>",
     verifyBeforeAct: "辦理前請核實：",
     openOfficialLink: "查看官方原文 →",
     syncPlanEffective: "生效：",
@@ -577,7 +578,7 @@ const LOCALES = {
     conversionCancelSource: "取消名單來源：",
     formsDownload: "下載表格",
     oaRegionsTitle: "地域辦事處電話",
-    backHome: "返正常流程",
+    backHome: "返回總覽",
   },
 },
 
@@ -591,9 +592,9 @@ const LOCALES = {
   APP: {
     name: "AYP Scout Bridging Guide",
     shortName: "AYP Scout",
-    tagline: "Situation-led: Simultaneous completion / Bridging · Transfer bridging · Advancement · Standard process",
-    description: "Unofficial guide: Scout ↔ AYP simultaneous completion / bridging recognition, transferring Operating Authority / advancing Sections, and the standard AYP process for each Section. All activities must take place after your official start date — no backdating.",
-    baseline: "Data baseline: October 2026 (Circular P95/2026 + new hkayp.scouting.org.hk)",
+    tagline: "A practical companion for your AYP journey",
+    description: "An unofficial guide to Scout and AYP bridging, transfers, advancement and getting started. Verify individual arrangements with your Operating Authority.",
+    baseline: "Data baseline: October 2026 · Verify current guidance",
   },
 
   COPYRIGHT: {
@@ -635,7 +636,7 @@ const LOCALES = {
         "<b>Young Leaders:</b> Ask your Group/Unit: \"Is my leader/instructor appointment still valid?\" An expired appointment means you don't qualify.",
       ],
       ask: "\"Excuse me, I'd like to do AYP through Scouts — have I made my Promise yet? What date was it, and is there a record I can see?\"",
-      ifNot: "No need to worry if you haven't been invested — ask your Group/Unit Leader when the next Investiture is, and submit your AYP application after that. Activities done before your Promise won't count towards AYP.",
+      ifNot: "No need to worry if you haven't been invested — ask your Group/Unit Leader when the next Investiture is, and submit your AYP application after that. Ask your Operating Authority whether activities undertaken before your Promise can count.",
     },
     {
       id: "branch", icon: "🏕️", title: "Check 2: Does my unit have an \"approved User Unit\"?",
@@ -673,16 +674,16 @@ const LOCALES = {
   },
 
   SYNC_CONVERT: {
-    intro: "From 15 August 2026, a trial \"Simultaneous Completion Scheme\" applies: using the same Scout training / activity / record / assessment process, you can complete a Scout Award and an AYP Award level at the same time, without duplication.",
+    intro: "From 15 August 2026, a trial \"Simultaneous Completion Scheme\" allows eligible Scout training, activities, records and assessment to count toward both awards under specified arrangements. Confirm eligibility and separate approvals.",
     stages: [
       { scoutBadge: "Scout Advanced Award", scoutInfo: "Scout Section Progressive Badge", toAyp: "AYP Bronze Award", toAypLv: "bronze", note: "Achieving the Scout Advanced Award simultaneously completes the AYP Bronze Award." },
       { scoutBadge: "Chief Scout's Award", scoutInfo: "Requires AYP Bronze Award completed first", toAyp: "AYP Progressive Silver Award", toAypLv: "silver", note: "After completing Bronze, the Chief Scout's Award can simultaneously complete the AYP Progressive Silver Award." },
     ],
-    caveat: "This is a trial arrangement, not an automatic one-to-one 'badge-for-award' swap — each matched item still has to be signed off by your User Unit Leader / a recognised Assessor before it counts, and activities used for simultaneous completion must take place after your official start date for that Award level (no backdating). Detailed matching, participation, record-keeping and assessment guidance is published on the Scout Association of Hong Kong's \"AYP Scout Operating Authority\" webpage — please verify before proceeding.",
+    caveat: "This is a trial arrangement, not an automatic one-to-one 'badge-for-award' swap — each matched item still has to be signed off by your User Unit Leader / a recognised Assessor before it counts, and activity dates or earlier records must be checked against the scheme and your Operating Authority's requirements. Detailed matching, participation, record-keeping and assessment guidance is published on the Scout Association of Hong Kong's \"AYP Scout Operating Authority\" webpage — please verify before proceeding.",
   },
 
   SECTION_MAP: {
-    header: "Scout activities/badges can be \"bridged (recognised)\" towards AYP Sections — i.e. the knowledge and skills already gained through Scout training can be used to report AYP, without repeating the same training and assessment. However, each Section must still meet AYP's hours/duration/assessment requirements, be formally reported, and be signed off by your User Unit Leader / a recognised Assessor — it is not automatic.",
+    header: "Scout activities or badges may meet some AYP requirements, but recognition is not automatic. Confirm each activity, hours, duration, assessment and applicable reporting procedures with your Operating Authority.",
     rows: [
       { ayp: "Service Section", scout: "Scout First Aid / Life Saving Proficiency Badges, campsite service, Scout District/Region community service schemes, service awards, etc.", lv: "Bronze / Silver / Gold" },
       { ayp: "Skills Section", scout: "Scout Proficiency Badges (Communications, Computer, Handicraft, Language, Photography, Camping, Bird-watching, etc., depending on nature), Venture/Rover personal interest projects", lv: "Bronze / Silver / Gold" },
@@ -690,7 +691,7 @@ const LOCALES = {
       { ayp: "Adventurous Journey Section", scout: "Scout hiking/camping/expedition journeys — must be led and assessed by an Adventurous Journey Instructor recognised by the Scout Operating Authority", lv: "Bronze / Silver / Gold (journey length varies by level)" },
       { ayp: "Residential Project Section (Gold)", scout: "Large-scale Scout exchange / camp / Jamboree (organised by HQ / Region / District / Group, 5 days 4 nights or longer)", lv: "Gold" },
     ],
-    caveat: "The above is a reference direction for \"bridging (recognition)\" only — not an automatic one-to-one conversion. The old official \"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" (P103/2016) is based on the old Training Scheme, which has been updated as the new scheme takes effect from 15 August 2026; the latest Section recognition follows announcements from the Scout Operating Authority and the Simultaneous Completion Scheme. Never assume \"earning a Scout badge automatically equals completing an AYP Section\" — every Section still needs to go through AYP's formal reporting process and be signed off by your User Unit Leader / a recognised Assessor.",
+    caveat: "The above is a reference direction for \"bridging (recognition)\" only — not an automatic one-to-one conversion. The old official \"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" (P103/2016) is based on an older training scheme. Confirm its current applicability and the latest Section recognition with the Scout Operating Authority. Never assume \"earning a Scout badge automatically equals completing an AYP Section\" — every Section still needs to go through AYP's formal reporting process and be signed off by your User Unit Leader / a recognised Assessor.",
   },
 
   SECTION_PATHS: {
@@ -702,13 +703,13 @@ const LOCALES = {
     },
     venture: {
       name: "Venture Scout", age: "approx. 15–20", color: "#7a1f2b",
-      aypStart: "You may start at Bronze/Silver/Gold depending on age (progressive or direct); Silver from 15, Gold from 16.",
+      aypStart: "Choose a starting level based on age and eligibility. Silver generally starts at 15 and Gold at 16; progressive exceptions may apply.",
       sync: "Venture Scout \"activities/expeditions\" training can be bridged (recognised) towards AYP Sections (see the item-by-item bridging table).",
       toNext: "After advancing to Rover Scout: your AYP progress carries over; Rover Scout \"community service / personal interest / world awareness\" activities can be bridged towards higher-level AYP Sections.",
     },
     rover: {
-      name: "Rover Scout", age: "approx. 18–25 (must join before turning 23)", color: "#0a3a5c",
-      aypStart: "May choose Bronze / direct Silver / direct Gold as the starting level (depending on age); the latest date for entry is your 23rd birthday.",
+      name: "Rover Scout", age: "approx. 18–25 (verify AYP entry age)", color: "#0a3a5c",
+      aypStart: "Choose a starting level based on age and eligibility. Confirm first-entry and progression arrangements with your Operating Authority.",
       sync: "Rover Scout service, personal interest, and international outlook activities (Jamborees, etc.) can be bridged (recognised) towards AYP Sections, especially Service / Skills / Residential Project.",
       toNext: "After Rover Scouts, you may become a leader/instructor; if you're a Young Leader with a valid appointment, you may enter Gold directly (see \"Other Situations\" case E).",
     },
@@ -717,9 +718,9 @@ const LOCALES = {
   JOIN_FLOW: {
     commonSteps: [
       "Do the \"3 Checks for Beginners\": ask your Group/Unit Leader — ① Have I made my Promise? ② Does our Group/District/Region have an approved User Unit? ③ Who is the qualified Unit Leader? (If your Group has no User Unit, you can join via the District/Regional one — no need to transfer Groups.)",
-      "Complete the \"Participant Orientation\": in-person briefings continue to be held, and the online orientation video is launching soon (check the Scout OA website). You must complete orientation before applying for your Record Book.",
+      "Complete the \"Participant Orientation\" before applying for your Record Book; check the Scout Operating Authority for current online and in-person arrangements.",
       "Complete the \"Application Form\" FORM AYP/01, along with required documents and the HK$45 Record Book fee, and hand it to your checked-and-verified User Unit Leader. Keep a photocopy.",
-      "Wait for acceptance and collect your Record Book: all AYP activities must be logged in the Record Book to count. Activities done before you receive the Record Book generally don't count — so don't rush; start counting only once you have it.",
+      "Wait for acceptance and collect your Record Book. Record activities as instructed by your Operating Authority; whether any earlier activity can count requires verification.",
     ],
     note: "Administrative procedures are being digitised in phases (online applications run alongside paper forms in the first year). Ask your Unit Leader whether to use online or paper when submitting — don't assume.",
   },
@@ -734,13 +735,13 @@ const LOCALES = {
     {
       id: "d", icon: "🌱", title: "D. Under 14 / Cub Scout advancing to Scouts, preparing early for AYP",
       q: "I'm still young (a Scout, or even a Cub Scout about to move up), and want to prepare for AYP later — what can I do now?",
-      body: "AYP Bronze generally requires a minimum age of 14 (Scouts aged 13+ may apply under special arrangement); activities done while underage can't count towards AYP. However, you can: focus on Scout Progressive Badges (especially the \"Scout Advanced Award\"), since it can later simultaneously complete the AYP Bronze Award; and build a sustainable skill/sport habit, which will help with the Skills Section / Physical Recreation Section later.",
+      body: "AYP Bronze generally requires a minimum age of 14 (Scouts aged 13+ may apply under special arrangement); confirm whether earlier activities can count with your Operating Authority. You can: focus on Scout Progressive Badges (especially the \"Scout Advanced Award\"), since it can later simultaneously complete the AYP Bronze Award; and build a sustainable skill/sport habit, which will help with the Skills Section / Physical Recreation Section later.",
     },
     {
       id: "e", icon: "👔", title: "E. Young Leader (adult) joining, entering Gold directly",
       q: "I'm a Young Leader — can I do AYP?",
       body: "Young Leaders aged 18 to under 23 with a valid leader/instructor appointment from the Scout Association of Hong Kong may take part in Gold-level training and assessment activities, and apply directly through the Programme Branch. You still need to complete the Orientation first, then submit FORM AYP/01 with documents and fees.",
-      caveat: "The latest date for entry is your 23rd birthday, and all activities must be completed before your 25th birthday.",
+      caveat: "Confirm first-entry age limits with your Operating Authority; activities generally must be completed before your 25th birthday.",
     },
     {
       id: "f", icon: "🌏", title: "F. Overseas / international AYP (Duke of Edinburgh's International Award) transferring into Hong Kong Scouts",
@@ -782,10 +783,10 @@ const LOCALES = {
     { q: "Can I not apply for Bronze if I'm under 14?", a: "Bronze generally requires a minimum age of 14; however, Scout members aged 13+ may apply under a special arrangement (must be done together with an age-appropriate peer group). Activities done while underage can't count towards AYP." },
     { q: "What's the difference between \"Simultaneous Completion\" and \"Bridging (Recognition)\"?", a: "Simultaneous Completion = earning a specific Scout Award (Scout Advanced Award / Chief Scout's Award) simultaneously completes a whole AYP Award level, without reporting by Section (currently on trial; still subject to your Unit Leader's confirmation). Bridging (Recognition) = you use the content of a Scout activity/badge to report a specific AYP Section, but it must still meet that Section's hours/duration/assessment requirements, be verified by a recognised Assessor, and be formally reported. Neither is an automatic 'badge-for-award' swap." },
     { q: "If I transfer into Scouts from another Operating Authority, will what I've already done disappear?", a: "In principle, already-approved Sections carry over with the Record Book and don't need to be redone; use FORM AYP/09 together with your records to process the transfer. This is subject to verification by the Scout Operating Authority and both Unit Leaders." },
-    { q: "Can my previous Scout activities / service hours be backdated into AYP?", a: "In principle, no (No Backdating). AYP activities count only from the date you officially start that Award level (successful enrolment and issue of the Record Book); old activities, hours or badge records from before your start date cannot be backdated into the time and frequency requirements. So if you want to do AYP, enrol and start formally as early as possible — check with your User Unit Leader if in doubt." },
-    { q: "Do I have to complete Bronze or Silver before Gold?", a: "Not necessarily. Once aged 16+, you can enter Direct Gold (Main Section ≥78h & ≥78w; two Secondary Sections ≥52h & ≥52w each), or Progressive Gold after completing Silver (all 3 Sections ≥52h & ≥52w). Note that Gold Sections require submitting AYP/02–06 at least 2 months before starting." },
+    { q: "Can my previous Scout activities / service hours be backdated into AYP?", a: "Do not assume earlier activity counts automatically. The 2023 AYP General Conditions describe a limited exception for activity undertaken in the three months before the Record Book was issued, with a view to joining and subject to the relevant Section conditions. Check the latest rules and whether the trial scheme permits this with your Operating Authority." },
+    { q: "Do I have to complete Bronze or Silver before Gold?", a: "Not necessarily. Once aged 16+, you can enter Direct Gold (Main Section ≥78h & ≥78w; two Secondary Sections ≥52h & ≥52w each), or Progressive Gold after completing Silver (all 3 Sections ≥52h & ≥52w). Confirm the applicable Gold activity plans, forms and submission deadlines with your Operating Authority in advance." },
     { q: "How much does the Record Book cost?", a: "From 1 April 2026, the application fee is HK$45." },
-    { q: "By when must I complete everything?", a: "All Award levels must be completed before your 25th birthday; the latest date for entry is your 23rd birthday." },
+    { q: "By when must I complete everything?", a: "Activities generally must be completed before your 25th birthday. P95/2026 lists the 23rd birthday as the general first-entry limit; Young Leaders have separate conditions including being under 23. Confirm the latest rules with your Operating Authority." },
     { q: "Can the same activity be used for both a Scout Award and AYP at the same time?", a: "Yes — this is exactly the spirit of \"Simultaneous Completion / Bridging (Recognition)\", using the same training/activity/assessment process. But it must still be formally reported to AYP — it's not automatic; ask your User Unit Leader for details." },
   ],
 
@@ -793,13 +794,13 @@ const LOCALES = {
     { term: "Operating Authority (OA)", def: "An organisation recognised by The Hong Kong Award for Young People to run AYP (The Scout Association of Hong Kong is one of them; others include schools and other uniformed groups)." },
     { term: "User Unit (UU)", def: "The unit under an Operating Authority that actually runs AYP day-to-day, e.g. a User Unit set up by a Scout Group/District/Region." },
     { term: "User Unit Leader", def: "The leader/commissioner responsible for helping run AYP, guiding participants, verifying records, and handling applications/transfers." },
-    { term: "Record Book", def: "The official record on which all AYP Award activities must be logged; activities done before the Record Book is issued don't count. Application fee: HK$45." },
+    { term: "Record Book", def: "The official record of AYP activities. Earlier activities must not be assumed to count; any limited exception requires verification against the Section conditions and Operating Authority arrangements. Fee: HK$45." },
     { term: "Orientation", def: "Must be completed before joining; covers the Scheme's purpose, Award levels and Sections, and Instructor/Assessor arrangements; now offered both online and in person." },
     { term: "Instructor/Assessor", def: "The person responsible for guiding and signing off your performance/progress in a Section; Adventurous Journey Section journeys must be led by a recognised Instructor/Assessor." },
     { term: "Main Section / Secondary Section", def: "Under the current system, direct entrants must choose a Main Section (higher hours) and Secondary Sections; those progressing from a lower Award don't need to split Main/Secondary." },
     { term: "Simultaneous Completion Scheme", def: "Earning the \"Scout Advanced Award\" simultaneously completes the AYP Bronze Award; after completing Bronze, the \"Chief Scout's Award\" simultaneously completes the Progressive Silver Award (trial from 15 August 2026)." },
     { term: "Bridging (Recognition)", def: "The official concept of using Scout activities/badges towards an AYP Section — not a 'badge-for-award' swap: each Section must still meet the hours/duration/assessment requirements, be formally reported, and be verified by your User Unit Leader / a recognised Assessor." },
-    { term: "Start Date", def: "The date you are officially accepted into an Award level. All activities counting towards AYP must take place on or after the start date — earlier activities generally cannot be backdated (No Backdating)." },
+    { term: "Start Date", def: "The reference date for starting the scheme or an Award level. Check current general conditions, Section rules and Operating Authority arrangements before counting earlier activity." },
     { term: "Change of Operating Authority", def: "The formal administrative procedure for moving from one Operating Authority (e.g. a school) to another (e.g. the Scout Association), processed with FORM AYP/09. Note: this is different from advancing Scout Sections within the same Operating Authority — advancing Sections doesn't require a transfer, but changing Operating Authority always does." },
     { term: "Direct entry / Progressive", def: "Direct entry = skipping lower levels to go straight to Silver/Gold; Progressive = completing Bronze/Silver first before moving up." },
   ],
@@ -816,7 +817,7 @@ const LOCALES = {
   BOTTOM_ACTIONS: [
     { id: "sync-plan", icon: "📋", label: "Sync Plan", target: "bt-sync" },
     { id: "conv-table", icon: "🔁", label: "Recognition", target: "bt-conv" },
-    { id: "start-forms", icon: "📝", label: "Start Forms", target: "bt-forms" },
+    { id: "start-forms", icon: "📝", label: "Forms", target: "bt-forms" },
     { id: "oa-lookup", icon: "🏢", label: "Find OA", target: "bt-oa" },
     { id: "faq", icon: "❓", label: "FAQ", target: "bt-faq" },
   ],
@@ -832,12 +833,12 @@ const LOCALES = {
   SYNC_PLAN: {
     title: "Simultaneous Completion Scheme (Trial)",
     effective: "Effective: trial from 15 August 2026",
-    summary: "From 15 August 2026, the way Scout Progressive Badges map to AYP Award levels has changed. It is no longer a simple one-to-one automatic conversion (\"one Scout Award = one AYP Award level\"); instead, it now works by matching individual projects/activities (training, activity, and assessment content) between the two schemes.",
+    summary: "From 15 August 2026, a trial links the Scout Advanced Award with AYP Bronze, and the Chief Scout's Award with progressive Silver for Bronze holders. Activities, records and assessments must meet the applicable requirements; verify the latest arrangements.",
     points: [
       "[Scout Advanced Award → AYP Bronze] Service is the Main Section (≥26h & ≥26w: Standard + Advanced Award ongoing service); Skills is Secondary (≥13h & ≥13w: Advanced Award B.2.a STEAM proficiency badge); Physical Recreation is Secondary (≥13h & ≥13w: physical fitness badge or ≥13h/13w training); Adventurous Journey maps to Pathfinder A.2.c + Standard A.2.e + Advanced A.2.f.I/II.",
-      "[Chief Scout's Award → AYP Progressive Silver] Requires AYP Bronze completed and age ≥15 (all 3 sections ≥26h & ≥26w, no Main/Secondary split): Service maps to D.1.c ongoing service; Skills maps to A.3 Pioneering (knots/lashings, design, gear prep, construction, instruction & leading); Physical Recreation maps to fitness badge or ≥26h/26w training; Adventurous Journey maps to Adventure Option II.",
+      "[Chief Scout's Award → AYP Progressive Silver] Requires AYP Bronze completed and confirmation of age and start arrangements (all 3 sections ≥26h & ≥26w, no Main/Secondary split): Service maps to D.1.c ongoing service; Skills maps to A.3 Pioneering (knots/lashings, design, gear prep, construction, instruction & leading); Physical Recreation maps to fitness badge or ≥26h/26w training; Adventurous Journey maps to Adventure Option II.",
       "[Trial Adventurous Journey Rules] For Bronze, contact a qualified EA / JEA (or a CRS instructor who is also a Scout Leader) before training/assessment starts; for Progressive Silver, complete the Intermediate Hiking Course & Assessment (or arrange an EA / CRS beforehand). Units must log the assessor's name, role, qualification, unit, contact, item, date and result.",
-      "[Start Date Rule (No Backdating)] All activities used for simultaneous completion must take place after officially starting that AYP level (orientation + AYP/01 + HK$45 Record Book) and using the 2026 Revised Scout Training Scheme from Pathfinder Award onwards.",
+      "[Activity dates] Confirm the start date and trial scheme requirements, and use the 2026 Revised Scout Training Scheme from Pathfinder Award onwards. Do not assume earlier activity is recognised; ask the Operating Authority whether any general-condition exception applies to the trial.",
       "[Unit Expression of Interest e-Form] Scout units and leaders joining the trial can submit the official Expression of Interest Google Form (note: this does not replace AYP/01 enrolment or Record Book procedures).",
     ],
     notifyLeader: "⚠️ Before starting under this sync plan, you must proactively inform your \"User Unit Leader\", so they can confirm how you intend to report the sync and help verify which items actually meet the matching requirements — don't assume or decide for yourself which Scout activity automatically equals which AYP Section.",
@@ -849,7 +850,7 @@ const LOCALES = {
     title: "Item-by-Item Bridging Table (Unofficial Compilation)",
     unofficialTag: "Unofficial compilation — must be verified with your User Unit Leader",
     intro: "The table below is compiled by us based on the 2016 official \"Conversion Table for Sectional Progressive Badges and Awards with AYP\" (P103/2016), with badges cancelled by the 15 August 2026 circular removed, to help User Unit Leaders see how Scout activities can be bridged (recognised) towards AYP Sections. Note the official terminology is \"simultaneous completion / bridging / recognition\" — not an automatic 'badge-for-award' swap: each Section must still be signed off by the User Unit Leader and a recognised Assessor, and meet AYP's hours/duration requirements. This is NOT an official table currently published by the Scout Association — it is our own reference version reworked from the old official table.",
-    excludedNote: "The following 8 Proficiency Badges, cancelled under the \"Update of Sectional Proficiency Badges\" circular (P013/26, effective 15 August 2026), have been excluded: Animal Care Badge (Interest Group), Canoe/Kayak Racing Badge (Skill Group), Sailing Helmsman Badge (Skill Group), International Friendship Badge (Skill Group), Camp Management Badge (Service Group), Canoe Lifesaving Badge (Service Group), Animal Husbandry Badge (Service Group), Animal Husbandry Badge (Instructor Group). These badges are no longer issued by the Association; even if existing holders may still wear them, they should not be used to report new AYP items.",
+    excludedNote: "The following 8 Proficiency Badges, cancelled under the \"Update of Sectional Proficiency Badges\" circular (P013/26, effective 15 August 2026), have been excluded: Animal Care Badge (Interest Group), Canoe/Kayak Racing Badge (Skill Group), Sailing Helmsman Badge (Skill Group), International Friendship Badge (Skill Group), Camp Management Badge (Service Group), Canoe Lifesaving Badge (Service Group), Animal Husbandry Badge (Service Group), Animal Husbandry Badge (Instructor Group). These badges in the listed groups have been cancelled and are no longer on sale. Similarly named badges in other groups may remain current. Verify earlier records with your Operating Authority.",
     groups: [
       {
         branch: "① Scout Section → AYP Bronze Award reference",
@@ -900,7 +901,7 @@ const LOCALES = {
         ],
       },
     ],
-    footnote: "Participants must complete at least two Sections before starting the next Award level's activities, and one of those Sections must be from the completed lower Award; the participant must also already exceed the minimum age for the higher Award level. All activities used for bridging must take place after you officially start that Award level (Record Book issued) — no backdating.",
+    footnote: "The 2023 General Conditions require completion of the same Section and at least one other Section at the lower level before starting a Section at the next level, subject to the higher level’s minimum starting age and other conditions. Progressive age exceptions after completing the earlier Award must also be verified. This is an older reference; confirm dates, earlier records and current Section requirements with your Operating Authority.",
     officialSource: { label: "\"Conversion Table for Sectional Progressive Badges and Awards with AYP\" P103/2016 (old scheme, for compilation reference only)", url: "https://www.scout.org.hk/article_attach/26708/p103-16.pdf" },
     cancelSource: { label: "Circular P013/26 \"Update of Sectional Proficiency Badges\" (cancellation list effective 15 August 2026)", url: "https://www.scout.org.hk/uploads/tc/circulars/23262/p013-26.pdf" },
   },
@@ -936,15 +937,15 @@ const LOCALES = {
   },
 
   TIMELINE: [
-    { age: "11–13", text: "Scout Section; under 14 — focus first on Scout Progressive Badges, which can later be simultaneously completed / bridged towards AYP (remember: activities before your start date cannot be backdated)." },
+    { age: "11–13", text: "Scout Section; Bronze generally starts at 14, with a conditional special arrangement at 13. Confirm with your Operating Authority whether any earlier Scout activity can be recognised." },
     { age: "13", text: "May apply for Bronze under a special arrangement (done with an age-appropriate peer group)." },
-    { age: "14", text: "Generally eligible for Bronze; earning the \"Scout Advanced Award\" simultaneously completes AYP Bronze." },
+    { age: "14", text: "Generally eligible for Bronze; the \"Scout Advanced Award\" can link to AYP Bronze under trial conditions. Confirm eligibility." },
     { age: "15", text: "Eligible for Silver (progressive or direct)." },
-    { age: "15–16", text: "Venture Scout Section; may start at Bronze/Silver/Gold." },
-    { age: "16", text: "Eligible for Gold (Progressive after Silver, or Direct Gold; Gold Sections require submitting AYP/02–06 at least 2 months prior)." },
+    { age: "15–16", text: "Venture Scout Section; choose a level based on age and eligibility, with possible progressive exceptions." },
+    { age: "16", text: "Generally eligible for Gold subject to requirements (Progressive after Silver, or Direct Gold). Confirm applicable forms, deadlines and assessment arrangements early." },
     { age: "18–22", text: "Rover Scout / Young Leader; may enter Gold directly." },
-    { age: "23", text: "Latest date for entry is your 23rd birthday." },
-    { age: "25", text: "All Award levels must be completed before your 25th birthday." },
+    { age: "23", text: "The 23rd birthday is a first-entry age reference; confirm the applicable deadline and progression arrangements with your Operating Authority." },
+    { age: "25", text: "Activities generally must be completed before your 25th birthday; ask your Operating Authority about exceptional cases." },
   ],
 
   WIZARD: {
@@ -965,11 +966,11 @@ const LOCALES = {
       { id: "sync",    icon: "🏅", label: "Want to bridge Scout badges", desc: "Sync / recognition towards AYP" },
     ],
     roleNote: {
-      scout: "💡 You're a Scout: earning the \"Scout Advanced Award\" simultaneously completes AYP Bronze — it's the best-value route.",
+      scout: "💡 You're a Scout: earning the \"Scout Advanced Award\" simultaneously completes AYP Bronze — check the trial requirements with your leader.",
       venture: "💡 You're a Venture Scout: you may start at Bronze/Silver/Gold depending on age; Venture activities can map to AYP Sections.",
-      rover: "💡 You're a Rover Scout: you may start at Bronze/direct Silver/direct Gold; remember your 23rd birthday is the latest date for entry.",
+      rover: "💡 You're a Rover Scout: select a starting level based on age and eligibility; confirm first-entry and progression arrangements with your Operating Authority.",
       leader: "💡 You're a Young Leader: with a valid appointment you can apply for Gold directly through the Programme Branch.",
-      young: "💡 You're still young: activities done while underage don't count towards AYP — focus on Scout Progressive Badges to prepare the way.",
+      young: "💡 You can explore Scout Progressive Badges while preparing. Check entry requirements and whether earlier activities can count with your Operating Authority.",
       unsure: "💡 No worries if you're not sure: follow the 3 steps below, and just read the script aloud when asking your leader.",
     },
   },
@@ -977,26 +978,26 @@ const LOCALES = {
   PLANS: {
     fresh: {
       icon: "🌱", pos: "You're at the starting point: haven't started AYP yet, starting from zero.",
-      route: "Start normally, and take the best-value \"Simultaneous Completion\" route along the way",
+      route: "Start with the standard process and explore the trial scheme",
       steps: [
-        "Do the \"3 Checks for Beginners\": ask your Group/Unit Leader whether you've made your Promise, whether there's a User Unit, and who the Unit Leader is (about 10 minutes to sort out).",
-        "Complete the \"Participant Orientation\" first (in-person sessions continue; online orientation video launching soon), then submit FORM AYP/01 + HK$45 for your Record Book.",
-        "Only start counting once you have the Record Book! As a Scout, aim for the \"Advanced Award\" = simultaneously completing Bronze.",
+        "Do the \"3 Checks for Beginners\": ask your Group/Unit Leader whether you've made your Promise, whether there's a User Unit, and who the Unit Leader is (ask your Leader about the current arrangements).",
+        "Complete the \"Participant Orientation\" first, then submit FORM AYP/01, required documents and the Record Book fee under current arrangements.",
+        "After receiving your Record Book, record activities as instructed; ask your leader whether the trial scheme applies.",
       ],
       who: "Your Group/Unit Leader + User Unit Leader", forms: "AYP/01",
-      time: "About 2–4 weeks to complete", link: "#f4", linkLabel: "See the standard process in detail",
-      warn: "Activities done before you receive the Record Book don't count — don't rush, start only once you have it.",
+      time: "Ask your Unit Leader about processing time", link: "#f4", linkLabel: "See the standard process in detail",
+      warn: "Do not assume earlier activities count. Ask your Operating Authority whether an exception applies.",
     },
     doing: {
       icon: "📝", pos: "You're halfway through: making progress at school/another Operating Authority, and want to transfer into Scouts.",
-      route: "Transfer into Scouts — already-approved Sections carry over, no need to redo them",
+      route: "Transfer into Scouts — organise already-approved Section records for verification",
       steps: [
         "Do the \"3 Checks for Beginners\", and find the right User Unit Leader on the Scout side.",
         "Submit FORM AYP/09 + your original Record Book / proof of approved Sections (photocopy for your records), and wait for the leader to confirm.",
         "Use the \"What's still missing\" calculator below to tick off already-approved Sections and see clearly what's left to complete.",
       ],
       who: "Scout Unit Leader + original Operating Authority's Unit Leader", forms: "AYP/09",
-      time: "About 2–4 weeks to process", link: "#f1", linkLabel: "Go to the \"What's still missing\" calculator",
+      time: "Depends on the case and processing arrangements", link: "#f1", linkLabel: "Go to the \"What's still missing\" calculator",
       warn: "Already-approved Sections generally don't need to be redone, but both Unit Leaders must verify them — having all documents ready makes it smoothest.",
     },
     done: {
@@ -1008,7 +1009,7 @@ const LOCALES = {
         "Continue according to the new level's requirements: after completing Silver/Gold, submit a Notification of Attainment to apply.",
       ],
       who: "Scout Unit Leader", forms: "AYP/09",
-      time: "About 2–4 weeks to process", link: "#f5", linkLabel: "See case B in detail",
+      time: "Depends on the case and processing arrangements", link: "#f5", linkLabel: "See case B in detail",
       warn: "Whether this can be carried over needs to be verified by the Scout Operating Authority — having all your proof documents ready is safest.",
     },
     overseas: {
@@ -1045,15 +1046,15 @@ const LOCALES = {
       ],
       who: "User Unit Leader", forms: "Report as guided by your Operating Authority",
       time: "Follows your progress on the Scout Award", link: "#f2", linkLabel: "See bridging details",
-      warn: "\"Earning a Scout Award\" doesn't automatically mean you have AYP — every Section still needs to go through AYP's formal reporting process and be signed off by your Unit Leader / a recognised Assessor; and activities must take place after your official start date for that level — no backdating.",
+      warn: "\"Earning a Scout Award\" doesn't automatically mean you have AYP — every Section still needs to go through AYP's formal reporting process and be signed off by your Unit Leader / a recognised Assessor; and activity dates and any earlier records must be checked against the scheme and Operating Authority arrangements.",
     },
   },
 
   SECTION_TLDR: {
-    f1: "Already-approved Sections carry over — no need to redo them. Use the calculator below to tick off approved Sections and see instantly what's left.",
-    f2: "A whole Award relies on \"Simultaneous Completion\"; individual Sections rely on \"bridging (recognition) + formal reporting\". Both must be verified through the Operating Authority and recognised Assessors — neither is automatic, and activities before your start date can't be backdated.",
+    f1: "Already-approved records can generally be submitted for transfer, subject to verification by both Operating Authorities. Use the checklist below to organise them.",
+    f2: "A whole Award relies on \"Simultaneous Completion\"; individual Sections rely on \"bridging (recognition) + formal reporting\". Both must be verified through the Operating Authority and recognised Assessors — neither is automatic; earlier activity must be verified under the applicable rules.",
     f3: "Advancing Sections within the same Operating Authority doesn't reset your AYP progress — just update your User Unit information; but moving in from another Operating Authority requires the FORM AYP/09 transfer procedure.",
-    f4: "3 Checks → Orientation → AYP/01 + $45 → Get your Record Book → Only then start counting. Just follow these steps.",
+    f4: "3 checks → orientation → AYP/01 + $45 → Record Book. Confirm your activity arrangements with your leader.",
     f5: "Special situations like transferring out, topping up hours, or record problems — open the card that matches you, no need to read them all.",
   },
 
@@ -1064,15 +1065,16 @@ const LOCALES = {
     { label: "Scout Association of Hong Kong — circulars listing (filter by Programme Branch for the latest AYP-related circulars)", url: "https://www.scout.org.hk/tc/circulars-forms/circulars/index.html" },
     { label: "Scout Association of Hong Kong — AYP Scout Operating Authority", url: "https://hkayp.scouting.org.hk/#home" },
     { label: "\"Reference Table of Sectional Progressive Badges and Their Relation to AYP\" P103/2016 (old scheme, for reference)", url: "https://www.scout.org.hk/article_attach/26708/P103-16.pdf" },
+    { label: "AYP General Conditions (2023; age and earlier-activity exceptions — verify the latest version)", url: "https://ayp.org.hk/wp-content/uploads/2023/09/3.-General-Conditions-Eng_20230911.pdf" },
     { label: "The Hong Kong Award for Young People (Award Office) — ayp.org.hk", url: "https://www.ayp.org.hk" },
   ],
 
-  DISCLAIMER: "This app is an unofficial aid tool. The official rules of The Hong Kong Award for Young People, as well as trial arrangements such as the \"Simultaneous Completion Scheme\", Section bridging/recognition, and transfer details, are subject to the latest public announcements from the Award Office and the Scout Association of Hong Kong (circulars such as P95/2026, and the AYP Scout Operating Authority webpage). Operational details may be updated at any time — please verify with your User Unit Leader / Scout leader before proceeding. Note also that AYP activities count only from your official start date — activities before that date generally cannot be backdated (No Backdating).",
+  DISCLAIMER: "This is an unofficial aid. Official AYP rules, trial schemes, recognition and transfers are subject to the latest announcements from the Award Office and the Scout Association of Hong Kong. Earlier activities may be subject to a limited exception, but are not automatically recognised. Please verify your circumstances with your Operating Authority and leader.",
 
   UI: {
-    heroLead: "🌱 <b>Standard process: start AYP from zero by following the action card.</b> Not sure which situation fits you? Tap ⚡ Wizard above and answer 2 questions.",
-    mini1: "① Follow the action card<br>Tick off step by step", mini2: "② Expand for details<br>Checks/steps/timeline", mini3: "③ Forms & leaders<br>Use tools below",
-    quickTitle: "5-Minute Wizard: What's your situation? What's next?",
+    heroLead: "Start with the action checklist, or use the wizard to find the next step for your situation.",
+    mini1: "Follow your checklist<br>Tick off each step", mini2: "Explore the details<br>Checks, steps and timeline", mini3: "Find forms<br>Check with your leader",
+    quickTitle: "Find your next step",
     beginnerTitle: "3 Checks for Beginners", beginnerSub: "When you don't know anything — how to check, who to ask, what to look at, step by step",
     beginnerIntro: "Whichever route you take, you need to pass these 3 checks first: made your Promise? Have a User Unit? Is the leader the right one? Every card includes a \"script to read aloud\" when asking your leader.",
     f1Title: "Transferring into Scouts from another Operating Authority → what's still needed", f1Tag: "(Feature ①)",
@@ -1130,12 +1132,12 @@ const LOCALES = {
     tldrTag: "⚡ 30-sec summary",
     aLabel: "A: ",
     disclaimerTitle: "Disclaimer",
-    baselineFoot: "Data baseline: October 2026 (Circular P95/2026 + new hkayp.scouting.org.hk)",
+    baselineFoot: "Data baseline: October 2026 · Verify current guidance",
 
     quickNavAria: "Bottom tool bar",
     topBarAria: "Top guide bar",
     unofficialBadge: "⚠️ Unofficial compilation — must be verified with your User Unit Leader",
-    backdateWarn: "🚫 <b>No Backdating warning:</b> AYP activity hours and frequency count only from your <b>official start date of that Award level</b> (successful enrolment and issue of the Record Book). Scout activities, service hours or badge records from before your start date generally <b>cannot be backdated</b> into AYP — never assume old Scout records can be reported automatically.",
+    backdateWarn: "<b>Earlier activity: No Backdating limits and exceptions</b><br>Scout Circular P95/2026 states that activities before formal acceptance generally cannot be used to complete the Award. The 2023 AYP General Conditions describe a limited exception for activities undertaken <b>in the three months before the Record Book was issued, with a view to joining</b>, subject to Section conditions. Confirm current rules and whether any exception applies to the trial with your Operating Authority.<br><a href='https://ayp.org.hk/wp-content/uploads/2023/09/3.-General-Conditions-Eng_20230911.pdf' target='_blank' rel='noopener'>AYP General Conditions</a> · <a href='https://www.scout.org.hk/uploads/tc/circulars/25989/p095-26.pdf' target='_blank' rel='noopener'>Scout Circular P95/2026</a>",
     verifyBeforeAct: "Verify before acting: ",
     openOfficialLink: "View official source →",
     syncPlanEffective: "Effective: ",
@@ -1145,7 +1147,7 @@ const LOCALES = {
     conversionCancelSource: "Cancellation list source: ",
     formsDownload: "Download form",
     oaRegionsTitle: "Regional office phone numbers",
-    backHome: "Normal Flow",
+    backHome: "Overview",
   },
 },
 
@@ -1153,76 +1155,76 @@ const LOCALES = {
 
 
 /* ===========================================================
-   2026 實戰強化互動工具包資料庫（針對 hkayp.scouting.org.hk 靜態網頁痛點強化）
+   2026 互動工具資料庫（計算、清單與參考資料）
    =========================================================== */
 LOCALES["zh-HK"].POWER = {
-  calcTitle: "🧮 AYP 時數・週數・死線計算器 ＋ 個人進度追蹤",
-  calcSub: "（官網冇嘅實戰工具：自動計最早完成日、23/25歲死線、金章提前2個月交表日，進度自動儲存）",
-  calcIntro: "揀你嘅章級路徑、主項同正式開展日（獲發紀錄簿日），即刻幫你算出每一科「最快幾號可以簽結」，仲可以記錄時數同週數防中伏！",
+  calcTitle: "🧮 AYP 進度及日期參考",
+  calcSub: "（記錄進度並估算參考日期，請以官方及所屬執行處安排為準）",
+  calcIntro: "揀章級及主項，記錄時數和星期數；各章級的進度及活動開始日分開儲存，出生日期共用。日期只按輸入的開始日及星期數估算，未考慮各科實際開始日、月份、評核或其他條件；不代表已完成或獲批。",
   paths: {
     bronze: {
       name: "🥉 銅章", minAge: 14, specialAge: 13, splitMain: true,
       mainH: 26, mainW: 26, subH: 13, subW: 13,
-      expText: "1日基本訓練 ＋ 1日實習旅程 ＋ 2日1夜評核旅程（≥12小時計劃活動）",
+      expText: "1日訓練 ＋ 1日實習旅程 ＋ 2日1夜評核旅程（≥12小時計劃活動）",
       resText: null,
       note: "通常年滿 14 歲；年滿 13 歲童軍可按特別安排申請（須完成迎新講座、與適齡朋友以小組形式進行、獲執行處酌情批准）。"
     },
     progSilver: {
       name: "🥈 漸進銀章（已完成銅章）", minAge: 15, specialAge: null, splitMain: false,
       mainH: 26, mainW: 26, subH: 26, subW: 26,
-      expText: "1日進階訓練 ＋ 1次2日1夜實習 ＋ 3日2夜評核旅程（≥21小時計劃活動）",
+      expText: "1日訓練 ＋ 1次2日實習 ＋ 3日2夜評核旅程（≥21小時計劃活動）",
       resText: null,
-      note: "須已完成銅章並年滿 15 歲；服務、技能、康體三科不分主副，每科均須 ≥26 小時及持續 ≥26 星期。"
+      note: "須已完成銅章；一般 15 歲起，已完成銅章者可能有例外，請向執行處核實。三科各參考 ≥26 小時及 ≥26 星期。"
     },
     directSilver: {
       name: "🥈 直接銀章（未有銅章）", minAge: 15, specialAge: null, splitMain: true,
       mainH: 52, mainW: 52, subH: 26, subW: 26,
-      expText: "1日基本訓練 ＋ 2次2日1夜實習 ＋ 3日2夜評核旅程（≥21小時計劃活動）",
+      expText: "1日訓練 ＋ 2次2日實習 ＋ 3日2夜評核旅程（≥21小時計劃活動）",
       resText: null,
       note: "未完成銅章而直接參加銀章；三科中揀一科做主項（≥52小時及≥52星期），其餘兩科為副項（≥26小時及≥26星期）。"
     },
     progGold: {
       name: "🥇 漸進金章（已完成銀章）", minAge: 16, specialAge: null, splitMain: false, isGold: true,
       mainH: 52, mainW: 52, subH: 52, subW: 52,
-      expText: "2日進階訓練 ＋ 1次2日1夜實習 ＋ 4日3夜評核旅程（≥32小時計劃活動）",
+      expText: "2日訓練 ＋ 1次2日實習 ＋ 4日3夜評核旅程（≥32小時計劃活動）",
       resText: "離開日常環境，與平日不相熟青年人連續外宿 5 日 4 夜，完成有意義活動（須事先獲批）",
-      note: "須已完成銀章並年滿 16 歲；服務、技能、康體三科不分主副，每科均須 ≥52 小時及持續 ≥52 星期。⚠️ 各科開始前最少 2 個月須經 UUL 簽署交 AYP/02–06 予地域辦事處！"
+      note: "須已完成銀章；一般 16 歲起，已完成銀章者可能有例外，請向執行處核實。三科各參考 ≥52 小時及 ≥52 星期；金章交表安排請預先確認。"
     },
     directGold: {
       name: "🥇 直接金章（未有銀章）", minAge: 16, specialAge: null, splitMain: true, isGold: true,
       mainH: 78, mainW: 78, subH: 52, subW: 52,
-      expText: "1日基本訓練 ＋ 2次2日1夜及1次3日2夜實習 ＋ 4日3夜評核旅程（≥32小時計劃活動）",
+      expText: "1日訓練 ＋ 2次2日及1次3日實習 ＋ 4日3夜評核旅程（≥32小時計劃活動）",
       resText: "離開日常環境，與平日不相熟青年人連續外宿 5 日 4 夜，完成有意義活動（須事先獲批）",
-      note: "未完成銀章而直接參加金章（青年領袖 18–23 歲亦適用）；主項 ≥78 小時及 ≥78 星期，兩副項各 ≥52 小時及 ≥52 星期。⚠️ 各科開始前最少 2 個月須交 AYP/02–06 予地域辦事處！"
+      note: "未完成銀章而直接參加金章；主項參考 ≥78 小時及 ≥78 星期，兩副項各 ≥52 小時及 ≥52 星期。金章交表及參加資格請預先向執行處核實。"
     }
   },
   labels: {
     pickPath: "① 揀章級及路徑",
     pickMain: "② 揀主項科目（時數及週數較高嗰科）",
     noSplitHint: "✅ 漸進路徑三科要求相同，無須區分主項／副項。",
-    startDate: "③ 正式開展日期（獲發紀錄簿日）",
-    birthDate: "④ 出生日期（選填：自動驗算 13–16歲資格 ＋ 23歲申請／25歲完成死線）",
-    goldTargetDate: "⑤ 金章預計科目開始日（自動倒推提前 2 個月交 AYP/02–06 死線）",
+    startDate: "③ 本次估算的活動開始日（各科可能不同）",
+    birthDate: "④ 出生日期（選填：顯示年齡及參考日期）",
+    goldTargetDate: "⑤ 金章預計科目開始日（倒推交表參考日）",
     mainTag: "主項",
     subTag: "副項",
     equalTag: "漸進統一要求",
     reqFormat: (h, w) => `最低要求：≥ ${h} 小時 ＋ 持續 ≥ ${w} 星期`,
-    earliestDate: "📅 最快可完成日期：",
-    daysLeft: (d) => d > 0 ? `（距離今日仲有 ${d} 日）` : `（已滿所需週數！）`,
-    setStartFirst: "請先喺上面輸入「正式開展日期」以計算最快完成日",
+    earliestDate: "📅 按開展日估算的參考日期：",
+    daysLeft: (d) => d > 0 ? `（距離今日仲有 ${d} 日）` : `（今日或之前）`,
+    setStartFirst: "請先輸入活動開始日以估算參考日期",
     hoursLogged: "已累積時數 (小時)",
     weeksLogged: "已持續週數 (星期)",
-    trapWarn: (remW) => `⚠️ 防中伏警告：你嘅時數已達標，但持續期仲欠 ${remW} 星期！AYP 規定必須「同時」滿足最低時數及最低持續週數，千祈唔好提早停做或搵評核員補簽！`,
-    secDone: "✅ 時數及持續週數均已達標！記得請導師／評核員填寫具體評語並簽署。",
+    trapWarn: (remW) => `⚠️ 提示：你輸入嘅時數已達參考數字，但持續期仲欠 ${remW} 星期！AYP 規定必須「同時」滿足最低時數及最低持續週數，千祈唔好提早停做或搵評核員補簽！`,
+    secDone: "已輸入的時數及星期數達參考數字；是否完成仍須由導師／評核員核實及簽署。",
     expDoneLabel: "已完成訓練、實習及評核旅程並獲簽署",
     resDoneLabel: "已完成 5 日 4 夜團體生活並獲簽署",
-    ageCheckTitle: "🎂 年齡資格與死線診斷",
+    ageCheckTitle: "🎂 年齡及日期參考",
     ageNow: (y, m) => `目前年齡：約 ${y} 歲 ${m} 個月`,
-    deadline23: "📌 最後報名申請限期（23歲生日當天）：",
-    deadline25: "🏁 所有活動最後完成限期（25歲生日前）：",
-    goldDeadlineTitle: "🚨 金章提前 2 個月交表死線倒數（AYP/02–06）",
-    goldRegionalDate: "🏢 最遲交抵地域辦事處（開展前 60 日）：",
-    goldUulDate: "🧑‍🏫 建議交支部組長 (UUL) 商討及簽署（開展前 75 日）：",
+    deadline23: "📌 23 歲生日（參加計劃日期參考）：",
+    deadline25: "🏁 25 歲生日（活動一般須在此前完成）：",
+    goldDeadlineTitle: "金章交表參考日期（AYP/02–06）",
+    goldRegionalDate: "🏢 按兩個曆月倒推的參考日：",
+    goldUulDate: "🧑‍🏫 建議預早與組長商討（參考日前 15 日，非官方限期）：",
     copySummaryBtn: "📋 複製我嘅 AYP 進度報告（傳畀組長／UUL）",
     resetCalcBtn: "↺ 重設進度數據",
     copiedToast: "✅ 已複製到剪貼簿！可以直接貼去 WhatsApp / Signal 傳畀組長。"
@@ -1230,19 +1232,19 @@ LOCALES["zh-HK"].POWER = {
 
   syncChecker: {
     title: "🔗 2026「童軍同步完成方案」互動對接核對器",
-    sub: "（按 2026-09-16 新版官網對接細項製作：逐項剔選，即知仲差邊項 AYP 手續未齊）",
+    sub: "（按已整理的試行資料列出核對項目，詳情請向組長確認）",
     eformBtn: "📝 填寫官方「同步計劃參與意向登記表」(Google Form)",
-    eformUrl: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform?usp=sharing&ouid=107671158074138069832",
-    eformNote: "⚠️ 注意：此 Google Form 僅供單位／領袖登記參與試行意向，絕對唔會取代參加者迎新講座、AYP/01 參加申請、$45 紀錄簿申請及各自審批程序！",
+    eformUrl: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform",
+    eformNote: "此表由執行處支部組長登記所屬童軍團的參與意向；名額有限，提交不代表獲分配名額，亦不取代 AYP 參加申請及審批。",
     routes: {
       bronze: {
         label: "🥉 童軍高級獎章 → AYP 銅章",
         badgePair: "童軍高級獎章 ➔ AYP 銅章（服務為主項，技能、康體為副項）",
         items: [
-          { id: "b_pre1", cat: "前置程序", title: "已完成參加者迎新講座，並交 AYP/01 及 HK$45 獲發紀錄簿", detail: "紅線：所有同步完成活動必須喺獲發紀錄簿（正式開展日）之後進行，不可追溯。" },
+          { id: "b_pre1", cat: "前置程序", title: "已完成參加者迎新講座，並交 AYP/01 及 HK$45 獲發紀錄簿", detail: "確認活動日期符合試行方案及執行處安排；較早活動不能自行假設獲認可。" },
           { id: "b_pre2", cat: "前置程序", title: "由「探索獎章」開始使用 2026 年新版《童軍訓練綱要》，並通知 UUL 參與同步方案", detail: "單位／領袖可同時透過官方 e-Form 提交參與試行意向。" },
           { id: "b_srv", cat: "🤝 服務科（主項）", title: "完成童軍「標準獎章」＋「高級獎章」持續服務項目，並累積 ≥26 小時及持續 ≥26 星期", detail: "注意：如童軍考驗已完成但未夠 26 星期／26 小時，須繼續參與服務直至達標。" },
-          { id: "b_skl", cat: "🛠️ 技能科（副項）", title: "完成高級獎章 B.2.a 所選一項 STEAM（科學/科技/工程/藝術/數學）合資格專科徽章，並累積 ≥13 小時及持續 ≥13 星期", detail: "團集會、專題訓練、個人練習、作品製作及考驗均可計入持續學習歷程；留意剔除 P013/26 已取消之 8 個徽章。" },
+          { id: "b_skl", cat: "🛠️ 技能科（副項）", title: "完成高級獎章 B.2.a 所選一項 STEAM（科學/科技/工程/藝術/數學）合資格專科徽章，並累積 ≥13 小時及持續 ≥13 星期", detail: "團集會、訓練或個人練習能否計入，須視乎活動內容、日期及執行處認可；留意 P013/26 所列已取消的徽章組別。" },
           { id: "b_phy", cat: "🏃 康樂體育科（副項）", title: "完成體適能相關專科徽章，或進行 ≥13 小時並持續 ≥13 星期嘅體適能訓練", detail: "學校校隊、體育會或旅團定期運動訓練，只要符合時數、持續期及有紀錄均可納入。" },
           { id: "b_exp1", cat: "🧭 野外鍛鍊科（事前關鍵）", title: "【開訓前】已聯絡具資格嘅 EA / JEA（或同時為童軍領袖之 CRS 遠足導師）審視前期訓練", detail: "未能自行聯絡時可由區會協助；切勿未搵 EA/JEA 就自己行完算數！" },
           { id: "b_exp2", cat: "🧭 野外鍛鍊科（考驗項目）", title: "完成探索獎章 A.2.c ＋ 標準獎章 A.2.e ＋ 高級獎章 A.2.f.I 或 A.2.f.II，並保存 EA/JEA/CRS 考驗人員完整紀錄", detail: "旅團須記錄考驗人員姓名、身分、資格、所屬單位、聯絡方法、考驗項目、日期及結果。" },
@@ -1253,7 +1255,7 @@ LOCALES["zh-HK"].POWER = {
         label: "🥈 總領袖獎章 → AYP 漸進銀章",
         badgePair: "總領袖獎章 ➔ AYP 漸進銀章（須已完成 AYP 銅章；三科不分主副）",
         items: [
-          { id: "s_pre1", cat: "前置程序", title: "已完成 AYP 銅章、年滿 15 歲，並喺紀錄簿正式開展「漸進銀章」", detail: "必須喺正式開展漸進銀章後進行相關活動，不可追溯。" },
+          { id: "s_pre1", cat: "前置程序", title: "已完成 AYP 銅章，並確認漸進銀章的年齡及開展安排", detail: "一般最低年齡為 15 歲；已完成銅章者可能有例外，須向執行處核實。" },
           { id: "s_srv", cat: "🤝 服務科（≥26h & ≥26w）", title: "完成總領袖獎章 D.1.c 持續服務項目，並累積 ≥26 小時及持續 ≥26 星期", detail: "漸進銀章三科不分主副，服務科須滿 26 小時及持續不少於 26 星期。" },
           { id: "s_skl", cat: "🛠️ 技能科（≥26h & ≥26w）", title: "完成總領袖獎章 A.3「先鋒工程」（含繩結編結、設計、器材準備、建造、教授技巧及帶領小隊），並累積 ≥26 小時及持續 ≥26 星期", detail: "包括課堂準備、工程設計、器材籌備、實地建造及帶領教授小隊嘅完整歷程。" },
           { id: "s_phy", cat: "🏃 康樂體育科（≥26h & ≥26w）", title: "完成體適能相關專科徽章，或進行 ≥26 小時並持續 ≥26 星期嘅體適能訓練", detail: "須展示比銅章更高水平或新的個人目標，並有持續 26 星期紀錄。" },
@@ -1264,7 +1266,7 @@ LOCALES["zh-HK"].POWER = {
       }
     },
     eaLoggerTitle: "🏕️ 領袖專用：試行期野外鍛鍊「考驗人員紀錄卡」產生器",
-    eaLoggerDesc: "新官網規定：「旅團須記錄考驗人員姓名、身分、資格、所屬單位、聯絡方法、考驗項目、日期及結果。」填妥下方欄位即可自動保存並一鍵複製標準格式留底！",
+    eaLoggerDesc: "整理考驗人員及活動資料作參考；請按官方要求核對並妥善保管。",
     eaFields: {
       memberName: "參加成員姓名",
       awardRoute: "同步路線（銅章／漸進銀章）",
@@ -1276,7 +1278,7 @@ LOCALES["zh-HK"].POWER = {
       examDates: "進行／考驗日期",
       examResult: "考驗結果及備註"
     },
-    eaCopyBtn: "📋 複製「野外鍛鍊考驗人員官方格式紀錄」"
+    eaCopyBtn: "📋 複製考驗人員紀錄草稿"
   },
 
   cancelledBadges: [
@@ -1290,60 +1292,53 @@ LOCALES["zh-HK"].POWER = {
     { name: "護養章（教導組）", group: "教導組", en: "Animal Husbandry Badge (Instructor)" }
   ],
 
-  redlinesTitle: "🚨 一般童軍活動 vs AYP 認可活動：4 大改造紅線（新官網重點）",
+  redlinesTitle: "童軍活動與 AYP 認可：四個注意事項",
   redlines: [
     { icon: "👥", title: "一般旅團集會 ≠ 自動計入 AYP", body: "單純出席團集會唔計！必須喺集會中持續進行一項已獲批嘅服務、技能或康體活動，並有清晰個人目標、時數、進度及評核，該部分時間先可以計（同一段時間亦不可重複計入兩科）。" },
     { icon: "⛺", title: "一般童軍露營／遠足 ≠ 野外鍛鍊科", body: "一般露營不能自動代替野外鍛鍊科！必須包含指定課堂與戶外訓練、由隊員共同策劃具明確目的嘅實習旅程及評核旅程，並由合資格導師及評核員（或試行方案下之 EA/JEA/CRS）按規定進行。" },
     { icon: "🏕️", title: "自己旅團露營 ≠ 金章團體生活科", body: "金章團體生活科要求「離開日常生活環境，與平日不熟悉嘅青年人連續共同生活 5 日 4 夜」並完成有意義活動（例如大露營、國際/內地交流營、跨區聯合訓練營）。純粹同自己旅團熟人露營或自助觀光旅遊唔計！" },
-    { icon: "📚", title: "日常功課／體育堂／單次服務 ≠ 完成科目", body: "學校一般體育堂、應付考試溫習、一次性賣旗或單日服務，唔足以完成科目；必須係課堂以外有個人起點目標、持續夠指定星期數（13/26/52/78週）同最低時數嘅恆常投入。" }
+    { icon: "📚", title: "日常功課／體育堂／單次服務 ≠ 完成科目", body: "一般課堂、應付考試溫習或一次性活動，未必符合科目的個人目標、持續期及評核要求。請向導師及執行處確認活動是否適用。" }
   ],
 
   fullForms: [
-    { code: "AYP/01", cat: "參加及轉換", name: "香港青年獎勵計劃參加申請表格", note: "完成迎新講座後申請參加 AYP 及買紀錄簿（HK$45）。網上 e-Form 即將推出，首年網上與紙本並行。", url: "https://www.scout.org.hk/uploads/tc/forms/7015/form01.pdf" },
-    { code: "AYP/02", cat: "訓練及評核", name: "訓練及評核申請表（服務科）", note: "按章級申請服務科訓練或評核（🥇金章須於活動開始最少 2 個月前經 UUL 簽署交地域辦事處）。", url: "https://www.scout.org.hk/uploads/tc/forms/7016/form02.pdf" },
-    { code: "AYP/03", cat: "訓練及評核", name: "訓練及評核申請表（野外鍛鍊科）", note: "申請野外鍛鍊科訓練或評核（🥇金章須提前最少 2 個月連同計劃書提交）。", url: "https://www.scout.org.hk/uploads/tc/forms/7017/form03.pdf" },
-    { code: "AYP/04", cat: "訓練及評核", name: "訓練及評核申請表（技能科）", note: "申請技能科訓練或評核（🥇金章須提前最少 2 個月連同計劃書提交）。", url: "https://www.scout.org.hk/uploads/tc/forms/7018/form04.pdf" },
-    { code: "AYP/05", cat: "訓練及評核", name: "訓練及評核申請表（康樂體育科）", note: "申請康樂體育科訓練或評核（🥇金章須提前最少 2 個月連同計劃書提交）。", url: "https://www.scout.org.hk/uploads/tc/forms/7019/form05.pdf" },
-    { code: "AYP/06", cat: "訓練及評核", name: "訓練及評核申請表（團體生活科）", note: "供🥇金章級參加者申請 5 日 4 夜團體生活科（須於活動開始最少 2 個月前提交批核）。", url: "https://www.scout.org.hk/uploads/tc/forms/7020/form06.pdf" },
+    { code: "AYP/01", cat: "參加及轉換", name: "香港青年獎勵計劃參加申請表格", note: "完成迎新講座後申請參加 AYP 及買紀錄簿（HK$45）。網上及紙本安排請向執行處核實。", url: "https://www.scout.org.hk/uploads/tc/forms/7015/form01.pdf" },
+    { code: "AYP/02", cat: "訓練及評核", name: "訓練及評核申請表（服務科）", note: "表格列明於活動開始兩個月前交地域辦事處；請確認適用章級及最新程序。", url: "https://www.scout.org.hk/uploads/tc/forms/7016/form02.pdf" },
+    { code: "AYP/03", cat: "訓練及評核", name: "訓練及評核申請表（野外鍛鍊科）", note: "表格列明於活動開始兩個月前交地域辦事處；請確認適用章級及最新程序。", url: "https://www.scout.org.hk/uploads/tc/forms/7017/form03.pdf" },
+    { code: "AYP/04", cat: "訓練及評核", name: "訓練及評核申請表（技能科）", note: "表格註明只適用金章級，並列明於活動開始兩個月前交地域辦事處；請確認最新程序。", url: "https://www.scout.org.hk/uploads/tc/forms/7018/form04.pdf" },
+    { code: "AYP/05", cat: "訓練及評核", name: "訓練及評核申請表（康樂體育科）", note: "表格註明只適用金章級，並列明於活動開始兩個月前交地域辦事處；請確認最新程序。", url: "https://www.scout.org.hk/uploads/tc/forms/7019/form05.pdf" },
+    { code: "AYP/06", cat: "訓練及評核", name: "訓練及評核申請表（團體生活科）", note: "金章團體生活科；表格列明於活動開始兩個月前交地域辦事處，請確認最新程序。", url: "https://www.scout.org.hk/uploads/tc/forms/7020/form06.pdf" },
     { code: "AYP/07", cat: "章級完成", name: "銀章／金章完成通知書", note: "完成銀章或金章所有科目後，經 UUL 核對並提交地域辦事處辦理完成確認及領獎。", url: "https://www.scout.org.hk/uploads/tc/forms/7021/form07.pdf" },
     { code: "AYP/08", cat: "參加及轉換", name: "轉換執行處支部申請表（童軍總會內轉支部／升團跨旅）", note: "喺香港童軍總會執行處「內部」轉換所屬執行處支部（例如轉旅團支部或由旅支部轉區支部）。", url: "https://www.scout.org.hk/uploads/tc/forms/7022/form08.pdf" },
     { code: "AYP/09", cat: "參加及轉換", name: "轉換執行處申請表（由學校／其他執行處轉入童軍）", note: "由其他 AYP 執行處（如中學、其他制服團隊）轉往香港童軍總會執行處必交表格。", url: "https://www.scout.org.hk/uploads/tc/forms/7023/form09.pdf" },
-    { code: "AYP/10", cat: "支部及行政", name: "成立執行處支部申請表", note: "童軍旅、童軍區或地域申請成立 AYP 執行處支部（須提名最少一名合資格 UUL；e-Form 即將推出）。", url: "https://www.scout.org.hk/uploads/tc/forms/7024/form10.pdf" },
-    { code: "AYP/11", cat: "支部及行政", name: "半年統計表", note: "執行處支部每半年向地域辦事處提交參加者及章級統計資料。", url: "https://www.scout.org.hk/hkayp/download/form11.pdf" },
+    { code: "AYP/10", cat: "支部及行政", name: "成立執行處支部申請表", note: "童軍旅、童軍區或地域申請成立 AYP 執行處支部（須提名最少一名合資格 UUL；網上申請安排請向執行處核實）。", url: "https://www.scout.org.hk/uploads/tc/forms/7024/form10.pdf" },
+    { code: "AYP/11", cat: "支部及行政", name: "半年統計表", note: "執行處支部每半年向地域辦事處提交參加者及章級統計資料。", url: "https://www.scout.org.hk/uploads/tc/forms/7025/form11.pdf" },
     { code: "AYP/12", cat: "章級完成", name: "獎章完成通知書", note: "按適用程序辦理獎章完成確認。", url: "https://www.scout.org.hk/uploads/tc/forms/7026/form12.pdf" },
-    { code: "AYP/13", cat: "訓練及評核", name: "野外鍛鍊科訓練班記錄", note: "舉辦野外鍛鍊科訓練班時保存參加者訓練紀錄。", url: "https://www.scout.org.hk/hkayp/download/form13.pdf" },
-    { code: "AYP/14", cat: "支部及行政", name: "執行處支部組長 (UUL) 註冊或更改申請表", note: "首次註冊、新增或更改執行處支部組長（須已完成組長迎新座談會；e-Form 即將推出）。", url: "https://www.scout.org.hk/uploads/tc/forms/7028/form14.pdf" },
-    { code: "e-Form", cat: "參加及轉換", name: "2026 童軍同步完成試行計劃 — 參與意向登記表", note: "供有意參與「童軍進度性獎章↔AYP同步完成」試行之童軍單位及領袖填寫（Google Form）。", url: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform?usp=sharing&ouid=107671158074138069832" },
+    { code: "AYP/13", cat: "訓練及評核", name: "野外鍛鍊科訓練班記錄", note: "舉辦野外鍛鍊科訓練班時保存參加者訓練紀錄。", url: "https://www.scout.org.hk/uploads/tc/forms/7027/form13.pdf" },
+    { code: "AYP/14", cat: "支部及行政", name: "執行處支部組長 (UUL) 註冊或更改申請表", note: "首次註冊、新增或更改執行處支部組長（須已完成組長迎新座談會；網上申請安排請向執行處核實）。", url: "https://www.scout.org.hk/uploads/tc/forms/7028/form14.pdf" },
+    { code: "e-Form", cat: "參加及轉換", name: "2026 童軍同步完成試行計劃 — 參與意向登記表", note: "由執行處支部組長登記所屬童軍團參與意向；名額有限，提交不代表獲分配名額。", url: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform" },
     { code: "指南", cat: "訓練及評核", name: "《野外鍛鍊科導師指南》及《AYP野外鍛鍊科手冊》", note: "策劃或主持野外鍛鍊科活動必讀官方手冊。", url: "https://ayp.org.hk/wp-content/uploads/2024/05/Award-Handbook-Adventurous-Journey-Section_Chi_20240516-1.pdf" }
   ],
 
   commentBuilder: {
-    title: "✍️ 導師／評核員「具體評語產生器」（防退件神器）",
-    sub: "新官網特別警告：「評語不建議只寫『完成』、『合格』或『表現良好』，應具體說明完成了甚麼、如何持續參與、取得甚麼進步、如何面對困難及是否達到目標。」揀選以下項目即可一鍵生成合規評語！",
+    title: "✍️ 導師／評核員評語草稿",
+    sub: "以下只提供填寫提示，並非已完成的評語。請由導師／評核員按實際紀錄填寫、核實及簽署；不得當作已獲批核。",
     secOptions: [
-      { id: "service", name: "🤝 服務科", defaultAct: "童軍旅團／社區持續服務及活動支援", progress: "由初期需要領袖從旁指導，進步至能主動承擔小隊職責、細心照顧服務對象及協助帶領活動", challenge: "面對活動突發情況及時間分配壓力時，仍能保持耐性與責任感並妥善解難" },
-      { id: "skill", name: "🛠️ 技能科", defaultAct: "先鋒工程／專科徽章技能持續研習", progress: "由掌握基本知識與工具操作，逐步提升至能獨立完成作品設計、解難及向隊員示範技巧", challenge: "在遇到技術瓶頸與實作失敗時積極請教導師並反覆練習，成功突破難關" },
-      { id: "physical", name: "🏃 康樂體育科", defaultAct: "恆常體適能及專項運動訓練", progress: "體能耐力、動作技術及運動安全意識均有顯著改善，成功超越個人起步水平所訂立嘅目標", challenge: "即使面對學業繁忙或天氣變化，仍能堅持每週規律訓練，展現良好毅力" },
-      { id: "expedition", name: "🧭 野外鍛鍊科", defaultAct: "小組野外鍛鍊實習及評核旅程", progress: "能與小隊成員共同策劃路線、導航、戶外煮食、搭建帳幕及執行風險管理，並完成清晰旅程匯報", challenge: "在旅途體力消耗及路況挑戰下發揮團隊合作精神，注意安全與無痕山林原則" },
-      { id: "residential", name: "🏕️ 團體生活科（金章）", defaultAct: "五日四夜跨單位交流／大露營團體生活", progress: "主動融入陌生群體，積極分擔群體生活職責並投入共同活動，展現成熟溝通與協作能力", challenge: "迅速適應離開日常環境嘅外宿生活，主動關心及協助其他青年參加者" }
+      { id: "service", name: "服務科", defaultAct: "例如：社區服務" },
+      { id: "skill", name: "技能科", defaultAct: "例如：攝影" },
+      { id: "physical", name: "康樂體育科", defaultAct: "例如：游泳" },
+      { id: "expedition", name: "野外鍛鍊科", defaultAct: "例如：野外旅程" },
+      { id: "residential", name: "團體生活科（金章）", defaultAct: "例如：團體生活項目" }
     ],
     generateZh: (secObj, lvName, actName, hours, weeks) =>
-      `參加者於${lvName}期間，在「${actName || secObj.defaultAct}」持續投入不少於 ${hours} 小時（歷時 ${weeks} 星期），出席穩定且態度認真投入。在過程中，參加者${secObj.progress}；${secObj.challenge}，最終圓滿達成活動開始前所訂立之個人目標，表現符合 AYP 本科要求，予以確認完成。`,
-    generateEn: (secId, lvName, actName, hours, weeks) => {
-      const map = {
-        service: `During the ${lvName} period, the participant consistently devoted at least ${hours} hours over ${weeks} weeks to "${actName || "ongoing Scout/community service"}", demonstrating reliable attendance and a caring attitude. Starting from basic assistance, the participant progressed to taking initiative in planning and supporting beneficiaries, overcame scheduling and operational challenges responsibly, and fully achieved their personal goals.`,
-        skill: `During the ${lvName} period, the participant consistently practised "${actName || "their chosen skill activity"}" for at least ${hours} hours across ${weeks} weeks. They progressed from foundational techniques to independent execution and problem-solving, persevered through technical difficulties with regular practice, and successfully met the personal learning goals set at the outset.`,
-        physical: `During the ${lvName} period, the participant engaged in regular training in "${actName || "physical recreation"}" for at least ${hours} hours over ${weeks} weeks. Showing strong perseverance and safety awareness despite weather and schedule challenges, they achieved clear improvements in fitness and technique compared with their starting baseline, fulfilling their personal target.`,
-        expedition: `During the ${lvName} Assessed Adventurous Journey ("${actName || "group expedition"}"), the participant actively contributed to team route planning, navigation, campcraft, outdoor cooking and risk management. Despite physical fatigue and terrain challenges, they demonstrated sound teamwork, safety awareness and Leave No Trace practices, successfully achieving the journey purpose and debriefing requirements.`,
-        residential: `During the 5-day-4-night Gold Residential Project ("${actName || "residential camp/exchange"}"), the participant lived and worked constructively with unfamiliar peers away from their usual environment. They adapted quickly, shared daily responsibilities proactively, collaborated well across backgrounds, and successfully accomplished the project objectives.`
-      };
-      return map[secId] || map.service;
-    }
+      `章級：${lvName}；科目：${secObj.name}\n活動：${actName || "［填寫實際活動］"}\n已核實時數／星期：${hours || "［填寫時數］"}／${weeks || "［填寫星期］"}\n實際參與及進步：［按紀錄填寫］\n困難及應對：［按實際情況填寫］\n目標及評核結果：［由評核員填寫並簽署］`,
+    generateEn: (secId, lvName, actName, hours, weeks) =>
+      `Award: ${lvName}\nSection: ${{ service: "Service", skill: "Skills", physical: "Physical Recreation", expedition: "Adventurous Journey", residential: "Residential Project" }[secId] || "[enter Section]"}\nActivity: ${actName || "[enter actual activity]"}\nVerified hours / weeks: ${hours || "[enter hours]"} / ${weeks || "[enter weeks]"}\nParticipation and progress: [complete from records]\nChallenges and response: [describe actual experience]\nGoals and assessment: [assessor to complete and sign]`
+
   },
 
   uulChecklists: {
-    title: "🏕️ 領袖／支部組長 (UUL) 三階段防退件核對清單",
-    sub: "（按新官網 `#leaders` 審批要求整理，手機逐項打勾，確保交去地域／青少年活動署唔會被打回頭）",
+    title: "🏕️ 領袖／支部組長 (UUL) 三階段核對清單",
+    sub: "（供整理資料之用；具體申請及審批要求請向所屬執行處核實）",
     groups: [
       {
         id: "uul_start",
@@ -1351,10 +1346,10 @@ LOCALES["zh-HK"].POWER = {
         items: [
           "確認參加者已宣誓（或青年領袖持有效委任），並已完成「參加者迎新講座」。",
           "核對參加年齡及章級路徑（13歲報銅章須為小組形式並申請特別安排；直接銀/金須揀定主項）。",
-          "已提交 AYP/01 及 HK$45 紀錄簿申請費，並已正式獲發紀錄簿（確立開展日，提醒不可追溯舊活動）。",
+          "已提交 AYP/01 及紀錄簿申請，並確認開展日及較早活動的適用安排。",
           "與參加者商討並同意各科活動計劃（目標具體可行、符合該科宗旨、無同一活動重複計兩科）。",
           "活動開始前已確認合資格導師及評核員人選（切勿完成後先搵人補簽；同步方案銅章野外鍛鍊須開訓前聯絡 EA/JEA/CRS）。",
-          "🥇 如屬金章：已提醒參加者於活動開始「最少 2 個月前」填妥 AYP/02–06 連同計劃書經 UUL 簽署交地域辦事處！"
+          "已按章級及科目核對適用申請表、提交時限及簽署程序；現有 AYP/02–06 表格列明活動開始兩個月前提交，最新安排請向執行處確認。"
         ]
       },
       {
@@ -1372,7 +1367,7 @@ LOCALES["zh-HK"].POWER = {
         id: "uul_end",
         title: "階段 ③：完成章級交表審批前（交 AYP/07・AYP/12 前必檢 6 項）",
         items: [
-          "核對所有科目開始日期均在正式開展日（獲發紀錄簿日）當日或之後。",
+          "核對各科活動日期及任何例外均已按最新規條和所屬執行處安排核實。",
           "核對各科累積時數及持續星期數（開始至完成日期跨度）完全符合該路徑要求，且無重複計算。",
           "核對導師及評核員已填寫「具體評語」（說明完成內容、持續參與、進步及達成目標，非僅寫「合格／完成」），並齊備簽署、資格及日期。",
           "野外鍛鍊科文件齊備（訓練紀錄、實習及評核旅程計劃、旅程報告／匯報、評核員簽署）。",
@@ -1385,73 +1380,73 @@ LOCALES["zh-HK"].POWER = {
 };
 
 LOCALES["en"].POWER = {
-  calcTitle: "🧮 AYP Hours · Weeks · Deadline Calculator & Progress Tracker",
-  calcSub: "(Interactive tool missing from the official site: auto-calculates earliest completion dates, age 23/25 deadlines & Gold 2-month pre-submission dates)",
-  calcIntro: "Select your Award path, Main Section and official Start Date (Record Book issue date) to instantly calculate the earliest completion date for each Section and track your hours & weeks!",
+  calcTitle: "🧮 AYP progress and date estimates",
+  calcSub: "(Track progress and estimate reference dates; verify the official rules and your Operating Authority arrangements.)",
+  calcIntro: "Choose an Award path and Main Section to track hours and weeks. Progress and activity start dates are stored separately per path; date of birth is shared. Dates are estimates using the entered start date and weeks; they do not account for individual Section start dates, calendar-month requirements, assessment or other conditions, and are not approval or completion dates.",
   paths: {
     bronze: {
       name: "🥉 Bronze Award", minAge: 14, specialAge: 13, splitMain: true,
       mainH: 26, mainW: 26, subH: 13, subW: 13,
-      expText: "1-day basic training + 1-day practice journey + 2D1N assessed journey (≥12h planned activity)",
+      expText: "1-day training + 1-day practice journey + 2D1N assessed journey (≥12h planned activity)",
       resText: null,
       note: "Normally age 14+; Scouts aged 13+ may apply under special arrangement (orientation + group participation with eligible peers + OA discretionary approval)."
     },
     progSilver: {
       name: "🥈 Progressive Silver (Bronze completed)", minAge: 15, specialAge: null, splitMain: false,
       mainH: 26, mainW: 26, subH: 26, subW: 26,
-      expText: "1-day advanced training + one 2D1N practice + 3D2N assessed journey (≥21h planned activity)",
+      expText: "1-day training + one 2-day practice + 3D2N assessed journey (≥21h planned activity)",
       resText: null,
-      note: "Requires Bronze completed and age ≥15; no Main/Secondary split — Service, Skills & Physical Recreation each require ≥26 hours and ≥26 weeks."
+      note: "Requires Bronze completed; age 15 is the general starting age, but an exception may apply for Bronze holders. Confirm with your Operating Authority. Each of the three Sections is listed at ≥26 hours and ≥26 weeks."
     },
     directSilver: {
       name: "🥈 Direct Silver (no Bronze)", minAge: 15, specialAge: null, splitMain: true,
       mainH: 52, mainW: 52, subH: 26, subW: 26,
-      expText: "1-day basic training + two 2D1N practices + 3D2N assessed journey (≥21h planned activity)",
+      expText: "1-day training + two 2-day practices + 3D2N assessed journey (≥21h planned activity)",
       resText: null,
       note: "Direct entry without Bronze; choose one Main Section (≥52h & ≥52w) and two Secondary Sections (≥26h & ≥26w each)."
     },
     progGold: {
       name: "🥇 Progressive Gold (Silver completed)", minAge: 16, specialAge: null, splitMain: false, isGold: true,
       mainH: 52, mainW: 52, subH: 52, subW: 52,
-      expText: "2-day advanced training + one 2D1N practice + 4D3N assessed journey (≥32h planned activity)",
+      expText: "2-day training + one 2-day practice + 4D3N assessed journey (≥32h planned activity)",
       resText: "5 days 4 nights consecutive residential life away from home with unfamiliar peers on a purposeful activity (pre-approval required)",
-      note: "Requires Silver completed and age ≥16; all three sections require ≥52h & ≥52w. ⚠️ Submit AYP/02–06 + plan via UUL to Regional Office at least 2 months before starting!"
+      note: "Requires Silver completed; age 16 is the general starting age, but an exception may apply for Silver holders. Confirm with your Operating Authority. Each Section is listed at ≥52h and ≥52w; check Gold submission arrangements in advance."
     },
     directGold: {
       name: "🥇 Direct Gold (no Silver)", minAge: 16, specialAge: null, splitMain: true, isGold: true,
       mainH: 78, mainW: 78, subH: 52, subW: 52,
-      expText: "1-day basic training + two 2D1N & one 3D2N practices + 4D3N assessed journey (≥32h planned activity)",
+      expText: "1-day training + two 2-day and one 3-day practices + 4D3N assessed journey (≥32h planned activity)",
       resText: "5 days 4 nights consecutive residential life away from home with unfamiliar peers on a purposeful activity (pre-approval required)",
-      note: "Direct Gold without Silver (also for Young Leaders aged 18–23); Main Section ≥78h & ≥78w, two Secondary Sections ≥52h & ≥52w each. ⚠️ Submit AYP/02–06 at least 2 months before starting!"
+      note: "Direct Gold without Silver: Main Section ≥78h & ≥78w, two Secondary Sections ≥52h & ≥52w each. Verify Gold submission and entry arrangements with your Operating Authority."
     }
   },
   labels: {
     pickPath: "① Select Award Level & Path",
     pickMain: "② Select Main Section (higher hours & weeks)",
     noSplitHint: "✅ Progressive path has equal requirements across all 3 Sections (no Main/Secondary split).",
-    startDate: "③ Official Start Date (Record Book issue date)",
-    birthDate: "④ Date of Birth (optional: checks age 13–16 eligibility + age 23/25 deadlines)",
-    goldTargetDate: "⑤ Planned Gold Section Start Date (calculates 2-month prior AYP/02–06 submission deadline)",
+    startDate: "③ Activity start date for this estimate (may differ by Section)",
+    birthDate: "④ Date of birth (optional: shows age and reference dates)",
+    goldTargetDate: "⑤ Planned Gold Section start date (estimates a submission reference date)",
     mainTag: "Main Section",
     subTag: "Secondary",
     equalTag: "Progressive Requirement",
     reqFormat: (h, w) => `Minimum: ≥ ${h} hrs + at least ${w} weeks`,
-    earliestDate: "📅 Earliest completion date: ",
-    daysLeft: (d) => d > 0 ? `(${d} days from today)` : `(Duration requirement reached!)`,
-    setStartFirst: "Enter your Official Start Date above to calculate earliest completion dates",
+    earliestDate: "📅 Reference date estimated from the start date: ",
+    daysLeft: (d) => d > 0 ? `(${d} days from today)` : `(today or earlier)`,
+    setStartFirst: "Enter an activity start date above to estimate reference dates",
     hoursLogged: "Hours logged",
     weeksLogged: "Weeks completed",
     trapWarn: (remW) => `⚠️ Anti-Trap Alert: Your hours are met, but you still need ${remW} more week(s)! AYP requires meeting BOTH minimum hours AND minimum weeks — do not stop early!`,
-    secDone: "✅ Both hours and duration met! Remember to get specific Assessor comments and signature.",
+    secDone: "The entered hours and weeks meet the reference figures; completion still requires verification and an Assessor’s signature.",
     expDoneLabel: "Completed training, practice & assessed journeys and signed off",
     resDoneLabel: "Completed 5D4N Residential Project and signed off",
-    ageCheckTitle: "🎂 Age Eligibility & Deadlines",
+    ageCheckTitle: "🎂 Age and date references",
     ageNow: (y, m) => `Current age: approx. ${y} yrs ${m} mos`,
-    deadline23: "📌 Last day to apply/enrol (23rd birthday): ",
-    deadline25: "🏁 Final deadline to complete all activities (before 25th birthday): ",
-    goldDeadlineTitle: "🚨 Gold Award 2-Month Pre-Submission Deadline (AYP/02–06)",
-    goldRegionalDate: "🏢 Latest submission to Regional Office (60 days prior): ",
-    goldUulDate: "🧑‍🏫 Recommended submission to UUL for review & signing (75 days prior): ",
+    deadline23: "📌 23rd birthday (scheme-entry reference): ",
+    deadline25: "🏁 25th birthday (activities generally finish before this): ",
+    goldDeadlineTitle: "Gold submission reference dates (AYP/02–06)",
+    goldRegionalDate: "🏢 Reference date, two calendar months before: ",
+    goldUulDate: "🧑‍🏫 Suggested discussion with UUL (15 days before reference date; not an official deadline): ",
     copySummaryBtn: "📋 Copy My AYP Progress Report (for UUL / Leader)",
     resetCalcBtn: "↺ Reset Progress Data",
     copiedToast: "✅ Copied to clipboard! Ready to paste into WhatsApp / Signal."
@@ -1459,19 +1454,19 @@ LOCALES["en"].POWER = {
 
   syncChecker: {
     title: "🔗 2026 'Simultaneous Completion Scheme' Interactive Checklist",
-    sub: "(Built from the Sep 2026 official item-by-item mapping: tick off your Scout items to see what AYP steps remain)",
+    sub: "A reference checklist to discuss with your Unit Leader; the detailed mappings and trial requirements must be verified.",
     eformBtn: "📝 Fill Official 'Trial Scheme Expression of Interest e-Form' (Google Form)",
-    eformUrl: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform?usp=sharing&ouid=107671158074138069832",
-    eformNote: "⚠️ Note: This Google Form only registers a unit/leader's interest in the trial — it does NOT replace Participant Orientation, AYP/01 enrolment, the HK$45 Record Book fee, or formal approval procedures!",
+    eformUrl: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform",
+    eformNote: "The User Unit Leader registers the Scout unit's interest. Places are limited; submission does not guarantee a place or replace AYP enrolment and approval.",
     routes: {
       bronze: {
         label: "🥉 Scout Advanced Award → AYP Bronze",
         badgePair: "Scout Advanced Award ➔ AYP Bronze (Service = Main; Skills & Physical = Secondary)",
         items: [
-          { id: "b_pre1", cat: "Prerequisites", title: "Completed Participant Orientation, submitted AYP/01 + HK$45 fee, and received Record Book", detail: "Red line: All synced activities must take place on/after your official start date (no backdating)." },
+          { id: "b_pre1", cat: "Prerequisites", title: "Completed Participant Orientation, submitted AYP/01 + HK$45 fee, and received Record Book", detail: "Check dates against the trial scheme and Operating Authority arrangements; earlier activities are not automatically recognised." },
           { id: "b_pre2", cat: "Prerequisites", title: "Using the 2026 Revised Scout Training Scheme from Pathfinder Award onwards & informed UUL", detail: "Units/leaders may also submit the official Expression of Interest Google Form." },
           { id: "b_srv", cat: "🤝 Service (Main)", title: "Completed Scout Standard Award + Advanced Award ongoing service items, totalling ≥26 hours & ≥26 weeks", detail: "If the Scout badge test finishes before 26 weeks, continue the service until both 26h and 26w are met." },
-          { id: "b_skl", cat: "🛠️ Skills (Secondary)", title: "Completed one eligible STEAM (Science/Tech/Engineering/Arts/Maths) badge under Advanced Award B.2.a for ≥13 hours & ≥13 weeks", detail: "Troop meetings, special training, personal practice, project making and testing all count towards the ongoing learning process." },
+          { id: "b_skl", cat: "🛠️ Skills (Secondary)", title: "Completed one eligible STEAM (Science/Tech/Engineering/Arts/Maths) badge under Advanced Award B.2.a for ≥13 hours & ≥13 weeks", detail: "Ask the Operating Authority whether meeting, training or personal-practice time meets the activity and date requirements." },
           { id: "b_phy", cat: "🏃 Physical (Secondary)", title: "Completed a physical fitness proficiency badge, or ≥13 hours & ≥13 weeks of fitness training", detail: "School team, sports club or troop regular training can count if hours, duration and records are met." },
           { id: "b_exp1", cat: "🧭 Journey (Pre-Trip)", title: "[Before Training/Test] Contacted a qualified EA / JEA (or CRS Hiking Instructor who is also a Scout Leader) to review pre-training", detail: "District can assist if the Group cannot find one; never complete the journey first before engaging an EA/JEA!" },
           { id: "b_exp2", cat: "🧭 Journey (Assessment)", title: "Completed Pathfinder A.2.c + Standard A.2.e + Advanced A.2.f.I or A.2.f.II & logged full EA/JEA/CRS assessor details", detail: "Troop must log the assessor's name, role, qualification, unit, contact, item, date and result." },
@@ -1482,7 +1477,7 @@ LOCALES["en"].POWER = {
         label: "🥈 Chief Scout's Award → AYP Progressive Silver",
         badgePair: "Chief Scout's Award ➔ AYP Progressive Silver (Requires AYP Bronze completed; equal sections)",
         items: [
-          { id: "s_pre1", cat: "Prerequisites", title: "Completed AYP Bronze, aged ≥15, and officially started Progressive Silver in Record Book", detail: "All synced activities must take place after officially starting Progressive Silver." },
+          { id: "s_pre1", cat: "Prerequisites", title: "Completed AYP Bronze and confirmed Progressive Silver age and start arrangements", detail: "The general starting age is 15; an exception may apply for Bronze holders. Verify with your Operating Authority." },
           { id: "s_srv", cat: "🤝 Service (≥26h & ≥26w)", title: "Completed Chief Scout's Award D.1.c ongoing service item for ≥26 hours & ≥26 weeks", detail: "Progressive Silver has no Main/Secondary split — Service requires ≥26h and ≥26w." },
           { id: "s_skl", cat: "🛠️ Skills (≥26h & ≥26w)", title: "Completed Chief Scout's Award A.3 'Pioneering' (knots/lashings, design, gear prep, construction, teaching & leading) for ≥26 hours & ≥26 weeks", detail: "Includes preparation, design, construction and leading/instructing patrol members." },
           { id: "s_phy", cat: "🏃 Physical (≥26h & ≥26w)", title: "Completed a physical fitness badge, or ≥26 hours & ≥26 weeks of physical fitness training", detail: "Must demonstrate progression beyond Bronze level with 26 weeks of records." },
@@ -1493,7 +1488,7 @@ LOCALES["en"].POWER = {
       }
     },
     eaLoggerTitle: "🏕️ Leader Tool: Trial Adventurous Journey 'Assessor Record Card' Generator",
-    eaLoggerDesc: "Official rule: 'Units must record the assessor's name, role, qualification, unit, contact method, assessment item, date and result.' Fill in below to save and copy!",
+    eaLoggerDesc: "Organise assessor and activity details as a draft; check official requirements and handle personal information carefully.",
     eaFields: {
       memberName: "Participant Name",
       awardRoute: "Sync Route (Bronze / Progressive Silver)",
@@ -1505,7 +1500,7 @@ LOCALES["en"].POWER = {
       examDates: "Training / Assessment Dates",
       examResult: "Result & Remarks"
     },
-    eaCopyBtn: "📋 Copy Official-Format Adventurous Journey Assessor Record"
+    eaCopyBtn: "📋 Copy assessor record draft"
   },
 
   cancelledBadges: LOCALES["zh-HK"].POWER.cancelledBadges,
@@ -1515,39 +1510,42 @@ LOCALES["en"].POWER = {
     { icon: "👥", title: "Regular Troop Meetings ≠ Automatic AYP Hours", body: "Mere attendance at troop meetings does not count! Only time spent on an approved ongoing Service, Skills or Physical activity with clear personal goals, hours, progress and assessment counts (and the same time cannot be double-counted across two sections)." },
     { icon: "⛺", title: "General Scout Camping / Hiking ≠ Adventurous Journey", body: "General camps do not automatically replace the Adventurous Journey Section! It requires specified training, team-planned practice and assessed journeys with a clear purpose, supervised and assessed by qualified Instructors/Assessors (or EA/JEA/CRS under the trial scheme)." },
     { icon: "🏕️", title: "Camping with Your Own Troop ≠ Gold Residential Project", body: "Gold Residential Project requires living away from home for 5 days 4 nights consecutively with young people you do NOT normally know, completing a purposeful activity (e.g. Jamboree, international/mainland exchange, joint regional camp). Sightseeing tours or camps only with familiar troopmates do not qualify!" },
-    { icon: "📚", title: "School PE / Homework / One-off Service ≠ Section Completion", body: "Regular school PE lessons, exam revision or one-off flag selling are insufficient; AYP requires sustained commitment outside routine classes meeting both minimum weeks (13/26/52/78w) and hours." }
+    { icon: "📚", title: "School PE / Homework / One-off Service ≠ Section Completion", body: "Routine classes, exam revision or one-off activities may not meet a Section’s goals, duration and assessment requirements. Confirm eligibility with your Instructor and Operating Authority." }
   ],
 
   fullForms: [
-    { code: "AYP/01", cat: "參加及轉換", name: "AYP Enrolment Application Form", note: "Apply for AYP & Record Book (HK$45) after Orientation. Online e-Form launching soon (1-year parallel period with paper form).", url: "https://www.scout.org.hk/uploads/tc/forms/7015/form01.pdf" },
-    { code: "AYP/02", cat: "訓練及評核", name: "Training & Assessment Application (Service)", note: "For Service Section (🥇Gold: submit via UUL to Regional Office ≥2 months before start).", url: "https://www.scout.org.hk/uploads/tc/forms/7016/form02.pdf" },
-    { code: "AYP/03", cat: "訓練及評核", name: "Training & Assessment Application (Adventurous Journey)", note: "For Adventurous Journey (🥇Gold: submit with plan ≥2 months before start).", url: "https://www.scout.org.hk/uploads/tc/forms/7017/form03.pdf" },
-    { code: "AYP/04", cat: "訓練及評核", name: "Training & Assessment Application (Skills)", note: "For Skills Section (🥇Gold: submit with plan ≥2 months before start).", url: "https://www.scout.org.hk/uploads/tc/forms/7018/form04.pdf" },
-    { code: "AYP/05", cat: "訓練及評核", name: "Training & Assessment Application (Physical Recreation)", note: "For Physical Recreation (🥇Gold: submit with plan ≥2 months before start).", url: "https://www.scout.org.hk/uploads/tc/forms/7019/form05.pdf" },
-    { code: "AYP/06", cat: "訓練及評核", name: "Training & Assessment Application (Residential Project)", note: "For 🥇Gold 5D4N Residential Project (submit ≥2 months before start).", url: "https://www.scout.org.hk/uploads/tc/forms/7020/form06.pdf" },
+    { code: "AYP/01", cat: "參加及轉換", name: "AYP Enrolment Application Form", note: "Apply for AYP & Record Book (HK$45) after Orientation. Confirm current online and paper submission arrangements with your Operating Authority.", url: "https://www.scout.org.hk/uploads/tc/forms/7015/form01.pdf" },
+    { code: "AYP/02", cat: "訓練及評核", name: "Training & Assessment Application (Service)", note: "The form says to submit to the Regional Office two months before the activity; confirm applicable Award levels and current procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7016/form02.pdf" },
+    { code: "AYP/03", cat: "訓練及評核", name: "Training & Assessment Application (Adventurous Journey)", note: "The form says to submit to the Regional Office two months before the activity; confirm applicable Award levels and current procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7017/form03.pdf" },
+    { code: "AYP/04", cat: "訓練及評核", name: "Training & Assessment Application (Skills)", note: "The form is marked Gold only and says to submit to the Regional Office two months before the activity; confirm current procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7018/form04.pdf" },
+    { code: "AYP/05", cat: "訓練及評核", name: "Training & Assessment Application (Physical Recreation)", note: "The form is marked Gold only and says to submit to the Regional Office two months before the activity; confirm current procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7019/form05.pdf" },
+    { code: "AYP/06", cat: "訓練及評核", name: "Training & Assessment Application (Residential Project)", note: "For the Gold Residential Project. The form says to submit to the Regional Office two months before the activity; confirm current procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7020/form06.pdf" },
     { code: "AYP/07", cat: "章級完成", name: "Silver / Gold Award Notification of Attainment", note: "Submit via UUL to Regional Office upon completing all Silver or Gold Sections.", url: "https://www.scout.org.hk/uploads/tc/forms/7021/form07.pdf" },
     { code: "AYP/08", cat: "參加及轉換", name: "Application for Change of User Unit (Within HK Scout OA)", note: "Transferring between User Units within the Scout Association of HK (e.g. changing Scout Group/District User Unit).", url: "https://www.scout.org.hk/uploads/tc/forms/7022/form08.pdf" },
     { code: "AYP/09", cat: "參加及轉換", name: "Application for Change of Operating Authority (Transfer into Scouts)", note: "Transferring from another Operating Authority (e.g. school) into the Scout Association of HK.", url: "https://www.scout.org.hk/uploads/tc/forms/7023/form09.pdf" },
     { code: "AYP/10", cat: "支部及行政", name: "Application to Establish a User Unit", note: "For Scout Groups, Districts or Regions establishing an AYP User Unit (nominate ≥1 qualified UUL).", url: "https://www.scout.org.hk/uploads/tc/forms/7024/form10.pdf" },
-    { code: "AYP/11", cat: "支部及行政", name: "Half-Yearly Statistical Return", note: "Submitted every 6 months by User Units to report participant & award statistics.", url: "https://www.scout.org.hk/hkayp/download/form11.pdf" },
+    { code: "AYP/11", cat: "支部及行政", name: "Half-Yearly Statistical Return", note: "Submitted every 6 months by User Units to report participant & award statistics.", url: "https://www.scout.org.hk/uploads/tc/forms/7025/form11.pdf" },
     { code: "AYP/12", cat: "章級完成", name: "Award Completion Notification", note: "For applicable Award completion confirmation procedures.", url: "https://www.scout.org.hk/uploads/tc/forms/7026/form12.pdf" },
-    { code: "AYP/13", cat: "訓練及評核", name: "Adventurous Journey Training Course Record", note: "For recording participant training when running an Adventurous Journey course.", url: "https://www.scout.org.hk/hkayp/download/form13.pdf" },
+    { code: "AYP/13", cat: "訓練及評核", name: "Adventurous Journey Training Course Record", note: "For recording participant training when running an Adventurous Journey course.", url: "https://www.scout.org.hk/uploads/tc/forms/7027/form13.pdf" },
     { code: "AYP/14", cat: "支部及行政", name: "User Unit Leader (UUL) Registration / Amendment Form", note: "First registration, addition or change of User Unit Leader (requires UUL Briefing completion).", url: "https://www.scout.org.hk/uploads/tc/forms/7028/form14.pdf" },
-    { code: "e-Form", cat: "參加及轉換", name: "2026 Simultaneous Completion Trial — Expression of Interest e-Form", note: "Official Google Form for Scout units and leaders interested in joining the 2026 trial scheme.", url: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform?usp=sharing&ouid=107671158074138069832" },
+    { code: "e-Form", cat: "參加及轉換", name: "2026 Simultaneous Completion Trial — Expression of Interest e-Form", note: "User Unit Leaders register their Scout unit's interest; places are limited and submission does not guarantee a place.", url: "https://docs.google.com/forms/d/e/1FAIpQLScvAVc-otJsKUv7xdMroTNaQqAWp_Igyk-3Fud45Wx2Z8xiPw/viewform" },
     { code: "Guide", cat: "訓練及評核", name: "Adventurous Journey Instructor Guide & AYP Handbook", note: "Official handbook for planning and assessing Adventurous Journeys.", url: "https://ayp.org.hk/wp-content/uploads/2024/05/Award-Handbook-Adventurous-Journey-Section_Chi_20240516-1.pdf" }
   ],
 
   commentBuilder: {
-    title: "✍️ Instructor / Assessor Specific Comment Builder (Anti-Rejection Tool)",
-    sub: "Official guideline: 'Avoid writing only Completed, Passed or Good. Comments must specify what was accomplished, ongoing participation, progress made, how challenges were overcome, and whether personal goals were met.'",
-    secOptions: LOCALES["zh-HK"].POWER.commentBuilder.secOptions,
+    title: "✍️ Instructor / Assessor Comment Draft",
+    sub: "This is a writing prompt, not a completed assessment. The instructor or assessor must add actual evidence, verify and sign it; it is not an approval.",
+    secOptions: LOCALES["zh-HK"].POWER.commentBuilder.secOptions.map((s, i) => ({ ...s,
+      name: ["Service", "Skills", "Physical Recreation", "Adventurous Journey", "Residential Project (Gold)"][i],
+      defaultAct: ["e.g. community service", "e.g. photography", "e.g. swimming", "e.g. an expedition", "e.g. a residential project"][i]
+    })),
     generateZh: LOCALES["zh-HK"].POWER.commentBuilder.generateZh,
     generateEn: LOCALES["zh-HK"].POWER.commentBuilder.generateEn
   },
 
   uulChecklists: {
     title: "🏕️ Leader / UUL 3-Stage Pre-Approval & Submission Checklists",
-    sub: "(Compiled from the new official `#leaders` guidelines — tick off on your phone so submissions aren't rejected by the Regional Office)",
+    sub: "(A reference checklist only; confirm submission and approval requirements with your Operating Authority.)",
     groups: [
       {
         id: "uul_start",
@@ -1555,10 +1553,10 @@ LOCALES["en"].POWER = {
         items: [
           "Confirm the participant is an invested Scout (or Young Leader with valid appointment) and has completed Participant Orientation.",
           "Verify age eligibility and Award path (age 13 Bronze requires group participation & special approval; Direct Silver/Gold requires choosing a Main Section).",
-          "Submitted AYP/01 + HK$45 fee and officially received the Record Book (establishes official start date — remind them no backdating).",
+          "Submitted AYP/01 and the Record Book application; confirmed the start date and arrangements for any earlier activities.",
           "Discussed and approved each Section's activity plan (specific personal goals, meets section aims, no double-counting across sections).",
           "Confirmed qualified Instructor & Assessor BEFORE starting (never sign off retroactively; Trial Bronze Journey requires contacting EA/JEA/CRS before training).",
-          "🥇 For Gold Award: reminded participant to submit AYP/02–06 + activity plan signed by UUL to Regional Office AT LEAST 2 MONTHS before starting!"
+          "Checked applicable forms, deadlines and signatures for each Award and Section. The currently linked AYP/02–06 forms state two months before the activity; confirm current arrangements with the Operating Authority."
         ]
       },
       {
@@ -1576,7 +1574,7 @@ LOCALES["en"].POWER = {
         id: "uul_end",
         title: "Stage ③: Before Submitting Completion Notification AYP/07 or AYP/12 (6 Checks)",
         items: [
-          "All Section start dates are on or after the official Record Book start date.",
+          "Section dates and any exceptions have been checked against the latest rules and Operating Authority arrangements.",
           "Total hours and week spans for every Section fully meet the chosen path's requirements with no overlapping hours.",
           "Instructors/Assessors wrote SPECIFIC comments (what was done, ongoing commitment, progress, challenges overcome & goals met — not just 'Passed') with signatures, qualifications & dates.",
           "Adventurous Journey documents are complete (training record, practice & assessed journey plans, report/debriefing, assessor sign-off).",

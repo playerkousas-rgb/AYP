@@ -10,19 +10,74 @@
   const VISIT_KEY = "ayp-guide-visited-v1";
   const FIRST_VISIT_KEY = "ayp-guide-first-visit-v1";
 
-  function loadOpen() { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (e) { return {}; } }
-  function saveOpen(o) { try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) {} }
-  function smoothTo(el, block) { if (!el) return; try { if (typeof el.scrollIntoView === "function") el.scrollIntoView({ behavior: "smooth", block: block || "start" }); } catch (e) {} }
-  function smoothTop() { try { if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {} }
+  // Storage can be blocked (private mode, quota, embedded browsers). Keep an
+  // in-memory fallback and tell the user when persistence is unavailable.
+  const memoryStore = Object.create(null);
+  let storageAvailable = true;
+  function updateStorageWarning() {
+    const el = document.getElementById("storage-warning");
+    if (!el) return;
+    el.hidden = storageAvailable;
+    el.textContent = LANG === "en"
+      ? "Browser storage is unavailable. Changes last only while this page is open."
+      : "瀏覽器儲存功能不可用；更改只會保留至此頁關閉。";
+  }
+  function storeRead(key) {
+    if (Object.prototype.hasOwnProperty.call(memoryStore, key)) return memoryStore[key];
+    try { return localStorage.getItem(key); }
+    catch (e) { storageAvailable = false; return null; }
+  }
+  function storeWrite(key, value) {
+    memoryStore[key] = value;
+    try { localStorage.setItem(key, value); }
+    catch (e) { storageAvailable = false; updateStorageWarning(); }
+  }
+  function storeRemove(key) {
+    memoryStore[key] = null;
+    try { localStorage.removeItem(key); return true; }
+    catch (e) { storageAvailable = false; updateStorageWarning(); return false; }
+  }
+  function loadOpen() { return loadJson(OPEN_KEY, {}); }
+  function saveOpen(o) { saveJson(OPEN_KEY, o); }
+  function scrollBehavior() {
+    return typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+  function smoothTo(el, block) { if (!el) return; try { if (typeof el.scrollIntoView === "function") el.scrollIntoView({ behavior: scrollBehavior(), block: block || "start" }); } catch (e) {} }
+  function smoothTop() { try { if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: scrollBehavior() }); } catch (e) {} }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  const ICON_PATHS = {
+    quick: '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2.3 4.7-4.7 2.3 2.3-4.7z"/>',
+    f1: '<path d="M4 12h15m-5-5 5 5-5 5"/><path d="M5 5v14"/>',
+    f2: '<path d="M10 13.5 14 9.5M8.5 16.5l-1 1a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M15.5 7.5l1-1a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0"/>',
+    f3: '<path d="M4 19h5v-5h5V9h5V4M15 4h4v4"/>',
+    f5: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+    "bt-sync": '<rect x="5" y="4" width="14" height="16" rx="2"/><path d="m8 9 1.5 1.5L12 8m2 2h2m-8 5h8"/>',
+    "bt-conv": '<path d="M4 8h13m-3-3 3 3-3 3M20 16H7m3-3-3 3 3 3"/>',
+    "bt-forms": '<path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/>',
+    "bt-oa": '<path d="M4 21h16M6 21V7l6-3 6 3v14M10 10h1m2 0h1m-4 4h1m2 0h1M11 21v-4h2v4"/>',
+    "bt-faq": '<circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 3.8 2c-1 .6-1.5 1.1-1.5 2.2M12 16.5h.01"/>',
+    scout: '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2.3 4.7-4.7 2.3 2.3-4.7z"/>',
+    venture: '<path d="M3 19 9 7l3 6 2-4 7 10z"/>',
+    rover: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+    leader: '<circle cx="12" cy="8" r="3"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>',
+    young: '<path d="M12 20v-8M12 14C6 14 5 10 5 7c4 0 7 2 7 7Zm0 1c0-5 3-7 7-7 0 4-2 7-7 7Z"/>',
+    unsure: '<circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 3.8 2c-1 .6-1.5 1.1-1.5 2.2M12 16.5h.01"/>',
+    fresh: '<path d="M12 20v-8M12 14C6 14 5 10 5 7c4 0 7 2 7 7Zm0 1c0-5 3-7 7-7 0 4-2 7-7 7Z"/>',
+    doing: '<path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/>',
+    done: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    overseas: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+    messy: '<path d="M3 7h7l2 2h9v10H3z"/>',
+    sync: '<circle cx="12" cy="9" r="6"/><path d="m8 14-1 7 5-2 5 2-1-7"/>'
+  };
+  function iconFor(key) {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICON_PATHS[key] || ICON_PATHS.f5}</svg>`;
+  }
 
   /* ═══════════ 語言 / Language ═══════════ */
   function detectDefaultLang() {
-    try {
-      const saved = localStorage.getItem(LANG_KEY);
-      if (saved && LOCALES[saved]) return saved;
-    } catch (e) {}
-    return "zh-HK";
+    const saved = storeRead(LANG_KEY);
+    return saved && LOCALES[saved] ? saved : "zh-HK";
   }
   let LANG = detectDefaultLang();
   function L() { return LOCALES[LANG]; }
@@ -30,9 +85,10 @@
   function setLang(lang) {
     if (!LOCALES[lang] || lang === LANG) return;
     LANG = lang;
-    try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+    storeWrite(LANG_KEY, lang);
     document.documentElement.lang = L().htmlLang;
     renderAll();
+    focusControl("#fab-lang");
   }
 
   // 建立一個 <details class="part"> 開合卡
@@ -53,13 +109,22 @@
     });
   }
 
-  // 開合狀態事件綁定
+  // Capture also handles cards rendered later; always merge the latest state.
+  let togglesBound = false;
   function bindPartToggles() {
-    $$("details.part").forEach(d => {
-      const k = d.dataset.key; const state = loadOpen();
-      if (state[k] === undefined) state[k] = d.hasAttribute("open");
-      d.addEventListener("toggle", () => { state[k] = d.open; saveOpen(state); });
-    });
+    if (togglesBound) return;
+    togglesBound = true;
+    document.addEventListener("toggle", event => {
+      const d = event.target;
+      if (!d.isConnected || !d.matches("details.part[data-key]")) return;
+      const state = loadOpen();
+      state[d.dataset.key] = d.open;
+      saveOpen(state);
+    }, true);
+  }
+  function focusControl(selector) {
+    const el = $(selector);
+    if (el) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
   }
 
   /* ═══════════ 靜態文字 ═══════════ */
@@ -72,6 +137,24 @@
 
     setText("app-title", app.name);
     setText("app-tag", app.tagline);
+    setText("home-nav", LANG === "en" ? "Overview" : "總覽");
+    setText("skip-link", LANG === "en" ? "Skip to content" : "跳至主要內容");
+    setText("header-note", LANG === "en" ? "Unofficial companion guide" : "非官方輔助指南");
+    setText("overview-title", LANG === "en" ? "From getting started to moving forward." : "由起步到銜接，陪你一步一步走。");
+    setText("overview-plan-title", LANG === "en" ? "Your starting checklist" : "起步行動清單");
+    setText("overview-plan-description", LANG === "en" ? "Start with the basics and work at your own pace." : "從基本步驟開始，按自己的節奏跟進。");
+    setText("quick-note", LANG === "en" ? "For reference · Check official guidance" : "參考指引 · 以官方資料為準");
+    setText("global-reference", LANG === "en" ? "Unofficial guide. Check the latest rules and arrangements: " : "非官方指南；請核實最新規條及安排：");
+    setText("global-source", LANG === "en" ? "Official AYP resources" : "AYP 官方資料");
+    setText("quick-description", LANG === "en"
+      ? "Choose your Scout role and AYP situation for a practical next-step checklist."
+      : "揀選你嘅童軍身份同 AYP 情況，整理適合你嘅下一步。 ");
+    setText("privacy-title", LANG === "en" ? "Your data on this device" : "你在此裝置的資料");
+    setText("privacy-note", LANG === "en"
+      ? "Your checklists, dates and assessor details are stored in this browser, not synced to AYP. Clearing browser data removes them. Avoid personal information on shared devices. If enabled by the host, Vercel Web Analytics may collect visit statistics."
+      : "待辦、日期及考驗人員資料儲存在此瀏覽器，並不會同步至 AYP。清除瀏覽資料後便會消失；公用裝置請避免輸入個人資料。部署環境如有啟用 Vercel Web Analytics，可能收集瀏覽統計。");
+    setText("privacy-clear", LANG === "en" ? "Clear saved guide data" : "清除此裝置的指南資料");
+    updateStorageWarning();
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", app.description);
 
@@ -116,8 +199,7 @@
 
     setText("bt-sync-summary", L().SYNC_PLAN.title);
     setText("bt-conv-summary", L().CONVERSION_TABLE.title);
-    const startFormsAction = L().BOTTOM_ACTIONS.find(b => b.id === "start-forms");
-    if (startFormsAction) setText("bt-forms-summary", startFormsAction.label);
+    setText("bt-forms-summary", LANG === "en" ? "Forms & comment drafts" : "表格及評語草稿");
     setText("bt-oa-summary", L().OA_LOOKUP.title);
     $$(".tv-back-label").forEach(el => { el.textContent = t.backHome; });
 
@@ -151,12 +233,12 @@
           <div class="ti-lev">
             <b>${esc(t.pickLevel)}</b>
             <div class="chips">${Object.keys(LV).map(k =>
-              `<button class="chip ${k === inLevel ? "active" : ""}" data-lv="${k}" style="--c:${LV[k].color}">${LV[k].icon} ${esc(LV[k].name)}</button>`).join("")}</div>
+              `<button class="chip ${k === inLevel ? "active" : ""}" data-lv="${k}" aria-pressed="${k === inLevel}" style="--c:${LV[k].color}">${LV[k].icon} ${esc(LV[k].name)}</button>`).join("")}</div>
           </div>
           <div class="ti-done">
             <b>${esc(t.tickDone)}</b>
             <div class="chips">${must.map(k =>
-              `<button class="chip tick ${inDone[k] ? "active" : ""}" data-sec="${k}" style="--c:#0a5c36">${FS[k].icon} ${esc(secName(k))}${inDone[k] ? " ✓" : ""}</button>`).join("")}</div>
+              `<button class="chip tick ${inDone[k] ? "active" : ""}" data-sec="${k}" aria-pressed="${!!inDone[k]}" style="--c:#0a5c36">${FS[k].icon} ${esc(secName(k))}${inDone[k] ? " ✓" : ""}</button>`).join("")}</div>
             <p class="hint">${esc(t.tickHint)}</p>
           </div>
         </div>
@@ -176,10 +258,10 @@
       </div>`;
 
     $$("[data-lv]", step).forEach(b => b.addEventListener("click", () => {
-      inLevel = b.dataset.lv; renderTransferIn();
+      inLevel = b.dataset.lv; renderTransferIn(); focusControl(`[data-lv="${inLevel}"]`);
     }));
     $$("[data-sec]", step).forEach(b => b.addEventListener("click", () => {
-      const k = b.dataset.sec; inDone[k] = !inDone[k]; renderTransferIn();
+      const k = b.dataset.sec; inDone[k] = !inDone[k]; renderTransferIn(); focusControl(`[data-sec="${k}"]`);
     }));
   }
 
@@ -277,8 +359,8 @@
      ════════════════════════════════════════════ */
   let wzRole = null, wzStatus = null;
   const TODO_KEY = "ayp-guide-todo-v1";
-  function loadTodo() { try { return JSON.parse(localStorage.getItem(TODO_KEY)) || {}; } catch (e) { return {}; } }
-  function saveTodo(o) { try { localStorage.setItem(TODO_KEY, JSON.stringify(o)); } catch (e) {} }
+  function loadTodo() { return loadJson(TODO_KEY, {}); }
+  function saveTodo(o) { saveJson(TODO_KEY, o); }
 
   function renderWizard() {
     const c = $("#wizard"); if (!c) return;
@@ -286,34 +368,36 @@
     const stepDone = (wzRole ? 1 : 0) + (wzStatus ? 1 : 0);
     c.innerHTML = `
       <div class="wz-progress"><div class="wz-bar" style="width:${stepDone / 2 * 100}%"></div></div>
-      <p class="wz-step-label">${stepDone === 2 ? esc(t.wizDone) : esc(t.wizStep(stepDone + 1, !wzRole ? t.wizQ1 : t.wizQ2))}</p>
+      <p class="wz-step-label">${stepDone === 2 ? esc(t.wizDone) : esc(t.wizStep(wzRole ? 2 : 1, !wzRole ? t.wizQ1 : t.wizQ2))}</p>
       <div class="wz-group">
         <b>${esc(t.wizRoleHeading)}</b>
         <div class="wz-grid">${W.roles.map(r =>
-          `<button class="wz-opt ${wzRole === r.id ? "active" : ""}" data-wz-role="${r.id}">
-            <span class="wz-ico">${r.icon}</span><span class="wz-t">${esc(r.label)}</span><small>${esc(r.desc)}</small>
+          `<button class="wz-opt ${wzRole === r.id ? "active" : ""}" data-wz-role="${r.id}" aria-pressed="${wzRole === r.id}">
+            <span class="wz-ico">${iconFor(r.id)}</span><span class="wz-t">${esc(r.label)}</span><small>${esc(r.desc)}</small>
           </button>`).join("")}</div>
       </div>
       <div class="wz-group">
         <b>${esc(t.wizStatusHeading)}</b>
         <div class="wz-grid">${W.statuses.map(s =>
-          `<button class="wz-opt ${wzStatus === s.id ? "active" : ""}" data-wz-status="${s.id}">
-            <span class="wz-ico">${s.icon}</span><span class="wz-t">${esc(s.label)}</span><small>${esc(s.desc)}</small>
+          `<button class="wz-opt ${wzStatus === s.id ? "active" : ""}" data-wz-status="${s.id}" aria-pressed="${wzStatus === s.id}">
+            <span class="wz-ico">${iconFor(s.id)}</span><span class="wz-t">${esc(s.label)}</span><small>${esc(s.desc)}</small>
           </button>`).join("")}</div>
       </div>
-      <div id="wz-result">${wzStatus ? wizardResultHtml() : `<div class="wz-empty">${esc(t.wizEmpty)}</div>`}</div>`;
+      <div id="wz-result">${wzRole && wzStatus ? wizardResultHtml() : `<div class="wz-empty">${esc(t.wizEmpty)}</div>`}</div>`;
 
     $$("[data-wz-role]", c).forEach(b => b.addEventListener("click", () => {
       wzRole = b.dataset.wzRole; renderWizard();
+      focusControl(`[data-wz-role="${wzRole}"]`);
       if (wzStatus) smoothTo($("#wz-result"), "nearest");
     }));
     $$("[data-wz-status]", c).forEach(b => b.addEventListener("click", () => {
       wzStatus = b.dataset.wzStatus; renderWizard();
-      smoothTo($("#wz-result"), "nearest");
+      focusControl(`[data-wz-status="${wzStatus}"]`);
+      if (wzRole) smoothTo($("#wz-result"), "nearest");
     }));
     bindTodo(c);
     const reset = $("#wz-reset", c);
-    if (reset) reset.addEventListener("click", () => { wzRole = null; wzStatus = null; renderWizard(); });
+    if (reset) reset.addEventListener("click", () => { wzRole = null; wzStatus = null; renderWizard(); focusControl("#wizard [data-wz-role]"); });
   }
 
   function wizardResultHtml() {
@@ -324,8 +408,8 @@
     const checked = todo[key] || [];
     const doneCount = p.steps.filter((_, i) => checked[i]).length;
     return `<div class="plan-card">
-      <div class="plan-head"><span class="plan-ico">${p.icon}</span>
-        <div><b>📍 ${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
+      <div class="plan-head"><span class="plan-ico">${iconFor("quick")}</span>
+        <div><b>${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
       ${wzRole && W.roleNote[wzRole] ? `<div class="tip">${esc(W.roleNote[wzRole])}</div>` : ""}
       <div class="plan-progress">${esc(t.progressLabel(doneCount, p.steps.length))}</div>
       <ol class="todo">${p.steps.map((s, i) => `
@@ -350,10 +434,11 @@
     $$("[data-todo]", root).forEach(box => box.addEventListener("change", () => {
       const [key, idx] = box.dataset.todo.split(":");
       const todo = loadTodo();
-      todo[key] = todo[key] || [];
+      if (!Array.isArray(todo[key])) todo[key] = [];
       todo[key][+idx] = box.checked;
       saveTodo(todo);
       renderWizard();
+      focusControl(`#wizard [data-todo="${key}:${idx}"]`);
     }));
     $$("#wz-result a[href^='#']", root).forEach(a => a.addEventListener("click", e => {
       const id = a.getAttribute("href").slice(1);
@@ -386,7 +471,7 @@
     const c = $("#topbar"); if (!c) return;
     const TT = L().TOP_TABS;
     c.innerHTML = TT.map(q =>
-      `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${q.icon}</span><span class="tb-lbl">${esc(q.label)}</span></button>`
+      `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${iconFor(q.target)}</span><span class="tb-lbl">${esc(q.label)}</span></button>`
     ).join("");
     $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tt;
@@ -402,7 +487,7 @@
     const c = $("#bottombar"); if (!c) return;
     const BA = L().BOTTOM_ACTIONS;
     c.innerHTML = BA.map(b =>
-      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${b.icon}</span><span class="bb-lbl">${esc(b.label)}</span></button>`
+      `<button class="bb-btn" data-tv="${esc(b.target)}"><span class="bb-ico">${iconFor(b.target)}</span><span class="bb-lbl">${esc(b.label)}</span></button>`
     ).join("");
     $$("[data-tv]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tv;
@@ -415,27 +500,69 @@
      APP 式整版 view 切換：home ＋ 4 工具
      ════════════════════════════════════════════ */
   const VIEWS = ["normal", "quick", "f1", "f2", "f3", "f5", "bt-sync", "bt-conv", "bt-forms", "bt-oa", "bt-faq"];
-  function showView(key) {
+  function showView(key, shouldFocus = true) {
     document.body.dataset.view = (VIEWS.indexOf(key) !== -1) ? key : "normal";
     syncViewUI();
+    const announcement = $("#view-announcer");
+    if (announcement) {
+      const tab = $(`#topbar [data-tt="${document.body.dataset.view}"], #bottombar [data-tv="${document.body.dataset.view}"]`);
+      announcement.textContent = tab ? tab.textContent.trim() : (LANG === "en" ? "Overview" : "總覽");
+    }
     if (key === "quick") renderWizard();
     if (key === "normal") renderNormalCard();
     try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
+    if (shouldFocus) {
+      const id = document.body.dataset.view;
+      const region = id === "normal" ? $("#view-normal") : $(id.startsWith("bt-") ? `#view-${id}` : `#${id}`);
+      const heading = region && region.querySelector("h2");
+      if (heading) { heading.setAttribute("tabindex", "-1"); try { heading.focus({ preventScroll: true }); } catch (e) { heading.focus(); } }
+    }
   }
   function syncViewUI() {
     const cur = document.body.dataset.view || "normal";
-    $$("#bottombar [data-tv]").forEach(a => a.classList.toggle("active", a.dataset.tv === cur));
-    $$("#topbar [data-tt]").forEach(a => a.classList.toggle("active", a.dataset.tt === cur));
+    $$("#bottombar [data-tv], #topbar [data-tt]").forEach(a => {
+      const active = (a.dataset.tv || a.dataset.tt) === cur;
+      a.classList.toggle("active", active);
+      a.setAttribute("aria-current", active ? "page" : "false");
+    });
+    const home = $("#home-nav");
+    if (home) home.setAttribute("aria-current", cur === "normal" ? "page" : "false");
   }
   function bindViews() {
     $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("normal")));
+    const home = $("#home-nav");
+    if (home) home.addEventListener("click", () => showView("normal"));
+    const clear = $("#privacy-clear");
+    if (clear) clear.addEventListener("click", clearGuideData);
+  }
+  function clearGuideData() {
+    const msg = LANG === "en"
+      ? "Clear saved checklists, calculator progress and assessor details on this device? Language preference is kept."
+      : "清除此裝置已儲存的待辦、計算器進度及考驗人員資料？語言設定會保留。";
+    if (!window.confirm(msg)) return;
+    const results = [OPEN_KEY, TODO_KEY, CALC_KEY, SYNC_CHK_KEY, EA_LOG_KEY, UUL_CHK_KEY].map(storeRemove);
+    wzRole = null; wzStatus = null;
+    inLevel = "bronze";
+    inDone = { service: false, skill: false, physical: false, expedition: false, residential: false };
+    syncRouteKey = "bronze";
+    convSearchQuery = ""; convBranchIdx = "all"; convSecFilter = "all";
+    formSearchQuery = ""; formCatFilter = "all";
+    cmtSecId = "service"; cmtLvKey = "bronze"; cmtActName = ""; cmtHours = ""; cmtWeeks = "";
+    renderAll();
+    const result = $("#privacy-result");
+    if (result) result.textContent = results.every(Boolean)
+      ? (LANG === "en" ? "Saved guide data cleared." : "已清除已儲存的指南資料。")
+      : (LANG === "en" ? "This session was cleared, but browser storage could not be cleared. Please remove site data in browser settings." : "已清除本次使用資料，但無法清除瀏覽器儲存。請到瀏覽器設定刪除此網站資料。");
+    focusControl("#privacy-clear");
   }
   function openDetail(key) {
     const d = document.querySelector(`.part[data-key="${key}"]`);
     if (!d) return;
     if (typeof d.open === "boolean") d.open = true;
     smoothTo(d);
+    const summary = d.querySelector("summary");
+    if (summary) { try { summary.focus({ preventScroll: true }); } catch (e) { summary.focus(); } }
   }
 
   /* ════════════════════════════════════════════
@@ -448,8 +575,8 @@
     const checked = todo[key] || [];
     const doneCount = p.steps.filter((_, i) => checked[i]).length;
     c.innerHTML = `<div class="plan-card">
-      <div class="plan-head"><span class="plan-ico">${p.icon}</span>
-        <div><b>📍 ${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
+      <div class="plan-head"><span class="plan-ico">${iconFor("quick")}</span>
+        <div><b>${esc(p.pos)}</b><div class="plan-route">${esc(t.routeLabel)}${esc(p.route)}</div></div></div>
       <div class="plan-progress">${esc(t.progressLabel(doneCount, p.steps.length))}</div>
       <ol class="todo">${p.steps.map((s, i) => `
         <li class="${checked[i] ? "done" : ""}"><label>
@@ -468,8 +595,9 @@
     </div>`;
     $$("[data-todo]", c).forEach(box => box.addEventListener("change", () => {
       const parts = box.dataset.todo.split(":");
-      const td = loadTodo(); td[parts[0]] = td[parts[0]] || []; td[parts[0]][+parts[1]] = box.checked;
+      const td = loadTodo(); if (!Array.isArray(td[parts[0]])) td[parts[0]] = []; td[parts[0]][+parts[1]] = box.checked;
       saveTodo(td); renderNormalCard();
+      focusControl(`#normal-card [data-todo="${parts[0]}:${parts[1]}"]`);
     }));
     const det = $("[data-normal-detail]", c);
     if (det) det.addEventListener("click", () => openDetail("f4-1"));
@@ -483,77 +611,97 @@
   const EA_LOG_KEY = "ayp-ea-log-v1";
   const UUL_CHK_KEY = "ayp-uul-chk-v1";
 
-  function loadJson(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch (e) { return def; } }
-  function saveJson(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function loadJson(k, def) {
+    try {
+      const value = JSON.parse(storeRead(k));
+      return value && typeof value === "object" && !Array.isArray(value) ? value : def;
+    } catch (e) { return def; }
+  }
+  function saveJson(k, v) { storeWrite(k, JSON.stringify(v)); }
 
+  // Work with calendar dates in UTC, not local-midnight-to-UTC conversion.
+  function parseDate(dateStr) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || "")) return null;
+    const date = new Date(dateStr + "T00:00:00Z");
+    return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr ? date : null;
+  }
+  function dateString(date) {
+    const year = date.getUTCFullYear();
+    return year >= 1000 && year <= 9999 ? date.toISOString().slice(0, 10) : null;
+  }
+  function todayString() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
   function addDays(dateStr, days) {
-    if (!dateStr) return null;
-    const d = new Date(dateStr + "T00:00:00");
-    if (isNaN(d.getTime())) return null;
-    d.setDate(d.getDate() + days);
-    return d.toISOString().slice(0, 10);
+    const date = parseDate(dateStr);
+    if (!date) return null;
+    date.setUTCDate(date.getUTCDate() + days);
+    return dateString(date);
+  }
+  function addMonths(dateStr, months) {
+    const date = parseDate(dateStr);
+    if (!date) return null;
+    const day = date.getUTCDate();
+    date.setUTCDate(1);
+    date.setUTCMonth(date.getUTCMonth() + months);
+    const last = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate();
+    date.setUTCDate(Math.min(day, last));
+    return dateString(date);
   }
   function diffDaysFromToday(dateStr) {
-    if (!dateStr) return null;
-    const target = new Date(dateStr + "T00:00:00");
-    if (isNaN(target.getTime())) return null;
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.round((target - today) / 86400000);
+    const target = parseDate(dateStr), today = parseDate(todayString());
+    return target && today ? Math.round((target - today) / 86400000) : null;
   }
-  function copyTextWithToast(text, toastEl, msg) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).catch(() => {});
-    } else {
+  async function copyTextWithToast(text, toastEl, msg) {
+    let copied = false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch (e) { /* Try the browser's legacy copy action below. */ }
+    if (!copied) {
+      const previous = document.activeElement;
       const ta = document.createElement("textarea");
-      ta.value = text; document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); } catch (e) {}
-      document.body.removeChild(ta);
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta); ta.select();
+      try { copied = !!document.execCommand && document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+      if (previous && previous.isConnected && typeof previous.focus === "function") previous.focus();
     }
     if (toastEl) {
-      toastEl.innerHTML = `<span class="toast-msg">${esc(msg)}</span>`;
-      setTimeout(() => { if (toastEl) toastEl.innerHTML = ""; }, 3500);
+      toastEl.textContent = copied ? msg : (LANG === "en"
+        ? "Could not copy. Please select and copy the text manually."
+        : "無法複製，請選取文字後手動複製。");
+      toastEl.className = copied ? "toast-msg" : "toast-msg copy-error";
+      setTimeout(() => { if (toastEl.isConnected) { toastEl.textContent = ""; toastEl.className = ""; } }, 5000);
     }
   }
 
-  /* ── 頂部 4 大實戰神器快跳橫幅 ── */
+  /* Practical shortcuts on the overview. */
   function renderPowerBanner() {
     const c = $("#power-banner"); if (!c) return;
     const isEn = LANG === "en";
     c.innerHTML = `
-      <div class="power-banner">
+      <section class="power-banner" aria-labelledby="tools-heading">
         <div class="power-banner-head">
-          <b>🚀 ${isEn ? "2026 Interactive Toolkit (What the Official Site Doesn't Have)" : "2026 互動實戰工具箱（童軍新官網冇嘅 4 大神器）"}</b>
-          <span class="power-badge">${isEn ? "Members + Leaders/UUL" : "成員 ＋ 領袖/UUL 雙線適用"}</span>
+          <div><h2 id="tools-heading">${isEn ? "Helpful tools" : "實用工具"}</h2>
+          <p>${isEn ? "Simple ways to organise your next steps." : "幫你整理資料，逐步跟進。"}</p></div>
+          <span class="power-badge">${isEn ? "For members & leaders" : "成員及領袖適用"}</span>
         </div>
         <div class="power-grid">
-          <button class="pw-btn" data-pw-jump="calc">
-            <b>🧮 ${isEn ? "Hours, Weeks & Deadlines" : "時數・週數・死線計算器"}</b>
-            <small>${isEn ? "Auto-calc completion date, age 23/25 & Gold 2-mo deadline" : "自動計最快完成日、23/25歲死線、金章提前2個月交表"}</small>
-          </button>
-          <button class="pw-btn" data-pw-view="bt-sync">
-            <b>🔗 ${isEn ? "2026 Sync Scheme Checker" : "2026 同步完成對接核對"}</b>
-            <small>${isEn ? "Tick off Scout items → check missing AYP steps & EA log" : "高級章→銅／總領袖→銀逐項剔＋野外EA紀錄產生器"}</small>
-          </button>
-          <button class="pw-btn" data-pw-view="bt-conv">
-            <b>🔍 ${isEn ? "Badge ↔ 5 Sections Matcher" : "跨支部徽章 ↔ 五科搜尋"}</b>
-            <small>${isEn ? "Instant badge search + 8 cancelled badges alert" : "秒查童軍/深資/樂行徽章對接＋8個已取消徽章防伏"}</small>
-          </button>
-          <button class="pw-btn" data-pw-view="bt-forms">
-            <b>✍️ ${isEn ? "Comment Builder & Forms" : "評語產生器 ＋ AYP/01-14"}</b>
-            <small>${isEn ? "Bilingual Assessor comments + UUL 3-stage checklists" : "一鍵生成防退件具體評語＋全套2026新表格＋UUL清單"}</small>
-          </button>
+          <button class="pw-btn" data-pw-jump="calc"><span class="pw-icon">${iconFor("bt-forms")}</span><span><b>${isEn ? "Progress calculator" : "進度計算器"}</b><small>${isEn ? "Track hours and estimate dates" : "記錄時數及估算日期"}</small></span><span class="pw-arrow" aria-hidden="true">→</span></button>
+          <button class="pw-btn" data-pw-view="bt-sync"><span class="pw-icon">${iconFor("bt-sync")}</span><span><b>${isEn ? "Sync checklist" : "同步方案核對"}</b><small>${isEn ? "Review the trial steps" : "了解試行安排及核對項目"}</small></span><span class="pw-arrow" aria-hidden="true">→</span></button>
+          <button class="pw-btn" data-pw-view="bt-conv"><span class="pw-icon">${iconFor("bt-conv")}</span><span><b>${isEn ? "Badge reference" : "徽章銜接參考"}</b><small>${isEn ? "Search the unofficial reference" : "搜尋非官方整理資料"}</small></span><span class="pw-arrow" aria-hidden="true">→</span></button>
+          <button class="pw-btn" data-pw-view="bt-forms"><span class="pw-icon">${iconFor("bt-forms")}</span><span><b>${isEn ? "Forms and comment draft" : "表格及評語草稿"}</b><small>${isEn ? "Find forms and organise notes" : "查找表格及整理評語"}</small></span><span class="pw-arrow" aria-hidden="true">→</span></button>
         </div>
-      </div>`;
-    $$("[data-pw-jump='calc']", c).forEach(b => b.addEventListener("click", () => {
-      const el = $("#calc-sec"); if (el) smoothTo(el);
-    }));
-    $$("[data-pw-view]", c).forEach(b => b.addEventListener("click", () => {
-      showView(b.dataset.pwView);
-    }));
+      </section>`;
+    $$("[data-pw-jump='calc']", c).forEach(b => b.addEventListener("click", () => smoothTo($("#calc-sec"))));
+    $$("[data-pw-view]", c).forEach(b => b.addEventListener("click", () => showView(b.dataset.pwView)));
   }
 
-  /* ── 神器 1：🧮 AYP 時數・週數・死線計算器 ＋ 個人進度追蹤 ── */
   function defaultCalcState() {
     return {
       path: "bronze",
@@ -578,63 +726,81 @@
     const secTitle = $("#calc-sec-title");
     if (secTitle) secTitle.textContent = PW.calcTitle.replace(/^🧮\s*/, "");
 
-    let st = loadJson(CALC_KEY, defaultCalcState());
-    if (!paths[st.path]) st.path = "bronze";
-    if (!st.sec) st.sec = defaultCalcState().sec;
+    const defaults = defaultCalcState();
+    let st = { ...defaults, ...loadJson(CALC_KEY, {}) };
+    if (!Object.prototype.hasOwnProperty.call(paths, st.path)) st.path = "bronze";
+    if (!["service", "skill", "physical"].includes(st.mainSec)) st.mainSec = "service";
+    if (!st.sec || typeof st.sec !== "object" || Array.isArray(st.sec)) st.sec = defaults.sec;
+    if (!st.perPath || typeof st.perPath !== "object" || Array.isArray(st.perPath)) st.perPath = {};
+    Object.keys(defaults.sec).forEach(key => {
+      if (!st.sec[key] || typeof st.sec[key] !== "object" || Array.isArray(st.sec[key])) st.sec[key] = defaults.sec[key];
+    });
     const p = paths[st.path];
 
-    // Age & 23/25 deadline calculation
+    // Age is only a reference: special/progressive eligibility needs verification.
     let ageHtml = "";
-    if (st.birthDate) {
-      const bd = new Date(st.birthDate + "T00:00:00");
-      if (!isNaN(bd.getTime())) {
-        const now = new Date();
-        let months = (now.getFullYear() - bd.getFullYear()) * 12 + (now.getMonth() - bd.getMonth());
-        if (now.getDate() < bd.getDate()) months--;
-        const yrs = Math.floor(months / 12), mos = Math.max(0, months % 12);
-        const dl23 = `${bd.getFullYear() + 23}-${String(bd.getMonth() + 1).padStart(2, "0")}-${String(bd.getDate()).padStart(2, "0")}`;
-        const dl25 = `${bd.getFullYear() + 25}-${String(bd.getMonth() + 1).padStart(2, "0")}-${String(bd.getDate()).padStart(2, "0")}`;
-        const d23 = diffDaysFromToday(dl23), d25 = diffDaysFromToday(dl25);
-        let eligMsg = "";
-        if (yrs < (p.specialAge || p.minAge)) {
-          eligMsg = LANG === "en"
-            ? `⚠️ Below minimum age (${p.minAge}) for ${p.name}. Activities before reaching eligible age & Record Book issue cannot be backdated.`
-            : `⚠️ 目前未滿 ${p.name} 最低年齡（${p.minAge} 歲${p.specialAge ? `／特別安排 ${p.specialAge} 歲` : ""}），未夠齡及未獲發紀錄簿前嘅活動不可追溯。`;
-        } else if (p.specialAge && yrs === p.specialAge) {
-          eligMsg = LANG === "en"
-            ? `💡 Age 13 Bronze Special Arrangement applies: complete Orientation, apply for OA discretionary approval, and participate in a group with eligible peers.`
-            : `💡 符合「13 歲銅章特別安排」：須完成迎新講座、由執行處按個別情況酌情批准，並與適齡朋友以小組形式進行活動。`;
-        } else {
-          eligMsg = LANG === "en"
-            ? `✅ Meets minimum age requirement (≥${p.minAge}) for ${p.name}.`
-            : `✅ 符合 ${p.name} 最低年齡要求（≥${p.minAge} 歲）。`;
-        }
-        ageHtml = `<div class="diag-box age">
-          <h4>${esc(lb.ageCheckTitle)}</h4>
-          <ul>
-            <li><b>${esc(lb.ageNow(yrs, mos))}</b> — ${esc(eligMsg)}</li>
-            <li>${esc(lb.deadline23)}<b>${esc(dl23)}</b> ${d23 !== null ? esc(lb.daysLeft(d23)) : ""}</li>
-            <li>${esc(lb.deadline25)}<b>${esc(dl25)}</b> ${d25 !== null ? esc(lb.daysLeft(d25)) : ""}</li>
-          </ul>
-        </div>`;
+    const bd = parseDate(st.birthDate);
+    if (st.birthDate && (!bd || st.birthDate > todayString())) {
+      ageHtml = `<div class="warn" role="alert">${LANG === "en" ? "Enter a valid date of birth that is not in the future." : "請輸入有效而且不是未來的出生日期。"}</div>`;
+    } else if (bd) {
+      const now = new Date();
+      let months = (now.getFullYear() - bd.getUTCFullYear()) * 12 + (now.getMonth() - bd.getUTCMonth());
+      if (now.getDate() < bd.getUTCDate()) months--;
+      const yrs = Math.floor(months / 12), mos = months % 12;
+      const leapBirthday = bd.getUTCMonth() === 1 && bd.getUTCDate() === 29;
+      const dl23 = leapBirthday ? null : addMonths(st.birthDate, 23 * 12);
+      const dl25 = leapBirthday ? null : addMonths(st.birthDate, 25 * 12);
+      const progressive = st.path === "progSilver" || st.path === "progGold";
+      let eligMsg;
+      if (yrs >= 25) {
+        eligMsg = LANG === "en"
+          ? "Activities generally need to be completed before age 25. Confirm exceptional circumstances with your Operating Authority."
+          : "活動一般須於 25 歲生日前完成；特殊情況請向所屬執行處核實。";
+      } else if (p.specialAge && yrs === p.specialAge) {
+        eligMsg = LANG === "en"
+          ? "Age 13 may qualify for a special Bronze arrangement, subject to Operating Authority approval and group conditions."
+          : "13 歲可能適用銅章特別安排；仍須符合小組條件及獲執行處批准。";
+      } else if (yrs < p.minAge && progressive) {
+        eligMsg = LANG === "en"
+          ? `Below the general starting age of ${p.minAge}; an exception may be available after the previous Award is completed. Ask your Operating Authority.`
+          : `未達一般起步年齡 ${p.minAge} 歲；已完成前一章級者可能有例外，請向執行處核實。`;
+      } else if (yrs < p.minAge) {
+        eligMsg = LANG === "en"
+          ? `Below the general starting age of ${p.minAge}. Confirm any applicable exceptions with your Operating Authority.`
+          : `未達一般起步年齡 ${p.minAge} 歲；請向執行處確認有否適用例外。`;
+      } else {
+        eligMsg = LANG === "en"
+          ? `Meets the general minimum age of ${p.minAge}; confirm all other entry and progression conditions.`
+          : `已達一般最低年齡 ${p.minAge} 歲；其他參加及銜接條件仍須核實。`;
       }
+      if (yrs >= 23 && yrs < 25) eligMsg += LANG === "en"
+        ? " Confirm first-entry and progression rules with your Operating Authority."
+        : " 首次參加及升級安排請向所屬執行處核實。";
+      ageHtml = `<div class="diag-box age">
+        <h4>${esc(lb.ageCheckTitle)}</h4>
+        <ul>
+          <li><b>${esc(lb.ageNow(yrs, mos))}</b> — ${esc(eligMsg)}</li>
+          ${leapBirthday ? `<li>${LANG === "en" ? "For a 29 February birthday, confirm the applicable dates with your Operating Authority." : "2 月 29 日出生的適用日期，請向執行處核實。"}</li>` : `
+          <li>${esc(lb.deadline23)}<b>${esc(dl23)}</b> ${esc(lb.daysLeft(diffDaysFromToday(dl23)))}</li>
+          <li>${esc(lb.deadline25)}<b>${esc(dl25)}</b> ${esc(lb.daysLeft(diffDaysFromToday(dl25)))}</li>`}
+        </ul>
+      </div>`;
     }
 
-    // Gold 2-month pre-submission calculation
+    // The Gold Section start date is distinct from the Record Book start date.
     let goldHtml = "";
     if (p.isGold) {
-      const refDate = st.goldTargetDate || st.startDate;
-      const regDl = refDate ? addDays(refDate, -60) : null;
-      const uulDl = refDate ? addDays(refDate, -75) : null;
+      const regDl = addMonths(st.goldTargetDate, -2);
+      const uulDl = regDl ? addDays(regDl, -15) : null;
       goldHtml = `<div class="diag-box gold-dl">
         <h4>${esc(lb.goldDeadlineTitle)}</h4>
-        <p style="margin:.2rem 0">${LANG === "en"
-          ? "Gold participants must submit FORM AYP/02–06 + activity plan signed by UUL to the Regional Office AT LEAST 2 MONTHS before starting any Section:"
-          : "新官網規定：金章參加者必須於各科活動開始「最少兩個月前」，將 UUL 簽署確認嘅 AYP/02–06 及活動計劃書交抵地域辦事處（轉交青少年活動署確認及安排約見）："}</p>
-        ${refDate ? `<ul>
+        <p>${LANG === "en"
+          ? "Gold activity plans and forms are normally submitted in advance. This estimate subtracts two calendar months; confirm the actual deadline with your User Unit Leader and allow time for review."
+          : "金章活動計劃及表格一般須提前提交。此處按兩個曆月估算；實際截止日期及審批時間請向執行處支部組長核實，並預留時間。"}</p>
+        ${regDl ? `<ul>
           <li>${esc(lb.goldUulDate)}<b>${esc(uulDl)}</b></li>
           <li>${esc(lb.goldRegionalDate)}<b>${esc(regDl)}</b></li>
-        </ul>` : `<p style="margin:.2rem 0;font-weight:700">${LANG === "en" ? "👆 Enter a Planned Gold Section Start Date above to calculate exact submission deadlines." : "👆 請喺上方輸入「金章預計科目開始日」，即刻幫你倒推最遲交表日期！"}</p>`}
+        </ul>` : `<p>${LANG === "en" ? "Enter the planned Gold Section start date to see a reference date." : "請輸入金章預計科目開始日，以顯示參考日期。"}</p>`}
       </div>`;
     }
 
@@ -643,8 +809,9 @@
       const isMain = p.splitMain && st.mainSec === k;
       const reqH = isMain ? p.mainH : p.subH;
       const reqW = isMain ? p.mainW : p.subW;
-      const curH = Math.max(0, Number((st.sec[k] && st.sec[k].h) || 0));
-      const curW = Math.max(0, Number((st.sec[k] && st.sec[k].w) || 0));
+      const curH = Math.max(0, Math.min(500, Number(st.sec[k].h) || 0));
+      const curW = Math.max(0, Math.min(200, Math.floor(Number(st.sec[k].w) || 0)));
+      st.sec[k].h = curH; st.sec[k].w = curW;
       const pctH = Math.min(100, Math.round((curH / reqH) * 100));
       const pctW = Math.min(100, Math.round((curW / reqW) * 100));
       const earliest = st.startDate ? addDays(st.startDate, reqW * 7) : null;
@@ -664,12 +831,12 @@
         </div>
         <div class="track-inputs">
           <div>
-            <label>${esc(lb.hoursLogged)}（目標 ${reqH}h）</label>
-            <input type="number" min="0" max="500" step="0.5" data-calc-h="${k}" value="${curH}">
+            <label for="calc-h-${k}">${esc(lb.hoursLogged)}（${LANG === "en" ? "target" : "目標"} ${reqH}h）</label>
+            <input id="calc-h-${k}" type="number" min="0" max="500" step="0.5" data-calc-h="${k}" value="${curH}">
           </div>
           <div>
-            <label>${esc(lb.weeksLogged)}（目標 ${reqW}w）</label>
-            <input type="number" min="0" max="200" step="1" data-calc-w="${k}" value="${curW}">
+            <label for="calc-w-${k}">${esc(lb.weeksLogged)}（${LANG === "en" ? "target" : "目標"} ${reqW}w）</label>
+            <input id="calc-w-${k}" type="number" min="0" max="200" step="1" data-calc-w="${k}" value="${curW}">
           </div>
         </div>
         <div class="bar-pair">
@@ -693,10 +860,11 @@
     c.innerHTML = `
       <div class="calc-shell">
         <p class="lead" style="margin:.1rem 0 .6rem">${esc(PW.calcIntro)}</p>
+        <p class="privacy-inline">${LANG === "en" ? "Dates and progress are stored in this browser. Avoid personal data on shared devices; use the privacy control above to clear them." : "日期及進度儲存在此瀏覽器。公用裝置請避免輸入個人資料；可用上方資料管理功能清除。"}</p>
         <div>
           <b style="color:#0a5c36;font-size:.9rem">${esc(lb.pickPath)}</b>
           <div class="chips">${Object.keys(paths).map(k =>
-            `<button class="chip ${st.path === k ? "active" : ""}" data-calc-path="${k}">${esc(paths[k].name)}</button>`
+            `<button class="chip ${st.path === k ? "active" : ""}" data-calc-path="${k}" aria-pressed="${st.path === k}">${esc(paths[k].name)}</button>`
           ).join("")}</div>
         </div>
         <div class="tip" style="margin:.4rem 0">${esc(p.note)}</div>
@@ -705,7 +873,7 @@
           <div style="margin:.6rem 0">
             <b style="color:#0a5c36;font-size:.9rem">${esc(lb.pickMain)}</b>
             <div class="chips">${threeSecs.map(k =>
-              `<button class="chip ${st.mainSec === k ? "active" : ""}" data-calc-main="${k}">${FS[k].icon} ${esc(FS[k].name)}（${p.mainH}h / ${p.mainW}w）</button>`
+              `<button class="chip ${st.mainSec === k ? "active" : ""}" data-calc-main="${k}" aria-pressed="${st.mainSec === k}">${FS[k].icon} ${esc(FS[k].name)}（${p.mainH}h / ${p.mainW}w）</button>`
             ).join("")}</div>
           </div>` : `<div class="ok-box">${esc(lb.noSplitHint)}</div>`}
 
@@ -716,7 +884,7 @@
           </div>
           <div class="field-box">
             <label for="calc-birth-date">${esc(lb.birthDate)}</label>
-            <input type="date" id="calc-birth-date" value="${esc(st.birthDate)}">
+            <input type="date" id="calc-birth-date" max="${todayString()}" value="${esc(st.birthDate)}">
           </div>
           ${p.isGold ? `
           <div class="field-box">
@@ -761,53 +929,64 @@
           <button class="btn primary" id="calc-copy-btn">${esc(lb.copySummaryBtn)}</button>
           <button class="btn ghost" id="calc-reset-btn">${esc(lb.resetCalcBtn)}</button>
         </div>
-        <div id="calc-toast"></div>
+        <div id="calc-toast" role="status" aria-live="polite"></div>
       </div>`;
 
     $$("[data-calc-path]", c).forEach(b => b.addEventListener("click", () => {
-      st.path = b.dataset.calcPath; saveJson(CALC_KEY, st); renderCalculator();
+      const nextPath = b.dataset.calcPath;
+      if (nextPath !== st.path) {
+        st.perPath[st.path] = { mainSec: st.mainSec, startDate: st.startDate, goldTargetDate: st.goldTargetDate, sec: st.sec };
+        const saved = st.perPath[nextPath];
+        const next = saved && typeof saved === "object" && !Array.isArray(saved) ? saved : defaults;
+        st = { ...st, path: nextPath, mainSec: next.mainSec || "service", startDate: next.startDate || "", goldTargetDate: next.goldTargetDate || "", sec: next.sec || defaultCalcState().sec };
+        saveJson(CALC_KEY, st);
+      }
+      renderCalculator(); focusControl(`[data-calc-path="${nextPath}"]`);
     }));
     $$("[data-calc-main]", c).forEach(b => b.addEventListener("click", () => {
       st.mainSec = b.dataset.calcMain; saveJson(CALC_KEY, st); renderCalculator();
+      focusControl(`[data-calc-main="${st.mainSec}"]`);
     }));
     const sd = $("#calc-start-date", c);
-    if (sd) sd.addEventListener("change", () => { st.startDate = sd.value; saveJson(CALC_KEY, st); renderCalculator(); });
-    const bd = $("#calc-birth-date", c);
-    if (bd) bd.addEventListener("change", () => { st.birthDate = bd.value; saveJson(CALC_KEY, st); renderCalculator(); });
+    if (sd) sd.addEventListener("change", () => { st.startDate = sd.value; saveJson(CALC_KEY, st); renderCalculator(); focusControl("#calc-start-date"); });
+    const birthInput = $("#calc-birth-date", c);
+    if (birthInput) birthInput.addEventListener("change", () => { st.birthDate = birthInput.value; saveJson(CALC_KEY, st); renderCalculator(); focusControl("#calc-birth-date"); });
     const gd = $("#calc-gold-date", c);
-    if (gd) gd.addEventListener("change", () => { st.goldTargetDate = gd.value; saveJson(CALC_KEY, st); renderCalculator(); });
+    if (gd) gd.addEventListener("change", () => { st.goldTargetDate = gd.value; saveJson(CALC_KEY, st); renderCalculator(); focusControl("#calc-gold-date"); });
 
     $$("[data-calc-h]", c).forEach(inp => inp.addEventListener("change", () => {
       const k = inp.dataset.calcH;
       st.sec[k] = st.sec[k] || { h: 0, w: 0 };
-      st.sec[k].h = Math.max(0, Number(inp.value) || 0);
-      saveJson(CALC_KEY, st); renderCalculator();
+      st.sec[k].h = Math.max(0, Math.min(500, Number(inp.value) || 0));
+      saveJson(CALC_KEY, st); renderCalculator(); focusControl(`#calc-h-${k}`);
     }));
     $$("[data-calc-w]", c).forEach(inp => inp.addEventListener("change", () => {
       const k = inp.dataset.calcW;
       st.sec[k] = st.sec[k] || { h: 0, w: 0 };
-      st.sec[k].w = Math.max(0, Number(inp.value) || 0);
-      saveJson(CALC_KEY, st); renderCalculator();
+      st.sec[k].w = Math.max(0, Math.min(200, Math.floor(Number(inp.value) || 0)));
+      saveJson(CALC_KEY, st); renderCalculator(); focusControl(`#calc-w-${k}`);
     }));
     const expBox = $("#calc-exp-done", c);
     if (expBox) expBox.addEventListener("change", () => {
-      st.sec.expedition = { done: expBox.checked }; saveJson(CALC_KEY, st); renderCalculator();
+      st.sec.expedition = { done: expBox.checked }; saveJson(CALC_KEY, st); renderCalculator(); focusControl("#calc-exp-done");
     });
     const resBox = $("#calc-res-done", c);
     if (resBox) resBox.addEventListener("change", () => {
-      st.sec.residential = { done: resBox.checked }; saveJson(CALC_KEY, st); renderCalculator();
+      st.sec.residential = { done: resBox.checked }; saveJson(CALC_KEY, st); renderCalculator(); focusControl("#calc-res-done");
     });
 
     const resetBtn = $("#calc-reset-btn", c);
     if (resetBtn) resetBtn.addEventListener("click", () => {
-      saveJson(CALC_KEY, defaultCalcState()); renderCalculator();
+      const message = LANG === "en" ? "Clear calculator dates and progress for all Award paths?" : "清除所有章級的計算器日期及進度？";
+      if (!window.confirm(message)) return;
+      saveJson(CALC_KEY, defaultCalcState()); renderCalculator(); focusControl("#calc-reset-btn");
     });
     const copyBtn = $("#calc-copy-btn", c);
     if (copyBtn) copyBtn.addEventListener("click", () => {
       const lines = [
         `【AYP 進度報告 / AYP Progress Report】`,
         `章級路徑 Path: ${p.name}`,
-        `正式開展日 Start Date: ${st.startDate || "未填 / Not set"}`,
+        `輸入活動開始日 Entered activity start date: ${st.startDate || "未填 / Not set"}`,
       ];
       threeSecs.forEach(k => {
         const isMain = p.splitMain && st.mainSec === k;
@@ -816,10 +995,11 @@
         const curH = (st.sec[k] && st.sec[k].h) || 0;
         const curW = (st.sec[k] && st.sec[k].w) || 0;
         const earliest = st.startDate ? addDays(st.startDate, reqW * 7) : "-";
-        lines.push(`- ${FS[k].name}: ${curH}/${reqH}h, ${curW}/${reqW}w (最快完成 Earliest: ${earliest})`);
+        lines.push(`- ${FS[k].name}: ${curH}/${reqH}h, ${curW}/${reqW}w (參考日期 Reference: ${earliest})`);
       });
       lines.push(`- ${FS.expedition.name}: ${expDone ? "✅ 已完成 Completed" : "⏳ 進行中 In progress"}`);
       if (p.resText) lines.push(`- ${FS.residential.name}: ${resDone ? "✅ 已完成 Completed" : "⏳ 進行中 In progress"}`);
+      lines.push(LANG === "en" ? "Reference only; confirm requirements with your Operating Authority." : "以上只作參考，請向所屬執行處核實要求。");
       copyTextWithToast(lines.join("\n"), $("#calc-toast", c), lb.copiedToast);
     });
   }
@@ -836,8 +1016,8 @@
   let cmtSecId = "service";
   let cmtLvKey = "bronze";
   let cmtActName = "";
-  let cmtHours = 26;
-  let cmtWeeks = 26;
+  let cmtHours = "";
+  let cmtWeeks = "";
 
   function renderBottomTools() {
     const PW = L().POWER, t = UI();
@@ -847,11 +1027,8 @@
     if (sync && PW) {
       const SP = L().SYNC_PLAN, SC = PW.syncChecker;
       const chkState = loadJson(SYNC_CHK_KEY, {});
-      const eaState = loadJson(EA_LOG_KEY, {
-        memberName: "", awardRoute: "童軍高級獎章 → AYP 銅章", assessorName: "",
-        assessorRole: "EA / JEA / CRS", assessorUnit: "", assessorContact: "",
-        examItems: "探索A.2.c＋標準A.2.e＋高級A.2.f.I", examDates: "", examResult: "合格 Pass"
-      });
+      const eaState = loadJson(EA_LOG_KEY, {});
+      const loggerOpen = loadOpen()["ea-logger"] !== false;
       const curRoute = SC.routes[syncRouteKey] || SC.routes.bronze;
       const doneItems = curRoute.items.filter(it => !!chkState[it.id]);
       const missingItems = curRoute.items.filter(it => !chkState[it.id]);
@@ -861,10 +1038,14 @@
         <div class="tool-card">
           <h3 style="margin:.1rem 0 .3rem;color:#0a5c36">${esc(SC.title)}</h3>
           <p class="hint" style="margin:0 0 .6rem">${esc(SC.sub)}</p>
+          <div class="reference-notice" role="note"><b>${LANG === "en" ? "Check the latest trial guidance" : "請核對最新試行指引"}</b>
+            <p>${LANG === "en" ? "This unofficial checklist is for discussion only. Individual mappings, examiner qualifications and completion requirements have not been verified with the Operating Authority. A checked item is not an approval." : "此非官方清單只供討論；各項對接、考驗人員資格及完成要求尚未逐項獲執行處確認。剔選不代表獲批。"}</p>
+            <a href="https://hkayp.scouting.org.hk/" target="_blank" rel="noopener">${LANG === "en" ? "Scout Operating Authority guidance" : "童軍執行處指引"} ↗</a>
+          </div>
 
           <div class="chips">
             ${Object.keys(SC.routes).map(rk =>
-              `<button class="chip ${syncRouteKey === rk ? "active" : ""}" data-sync-route="${rk}">${esc(SC.routes[rk].label)}</button>`
+              `<button class="chip ${syncRouteKey === rk ? "active" : ""}" data-sync-route="${rk}" aria-pressed="${syncRouteKey === rk}">${esc(SC.routes[rk].label)}</button>`
             ).join("")}
           </div>
 
@@ -873,15 +1054,15 @@
               <b>${esc(curRoute.badgePair)}</b>
               <div style="font-size:.82rem;color:#444;margin-top:.15rem">
                 ${LANG === "en"
-                  ? `Completed ${doneItems.length} / ${curRoute.items.length} requirements`
-                  : `已剔選完成 ${doneItems.length} / ${curRoute.items.length} 項對接要求`}
+                  ? `Checked ${doneItems.length} / ${curRoute.items.length} reference items`
+                  : `已剔選 ${doneItems.length} / ${curRoute.items.length} 項參考項目`}
               </div>
             </div>
             <button class="btn primary" id="sync-copy-btn" style="min-height:40px;padding:.45rem .85rem;font-size:.85rem">
               📋 ${LANG === "en" ? "Copy Sync Status" : "複製核對進度"}
             </button>
           </div>
-          <div id="sync-toast"></div>
+          <div id="sync-toast" role="status" aria-live="polite"></div>
 
           <ol class="todo">
             ${curRoute.items.map((it, idx) => `
@@ -899,8 +1080,8 @@
           </ol>
 
           ${missingItems.length === 0
-            ? `<div class="ok-box">🎉 ${LANG === "en" ? "All items for this sync route are checked! Submit to your UUL for dual sign-off." : "此同步路線全部要求已齊備！請連同紀錄簿交予執行處支部組長 (UUL) 辦理雙線審批。"}</div>`
-            : `<div class="warn">🔎 <b>${LANG === "en" ? `Still missing (${missingItems.length} items):` : `目前尚欠 (${missingItems.length} 項)：`}</b>
+            ? `<div class="ok-box">${LANG === "en" ? "You have checked every reference item. This does not confirm eligibility or completion; review your records with your Unit Leader." : "你已剔選所有參考項目。這不代表符合資格或已完成；請與組長核對紀錄。"}</div>`
+            : `<div class="warn">🔎 <b>${LANG === "en" ? `Not checked (${missingItems.length} items):` : `未剔選 (${missingItems.length} 項)：`}</b>
                 <ul style="margin:.3rem 0;padding-left:1.2rem">${missingItems.map(m => `<li><b>${esc(m.cat)}</b>：${esc(m.title)}</li>`).join("")}</ul>
               </div>`}
 
@@ -910,44 +1091,49 @@
           </div>
         </div>
 
-        <details class="part" data-key="ea-logger" open>
+        <details class="part" data-key="ea-logger" ${loggerOpen ? "open" : ""}>
           <summary><span class="ico">🏕️</span> <span class="sum-text"><b>${esc(SC.eaLoggerTitle)}</b><small>${esc(SC.eaLoggerDesc)}</small></span><span class="chev">▾</span></summary>
           <div class="part-body">
+            <p class="privacy-inline">${LANG === "en"
+              ? "Details are saved in this browser, not to an official record. Avoid personal information on shared devices and clear it after use."
+              : "資料只儲存在此瀏覽器，並非官方紀錄。公用裝置請避免輸入個人資料，使用後可清除。"}</p>
             <div class="calc-grid">
               ${Object.keys(SC.eaFields).map(fk => `
                 <div class="field-box">
-                  <label>${esc(SC.eaFields[fk])}</label>
-                  <input type="text" data-ea-field="${fk}" value="${esc(eaState[fk] || "")}">
+                  <label for="ea-${fk}">${esc(SC.eaFields[fk])}</label>
+                  <input type="text" id="ea-${fk}" data-ea-field="${fk}" value="${esc(eaState[fk] || "")}">
                 </div>`).join("")}
             </div>
             <div class="plan-actions">
               <button class="btn primary" id="ea-copy-btn">${esc(SC.eaCopyBtn)}</button>
+              <button class="btn ghost" id="ea-clear-btn">${LANG === "en" ? "Clear assessor details" : "清除考驗人員資料"}</button>
             </div>
-            <div id="ea-toast"></div>
+            <div id="ea-toast" role="status" aria-live="polite"></div>
           </div>
         </details>
 
         <div class="unofficial-badge">⚠️ ${esc(SP.effective)}</div>
         <p>${esc(SP.summary)}</p>
+        <div class="reference-notice" role="note">${LANG === "en" ? "The following detailed mappings are unofficial references and need confirmation with the Operating Authority." : "以下對接細節屬非官方參考，須向執行處逐項核實。"}</div>
         <ol class="steps">${SP.points.map(p => `<li>${esc(p)}</li>`).join("")}</ol>
         <div class="warn">${esc(SP.notifyLeader)}</div>
         <div class="warn">${esc(SP.verify)}</div>
         <p><a href="${esc(SP.source.url)}" target="_blank" rel="noopener">${esc(SP.source.label)} — ${esc(t.openOfficialLink)}</a></p>`;
 
       $$("[data-sync-route]", sync).forEach(b => b.addEventListener("click", () => {
-        syncRouteKey = b.dataset.syncRoute; renderBottomTools();
+        syncRouteKey = b.dataset.syncRoute; renderBottomTools(); focusControl(`[data-sync-route="${syncRouteKey}"]`);
       }));
       $$("[data-sync-chk]", sync).forEach(box => box.addEventListener("change", () => {
         const s = loadJson(SYNC_CHK_KEY, {});
         s[box.dataset.syncChk] = box.checked;
-        saveJson(SYNC_CHK_KEY, s); renderBottomTools();
+        saveJson(SYNC_CHK_KEY, s); renderBottomTools(); focusControl(`[data-sync-chk="${box.dataset.syncChk}"]`);
       }));
       const syncCopy = $("#sync-copy-btn", sync);
       if (syncCopy) syncCopy.addEventListener("click", () => {
         const txt = [
-          `【2026 童軍↔AYP 同步完成核對清單】`,
-          `路線：${curRoute.badgePair}`,
-          `完成度：${doneItems.length} / ${curRoute.items.length}`,
+          LANG === "en" ? "【2026 Scout–AYP simultaneous completion checklist】" : "【2026 童軍↔AYP 同步完成核對清單】",
+          `${LANG === "en" ? "Route" : "路線"}：${curRoute.badgePair}`,
+          `${LANG === "en" ? "Checked" : "已剔選"}：${doneItems.length} / ${curRoute.items.length}`,
           ...curRoute.items.map(it => `${chkState[it.id] ? "✅" : "⬜"} [${it.cat}] ${it.title}`)
         ].join("\n");
         copyTextWithToast(txt, $("#sync-toast", sync), PW.labels.copiedToast);
@@ -957,11 +1143,21 @@
         s[inp.dataset.eaField] = inp.value;
         saveJson(EA_LOG_KEY, s);
       }));
+      const eaClear = $("#ea-clear-btn", sync);
+      if (eaClear) eaClear.addEventListener("click", () => {
+        const message = LANG === "en" ? "Clear assessor details saved on this device?" : "清除此裝置儲存的考驗人員資料？";
+        if (!window.confirm(message)) return;
+        const removed = storeRemove(EA_LOG_KEY); renderBottomTools(); focusControl("#ea-clear-btn");
+        const toast = $("#ea-toast", sync);
+        if (toast) toast.textContent = removed
+          ? (LANG === "en" ? "Assessor details cleared." : "已清除考驗人員資料。")
+          : (LANG === "en" ? "Session details cleared; remove site data in browser settings to clear saved data." : "已清除本次使用資料；請到瀏覽器設定刪除此網站的已儲存資料。");
+      });
       const eaCopy = $("#ea-copy-btn", sync);
       if (eaCopy) eaCopy.addEventListener("click", () => {
         const s = loadJson(EA_LOG_KEY, eaState);
         const lines = [
-          `【2026 童軍同步完成試行方案 — 野外鍛鍊科考驗人員紀錄】`,
+          LANG === "en" ? "【2026 trial scheme — journey assessor record draft】" : "【2026 童軍同步完成試行方案 — 野外鍛鍊科考驗人員紀錄草稿】",
           ...Object.keys(SC.eaFields).map(fk => `${SC.eaFields[fk]}：${s[fk] || "-"}`)
         ];
         copyTextWithToast(lines.join("\n"), $("#ea-toast", sync), PW.labels.copiedToast);
@@ -974,10 +1170,12 @@
       const CT = L().CONVERSION_TABLE;
       const q = convSearchQuery.trim().toLowerCase();
       const matchedCancelled = PW.cancelledBadges.filter(b =>
-        q && (b.name.toLowerCase().includes(q) || b.en.toLowerCase().includes(q) || q.includes("護養") || q.includes("愛護動物") || q.includes("營地管理") || q.includes("國際友誼"))
+        q && (b.name.toLowerCase().includes(q) || b.en.toLowerCase().includes(q))
       );
 
+      const badgeGroupsEn = { "興趣組": "Interest group", "技能組": "Pursuit group", "服務組": "Service group", "教導組": "Instructor group" };
       const secKeys = ["all", "服務科", "技能科", "康樂體育科", "野外鍛鍊科", "團體生活科"];
+      const secLabelsEn = { "服務科": "Service", "技能科": "Skills", "康樂體育科": "Physical", "野外鍛鍊科": "Journey", "團體生活科": "Residential" };
       const filteredGroups = CT.groups.map((g, idx) => {
         if (convBranchIdx !== "all" && String(idx) !== String(convBranchIdx)) return null;
         const rows = g.rows.filter(r => {
@@ -994,25 +1192,31 @@
       conv.innerHTML = `
         <div class="warn backdate">${t.backdateWarn}</div>
         <div class="tool-card">
-          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">🔍 ${LANG === "en" ? "Interactive Badge ↔ AYP 5-Section Search & Matcher" : "跨支部徽章 ↔ AYP 五科即時搜尋配對器"}</h3>
+          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">${LANG === "en" ? "Badge and AYP Section reference" : "徽章及 AYP 科目參考"}</h3>
+          <div class="reference-notice" role="note"><b>${LANG === "en" ? "Historical reference, not current requirements" : "歷史參考資料，並非現行要求"}</b>
+            <p>${LANG === "en" ? "This unofficial table is based on a 2016 reference. Badge names, hours and journey distances below may be outdated; do not treat them as current eligibility or requirements. Confirm every mapping with your Operating Authority." : "此非官方整理以 2016 年參照表為基礎；下列徽章名稱、時數及旅程距離可能已過時，不能當作現行資格或要求。每項對應請向所屬執行處核實。"}</p>
+            <a href="${esc(CT.officialSource.url)}" target="_blank" rel="noopener">${LANG === "en" ? "2016 source" : "2016 年原始資料"} ↗</a> · <a href="https://ayp.org.hk/wp-content/uploads/2024/06/2.-%E4%BA%94%E7%A7%91%E6%B4%BB%E5%8B%95%E4%BB%8B%E7%B4%B9.pdf" target="_blank" rel="noopener">${LANG === "en" ? "AYP Section overview (2024)" : "AYP 五科活動介紹（2024）"} ↗</a>
+          </div>
           <div class="filter-row">
+            <label class="sr-only" for="conv-search-inp">${LANG === "en" ? "Search badge reference" : "搜尋徽章參考"}</label>
             <input type="search" class="search-input" id="conv-search-inp" placeholder="${LANG === "en" ? "Search badge/activity (e.g. First Aid, Canoe, Pioneering, R-A102...)" : "輸入徽章或活動名稱搜尋（例：急救、獨木舟、先鋒工程、攝影、R-A102、大露營...）"}" value="${esc(convSearchQuery)}">
-            ${convSearchQuery ? `<button class="btn ghost" id="conv-clear-btn" style="min-height:42px;padding:.4rem .8rem">✕</button>` : ""}
+            ${convSearchQuery ? `<button class="btn ghost" id="conv-clear-btn" aria-label="${LANG === "en" ? "Clear badge search" : "清除徽章搜尋"}" style="min-height:42px;padding:.4rem .8rem">✕</button>` : ""}
           </div>
           <div class="chips">
-            <button class="chip ${convBranchIdx === "all" ? "active" : ""}" data-conv-br="all">${LANG === "en" ? "All Sections" : "全部支部"}</button>
-            ${CT.groups.map((g, idx) => `<button class="chip ${String(convBranchIdx) === String(idx) ? "active" : ""}" data-conv-br="${idx}">${esc(g.branch.split("參考")[0].split("reference")[0])}</button>`).join("")}
+            <button class="chip ${convBranchIdx === "all" ? "active" : ""}" data-conv-br="all" aria-pressed="${convBranchIdx === "all"}">${LANG === "en" ? "All Scout sections" : "全部支部"}</button>
+            ${CT.groups.map((g, idx) => `<button class="chip ${String(convBranchIdx) === String(idx) ? "active" : ""}" data-conv-br="${idx}" aria-pressed="${String(convBranchIdx) === String(idx)}">${esc(g.branch.split("參考")[0].split("reference")[0])}</button>`).join("")}
           </div>
           <div class="chips">
-            ${secKeys.map(sk => `<button class="chip ${convSecFilter === sk ? "active" : ""}" data-conv-sec="${sk}">${sk === "all" ? (LANG === "en" ? "All 5 AYP Sections" : "全部五科") : esc(sk)}</button>`).join("")}
+            ${secKeys.map(sk => `<button class="chip ${convSecFilter === sk ? "active" : ""}" data-conv-sec="${sk}" aria-pressed="${convSecFilter === sk}">${sk === "all" ? (LANG === "en" ? "All 5 AYP Sections" : "全部五科") : esc(LANG === "en" ? secLabelsEn[sk] : sk)}</button>`).join("")}
           </div>
 
           ${matchedCancelled.length > 0 ? `
             <div class="badge-cancel-alert">
-              <b>🚫 ${LANG === "en" ? "CANCELLED BADGE ALERT (Circular P013/26, 2026-08-15):" : "防中伏警告：你搜尋嘅徽章已於 2026-08-15 通告 (P013/26) 正式取消！"}</b>
+              <b>🚫 ${LANG === "en" ? "Badge status notice (Circular P013/26, 2026-08-15):" : "徽章狀態提示：以下徽章已於 2026-08-15 通告 (P013/26) 取消。"}</b>
               <ul style="margin:.3rem 0;padding-left:1.2rem">
-                ${matchedCancelled.map(b => `<li><b>${esc(b.name)}（${esc(b.group)} / ${esc(b.en)}）</b> — ${LANG === "en" ? "No longer issued; do NOT use for new AYP declarations." : "總會已停止簽發，切勿再用嚟申報新嘅 AYP 項目！"}</li>`).join("")}
+                ${matchedCancelled.map(b => `<li><b>${esc(LANG === "en" ? b.en : b.name)}（${esc(LANG === "en" ? badgeGroupsEn[b.group] : b.group)}）</b> — ${LANG === "en" ? "This badge in the listed group has been cancelled. Verify earlier records with your Operating Authority." : "此組別的徽章已取消；過往紀錄能否認可，請向所屬執行處核實。"}</li>`).join("")}
               </ul>
+              <p>${LANG === "en" ? "This notice applies only to the listed group; a similarly named badge in another group may still be current." : "此提示只適用於所列組別；其他組別的同名徽章可能仍然有效，請核對組別。"}</p>
             </div>` : ""}
 
           ${filteredGroups.length === 0
@@ -1048,12 +1252,12 @@
         if (nextInp) { nextInp.focus(); try { nextInp.setSelectionRange(pos, pos); } catch (e) {} }
       });
       const clr = $("#conv-clear-btn", conv);
-      if (clr) clr.addEventListener("click", () => { convSearchQuery = ""; renderBottomTools(); });
+      if (clr) clr.addEventListener("click", () => { convSearchQuery = ""; renderBottomTools(); focusControl("#conv-search-inp"); });
       $$("[data-conv-br]", conv).forEach(b => b.addEventListener("click", () => {
-        convBranchIdx = b.dataset.convBr; renderBottomTools();
+        convBranchIdx = b.dataset.convBr; renderBottomTools(); focusControl(`[data-conv-br="${convBranchIdx}"]`);
       }));
       $$("[data-conv-sec]", conv).forEach(b => b.addEventListener("click", () => {
-        convSecFilter = b.dataset.convSec; renderBottomTools();
+        convSecFilter = b.dataset.convSec; renderBottomTools(); focusControl(`[data-conv-sec="${convSecFilter}"]`);
       }));
     }
 
@@ -1062,6 +1266,8 @@
     if (forms2 && PW) {
       const CB = PW.commentBuilder;
       const cats = ["all", "參加及轉換", "訓練及評核", "章級完成", "支部及行政"];
+      const catLabelsEn = { "參加及轉換": "Joining & transfers", "訓練及評核": "Training & assessment", "章級完成": "Award completion", "支部及行政": "Unit administration" };
+      const catLabel = cat => LANG === "en" ? (catLabelsEn[cat] || cat) : cat;
       const fq = formSearchQuery.trim().toLowerCase();
       const matchedForms = PW.fullForms.filter(f => {
         if (formCatFilter !== "all" && f.cat !== formCatFilter) return false;
@@ -1070,31 +1276,34 @@
       });
 
       const secObj = CB.secOptions.find(s => s.id === cmtSecId) || CB.secOptions[0];
+      const secObjZh = LOCALES["zh-HK"].POWER.commentBuilder.secOptions.find(s => s.id === cmtSecId) || LOCALES["zh-HK"].POWER.commentBuilder.secOptions[0];
       const lvNameZh = { bronze: "銅章級", silver: "銀章級", gold: "金章級" }[cmtLvKey] || "銅章級";
       const lvNameEn = { bronze: "Bronze Award", silver: "Silver Award", gold: "Gold Award" }[cmtLvKey] || "Bronze Award";
-      const genZh = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+      const genZh = CB.generateZh(secObjZh, lvNameZh, cmtActName, cmtHours, cmtWeeks);
       const genEn = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
 
       forms2.innerHTML = `
         <div class="tool-card">
-          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">📋 ${LANG === "en" ? "2026 Full Official Forms Finder (AYP/01–AYP/14 + e-Forms)" : "2026 全套官方表格搜尋器（AYP/01–AYP/14 ＋ 試行意向 e-Form）"}</h3>
+          <h3 style="margin:.1rem 0 .35rem;color:#0a5c36">${LANG === "en" ? "AYP Forms Finder" : "AYP 常用表格搜尋"}</h3>
           <div class="filter-row">
+            <label class="sr-only" for="form-search-inp">${LANG === "en" ? "Search forms" : "搜尋表格"}</label>
             <input type="search" class="search-input" id="form-search-inp" placeholder="${LANG === "en" ? "Search form code or purpose (e.g. AYP/07, AYP/08, Gold, transfer...)" : "輸入表格編號或用途（例：AYP/07、AYP/08、金章、轉處、統計...）"}" value="${esc(formSearchQuery)}">
           </div>
           <div class="chips">
-            ${cats.map(cKey => `<button class="chip ${formCatFilter === cKey ? "active" : ""}" data-form-cat="${cKey}">${cKey === "all" ? (LANG === "en" ? "All Categories (16)" : "全部類別 (16)") : esc(cKey)}</button>`).join("")}
+            ${cats.map(cKey => `<button class="chip ${formCatFilter === cKey ? "active" : ""}" data-form-cat="${cKey}" aria-pressed="${formCatFilter === cKey}">${cKey === "all" ? (LANG === "en" ? "All categories" : "全部類別") : esc(catLabel(cKey))}</button>`).join("")}
           </div>
-          <table class="forms"><tbody>
+          <p class="hint" role="status">${LANG === "en" ? `${matchedForms.length} results. Verify current forms before submitting.` : `找到 ${matchedForms.length} 項；提交前請核實表格版本。`}</p>
+          ${matchedForms.length ? `<table class="forms"><tbody>
             ${matchedForms.map(f => `
               <tr>
-                <td class="no"><b>${esc(f.code)}</b><small>${esc(f.cat)}</small></td>
+                <td class="no"><b>${esc(f.code)}</b><small>${esc(catLabel(f.cat))}</small></td>
                 <td>
                   <b>${esc(f.name)}</b>
                   <small>${esc(f.note)}</small>
                   <a href="${esc(f.url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:.2rem">${esc(t.formsDownload)} ↗</a>
                 </td>
               </tr>`).join("")}
-          </tbody></table>
+            </tbody></table>` : `<div class="wz-empty">${LANG === "en" ? "No matching forms. Try another search or category." : "找不到符合條件的表格，請嘗試其他關鍵字或類別。"}</div>`}
         </div>
 
         <div class="tool-card">
@@ -1102,42 +1311,42 @@
           <p class="hint" style="margin:0 0 .6rem">${esc(CB.sub)}</p>
           <div class="calc-grid">
             <div class="field-box">
-              <label>${LANG === "en" ? "① Section" : "① 揀科目"}</label>
+              <label for="cmt-sec-sel">${LANG === "en" ? "① Section" : "① 揀科目"}</label>
               <select id="cmt-sec-sel">
                 ${CB.secOptions.map(s => `<option value="${s.id}" ${s.id === cmtSecId ? "selected" : ""}>${esc(s.name)}</option>`).join("")}
               </select>
             </div>
             <div class="field-box">
-              <label>${LANG === "en" ? "② Award Level" : "② 揀章級"}</label>
+              <label for="cmt-lv-sel">${LANG === "en" ? "② Award Level" : "② 揀章級"}</label>
               <select id="cmt-lv-sel">
-                <option value="bronze" ${cmtLvKey === "bronze" ? "selected" : ""}>🥉 銅章 Bronze</option>
-                <option value="silver" ${cmtLvKey === "silver" ? "selected" : ""}>🥈 銀章 Silver</option>
-                <option value="gold" ${cmtLvKey === "gold" ? "selected" : ""}>🥇 金章 Gold</option>
+                <option value="bronze" ${cmtLvKey === "bronze" ? "selected" : ""}>${LANG === "en" ? "Bronze" : "銅章"}</option>
+                <option value="silver" ${cmtLvKey === "silver" ? "selected" : ""}>${LANG === "en" ? "Silver" : "銀章"}</option>
+                <option value="gold" ${cmtLvKey === "gold" ? "selected" : ""}>${LANG === "en" ? "Gold" : "金章"}</option>
               </select>
             </div>
             <div class="field-box">
-              <label>${LANG === "en" ? "③ Activity Name (optional)" : "③ 具體活動名稱（可自訂）"}</label>
+              <label for="cmt-act-inp">${LANG === "en" ? "③ Activity name (optional)" : "③ 實際活動名稱（選填）"}</label>
               <input type="text" id="cmt-act-inp" placeholder="${esc(secObj.defaultAct)}" value="${esc(cmtActName)}">
             </div>
             <div class="field-box">
-              <label>${LANG === "en" ? "④ Hours & Weeks" : "④ 累積時數 ／ 持續星期數"}</label>
+              <label for="cmt-h-inp">${LANG === "en" ? "④ Verified hours and weeks (optional)" : "④ 已核實時數及星期數（選填）"}</label>
               <div style="display:flex;gap:.4rem">
-                <input type="number" id="cmt-h-inp" min="1" max="300" value="${cmtHours}" title="Hours">
-                <input type="number" id="cmt-w-inp" min="1" max="150" value="${cmtWeeks}" title="Weeks">
+                <input type="number" id="cmt-h-inp" min="0" max="500" step="0.5" value="${esc(cmtHours)}" aria-label="${LANG === "en" ? "Verified hours" : "已核實時數"}">
+                <input type="number" id="cmt-w-inp" min="0" max="200" step="1" value="${esc(cmtWeeks)}" aria-label="${LANG === "en" ? "Verified weeks" : "已核實星期數"}">
               </div>
             </div>
           </div>
 
-          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">🇭🇰 中文具體評語範本（可直接抄寫落紀錄簿）：</b>
+          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">${LANG === "en" ? "Chinese draft — complete from actual records:" : "中文草稿：請按實際紀錄補充"}</b>
           <div class="cmt-output" id="cmt-zh-out">${esc(genZh)}</div>
-          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">🇬🇧 English Specific Assessor Comment Template:</b>
+          <b style="color:#0a5c36;font-size:.88rem;display:block;margin-top:.4rem">${LANG === "en" ? "English draft — complete from actual records:" : "英文草稿：請按實際紀錄補充"}</b>
           <div class="cmt-output" id="cmt-en-out">${esc(genEn)}</div>
 
           <div class="plan-actions">
             <button class="btn primary" id="cmt-copy-zh">📋 ${LANG === "en" ? "Copy Chinese Comment" : "複製中文評語"}</button>
             <button class="btn ghost" id="cmt-copy-en">📋 ${LANG === "en" ? "Copy English Comment" : "複製英文評語"}</button>
           </div>
-          <div id="cmt-toast"></div>
+          <div id="cmt-toast" role="status" aria-live="polite"></div>
         </div>`;
 
       const fInp = $("#form-search-inp", forms2);
@@ -1149,32 +1358,29 @@
         if (nextInp) { nextInp.focus(); try { nextInp.setSelectionRange(pos, pos); } catch (e) {} }
       });
       $$("[data-form-cat]", forms2).forEach(b => b.addEventListener("click", () => {
-        formCatFilter = b.dataset.formCat; renderBottomTools();
+        formCatFilter = b.dataset.formCat; renderBottomTools(); focusControl(`[data-form-cat="${formCatFilter}"]`);
       }));
 
       const secSel = $("#cmt-sec-sel", forms2);
-      if (secSel) secSel.addEventListener("change", () => { cmtSecId = secSel.value; renderBottomTools(); });
+      if (secSel) secSel.addEventListener("change", () => { cmtSecId = secSel.value; renderBottomTools(); focusControl("#cmt-sec-sel"); });
       const lvSel = $("#cmt-lv-sel", forms2);
       if (lvSel) lvSel.addEventListener("change", () => {
         cmtLvKey = lvSel.value;
-        if (cmtLvKey === "bronze") { cmtHours = 26; cmtWeeks = 26; }
-        if (cmtLvKey === "silver") { cmtHours = 26; cmtWeeks = 26; }
-        if (cmtLvKey === "gold") { cmtHours = 52; cmtWeeks = 52; }
-        renderBottomTools();
+        renderBottomTools(); focusControl("#cmt-lv-sel");
       });
       const actInp = $("#cmt-act-inp", forms2);
       if (actInp) actInp.addEventListener("input", () => {
         cmtActName = actInp.value;
         const zOut = $("#cmt-zh-out", forms2), eOut = $("#cmt-en-out", forms2);
-        if (zOut) zOut.textContent = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+        if (zOut) zOut.textContent = CB.generateZh(secObjZh, lvNameZh, cmtActName, cmtHours, cmtWeeks);
         if (eOut) eOut.textContent = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
       });
       const hInp = $("#cmt-h-inp", forms2), wInp = $("#cmt-w-inp", forms2);
       const onHW = () => {
-        cmtHours = Number(hInp.value) || 26;
-        cmtWeeks = Number(wInp.value) || 26;
+        cmtHours = hInp.validity.valid ? hInp.value : "";
+        cmtWeeks = wInp.validity.valid ? wInp.value : "";
         const zOut = $("#cmt-zh-out", forms2), eOut = $("#cmt-en-out", forms2);
-        if (zOut) zOut.textContent = CB.generateZh(secObj, lvNameZh, cmtActName, cmtHours, cmtWeeks);
+        if (zOut) zOut.textContent = CB.generateZh(secObjZh, lvNameZh, cmtActName, cmtHours, cmtWeeks);
         if (eOut) eOut.textContent = CB.generateEn(secObj.id, lvNameEn, cmtActName, cmtHours, cmtWeeks);
       };
       if (hInp) hInp.addEventListener("input", onHW);
@@ -1225,7 +1431,7 @@
       $$("[data-uul-chk]", oa).forEach(box => box.addEventListener("change", () => {
         const s = loadJson(UUL_CHK_KEY, {});
         s[box.dataset.uulChk] = box.checked;
-        saveJson(UUL_CHK_KEY, s); renderBottomTools();
+        saveJson(UUL_CHK_KEY, s); renderBottomTools(); focusControl(`[data-uul-chk="${box.dataset.uulChk}"]`);
       }));
     }
   }
@@ -1327,24 +1533,15 @@
   }
 
   /* ═══════════ 初始＋首次自動進精靈 ═══════════ */
-  function isFirstVisit() {
-    try {
-      return !localStorage.getItem(VISIT_KEY) && !localStorage.getItem(FIRST_VISIT_KEY);
-    } catch (e) { return false; }
-  }
-  function markVisited() {
-    try {
-      localStorage.setItem(VISIT_KEY, "1");
-      localStorage.setItem(FIRST_VISIT_KEY, "1");
-    } catch (e) {}
-  }
+  function isFirstVisit() { return !storeRead(VISIT_KEY) && !storeRead(FIRST_VISIT_KEY); }
+  function markVisited() { storeWrite(VISIT_KEY, "1"); storeWrite(FIRST_VISIT_KEY, "1"); }
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindFloatBtns();
     bindViews();
     // 第一次進APP自動進入精靈了解需要
     if (isFirstVisit()) {
-      showView("quick");
+      showView("quick", false);
       markVisited();
     }
   });

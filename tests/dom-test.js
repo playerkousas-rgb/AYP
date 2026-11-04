@@ -215,7 +215,7 @@ ok("5 工具 view 返正常流程掣齊全", ["view-bt-sync", "view-bt-conv", "v
   ok("切去英文後 html lang=en", window.document.documentElement.lang === "en");
   ok("切去英文後置底變 5 工具英文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
-    return /Sync Plan/.test(txt) && /Recognition/.test(txt) && /Start Forms/.test(txt) && /Find OA/.test(txt) && /FAQ/.test(txt);
+    return /Sync Plan/.test(txt) && /Recognition/.test(txt) && /Forms/.test(txt) && /Find OA/.test(txt) && /FAQ/.test(txt);
   })());
   ok("切去英文後置頂變 5 情景英文標籤", (() => {
     const txt = window.document.getElementById("topbar").textContent;
@@ -223,26 +223,26 @@ ok("5 工具 view 返正常流程掣齊全", ["view-bt-sync", "view-bt-conv", "v
   })());
   ok("切去英文後行動卡＋FAQ＋返正常流程變英文", /You're at the starting point/.test(window.document.getElementById("normal-card").textContent) &&
     /FAQ & Glossary/.test(window.document.getElementById("bt-faq-summary").textContent) &&
-    /Normal Flow/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
+    /Overview/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
   ok("切去英文後 TI 有內容", innerLen("ti-inner") > 150);
   ok("切去英文後 FAQ 有內容", innerLen("faq-list") > 50);
   ok("切去英文後 disclaimer 有內容", innerLen("disclaimer") > 50);
   ok("切去英文後同步方案變英文", /Simultaneous Completion Scheme/.test(window.document.getElementById("bt-sync-summary").textContent));
   ok("切去英文後兌換表變英文", /Unofficial compilation/.test(window.document.getElementById("bt-conv-body").textContent));
   ok("切去英文後查執行處變英文", /Find Your Operating Authority/.test(window.document.getElementById("bt-oa-summary").textContent));
-  ok("切去英文後不可追溯警告變英文", /official start date/i.test(window.document.getElementById("f1-backdate").textContent));
+  ok("切去英文後不可追溯警告變英文", /No Backdating/i.test(window.document.getElementById("f1-backdate").textContent));
   langBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   ok("切返中文後標題變回中文", /AYP 童軍接駁指南/.test(window.document.title));
   ok("切返中文後同步方案變回中文", /同步完成方案/.test(window.document.getElementById("bt-sync-summary").textContent));
   ok("切返中文後置底變回 5 工具中文標籤", (() => {
     const txt = window.document.getElementById("bottombar").textContent;
-    return /同步方案/.test(txt) && /單項銜接表/.test(txt) && /開展表格/.test(txt) && /查執行處/.test(txt) && /FAQ/.test(txt);
+    return /同步方案/.test(txt) && /銜接表/.test(txt) && /表格/.test(txt) && /查執行處/.test(txt) && /FAQ/.test(txt);
   })());
   ok("切返中文後置頂變回情景中文標籤", (() => {
     const txt = window.document.getElementById("topbar").textContent;
     return /精靈/.test(txt) && /轉入/.test(txt) && /銜接/.test(txt) && /升團/.test(txt) && /其他/.test(txt);
   })());
-  ok("切返中文後返正常流程變回中文", /返正常流程/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
+  ok("切返中文後返正常流程變回中文", /返回總覽/.test(window.document.querySelector("#view-bt-sync .tv-back-label").textContent));
 }
 
 // 🐛 回歸守護：開合卡必須全部係 <details>（div.part 係舊 bug：唔可以收合／唔記狀態）
