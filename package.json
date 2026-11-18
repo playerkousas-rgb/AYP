@@ -10,7 +10,7 @@
     "lint": "node scripts/lint.js",
     "build": "node scripts/lint.js && node scripts/check.js && node scripts/build.js",
     "test": "npm run test:dom && npm run test:sw",
-    "test:dom": "node tests/dom-test.js && node tests/interaction-test.js",
+    "test:dom": "node tests/dom-test.js && node tests/interaction-test.js && node tests/store-gate-test.js",
     "test:full": "playwright test tests/guide.spec.js --workers=1",
     "test:sw": "node tests/sw-test.js"
   },

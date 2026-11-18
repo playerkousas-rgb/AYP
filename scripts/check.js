@@ -19,13 +19,15 @@ const ok = (cond, name, extra) => {
 const warn = (name, extra) => { console.log(`  ⚠ ${name}${extra ? " — " + extra : ""}`); warns++; };
 
 /* ── 防增肥預算（byte）── */
-const BUDGET_TOTAL = 400000;   // 部署產物總和上限
+const BUDGET_TOTAL = 400000;   // App 自身部署產物總和上限（不含真理倉原封閘門）
+const BUDGET_STORE_GATE = 45000; // 真理倉 store_gate_v1.0.js 原封檔獨立上限
+const STORE_GATE = "store_gate_v1.0.js";
 const BUDGET_ASSETS_TOTAL = 200000; // assets/ 總和上限
 const BUDGET_ASSET_SINGLE = 120000; // 單一資產上限
 
 /* ── 0. 必備檔案 ── */
 console.log("\n[0] 必備部署檔案");
-const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
+const CORE = ["index.html", "store_gate_v1.0.js", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
 for (const f of CORE) ok(exists(f), `存在 ${f}`);
 
 /* ── 1. 資產清單 ── */
@@ -51,8 +53,8 @@ for (const f of assetFiles) ok(allRefs.has(f), `assets/${f} 被 index.html／man
 
 /* ── 4. Service Worker 預快取必須＝根檔案＋全部資產 ── */
 console.log("\n[4] sw.js 預快取清單一致性");
-const swAssets = [...new Set([...swJs.matchAll(/"\.\/(assets\/[A-Za-z0-9._-]+|index\.html|data\.js|app\.js|analytics\.js|manifest\.webmanifest|)"/g)].map((m) => "./" + m[1]))];
-const expectedSw = ["./", "./index.html", "./data.js", "./app.js", "./analytics.js", "./manifest.webmanifest",
+const swAssets = [...new Set([...swJs.matchAll(/"\.\/(assets\/[A-Za-z0-9._-]+|index\.html|store_gate_v1\.0\.js|data\.js|app\.js|analytics\.js|manifest\.webmanifest|)"/g)].map((m) => "./" + m[1]))];
+const expectedSw = ["./", "./index.html", "./store_gate_v1.0.js", "./data.js", "./app.js", "./analytics.js", "./manifest.webmanifest",
   ...assetFiles.map((f) => "./assets/" + f)].sort();
 ok(JSON.stringify([...swAssets].sort()) === JSON.stringify(expectedSw),
   "sw.js ASSETS ＝ 根檔案 ＋ 全部 assets/", `sw=${swAssets.length} 項 / 應=${expectedSw.length} 項`);
@@ -101,6 +103,7 @@ const scriptVersions = ["analytics", "data", "app"].map((name) => {
 ok(!!shellVersion && scriptVersions.every((version) => version === shellVersion),
   "shell 腳本版本與 Service Worker 一致", `v${shellVersion || "?"}`);
 ok(/manifest\.webmanifest/.test(html), "連結 manifest");
+ok(/<script src="\/store_gate_v1\.0\.js"><\/script>/.test(html), "載入 store gate 閘門");
 ok(/serviceWorker/.test(html) && /sw\.js/.test(html), "註冊 service worker");
 const appJs = read("app.js");
 const idRefs = new Set();
@@ -129,8 +132,11 @@ console.log("\n[9] 體積預算（防增肥）");
 const size = (p) => fs.statSync(path.join(ROOT, p)).size;
 const deploy = [...CORE, ...assetFiles.map((f) => "assets/" + f)];
 let total = 0;
-for (const f of deploy) total += size(f);
-ok(total <= BUDGET_TOTAL, `部署總和 ≤ ${(BUDGET_TOTAL / 1000).toFixed(0)}KB`, `${(total / 1000).toFixed(1)}KB`);
+for (const f of deploy) if (f !== STORE_GATE) total += size(f);
+ok(total <= BUDGET_TOTAL, `App 部署總和（不含閘門）≤ ${(BUDGET_TOTAL / 1000).toFixed(0)}KB`, `${(total / 1000).toFixed(1)}KB`);
+const gateSize = size(STORE_GATE);
+ok(gateSize <= BUDGET_STORE_GATE, `${STORE_GATE} ≤ ${(BUDGET_STORE_GATE / 1000).toFixed(0)}KB`, `${(gateSize / 1000).toFixed(1)}KB`);
+ok(total + gateSize <= BUDGET_TOTAL + BUDGET_STORE_GATE, `含閘門部署總和 ≤ ${((BUDGET_TOTAL + BUDGET_STORE_GATE) / 1000).toFixed(0)}KB`, `${((total + gateSize) / 1000).toFixed(1)}KB`);
 let assetsTotal = 0;
 for (const f of assetFiles) {
   const s = size("assets/" + f);

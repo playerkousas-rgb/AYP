@@ -67,22 +67,25 @@ async function request(url, options = {}) {
 
 (async () => {
   store.set("other-application-cache", new Map());
-  store.set("ayp-guide-v11", new Map());
+  store.set("ayp-guide-v12", new Map());
   await lifecycle("install");
   assert.ok(skipped, "new worker activates");
-  assert.ok(store.get("ayp-guide-v12").has(`${scope}index.html`), "app shell is precached");
+  assert.ok(store.get("ayp-guide-v13").has(`${scope}index.html`), "app shell is precached");
+  assert.ok(store.get("ayp-guide-v13").has(`${scope}store_gate_v1.0.js`), "entry gate script is precached");
   await lifecycle("activate");
   assert.ok(claimed);
-  assert.deepEqual(deleted, ["ayp-guide-v11"], "only old AYP caches are deleted");
+  assert.deepEqual(deleted, ["ayp-guide-v12"], "only old AYP caches are deleted");
   assert.ok(store.has("other-application-cache"), "other apps' caches are preserved");
 
   let response = await request(scope, { mode: "navigate" });
   assert.equal(await response.text(), "network", "online navigation uses fresh HTML");
   response = await request(`${scope}app.js?version=1`);
   assert.equal(await response.text(), "cached:./app.js", "core assets use the app cache");
-  response = await request(`${scope}app.js?v=12`);
-  assert.equal(await response.text(), "cached:./app.js", "current version uses the shell cache");
+  response = await request(`${scope}store_gate_v1.0.js`);
+  assert.equal(await response.text(), "cached:./store_gate_v1.0.js", "entry gate script uses the app cache");
   response = await request(`${scope}app.js?v=13`);
+  assert.equal(await response.text(), "cached:./app.js", "current version uses the shell cache");
+  response = await request(`${scope}app.js?v=14`);
   assert.equal(await response.text(), "network", "newer version bypasses an older worker cache");
   response = await request(`${scope}unexpected.json`);
   assert.equal(await response.text(), "network", "other requests are not cached");
@@ -96,13 +99,13 @@ async function request(url, options = {}) {
   online = false;
   response = await request(`${scope}?from=bookmark`, { mode: "navigate" });
   assert.equal(await response.text(), "cached:./index.html", "offline navigation gets the shell");
-  response = await request(`${scope}app.js?v=13`);
+  response = await request(`${scope}app.js?v=14`);
   assert.equal(response.status, 503, "a newer script never falls back to a mismatched old version");
   response = await request(`${scope}unknown.js`);
   assert.equal(response.status, 503, "offline assets receive a non-HTML failure");
   assert.match(response.headers.get("content-type"), /^text\/plain/);
-  store.get("ayp-guide-v12").delete(`${scope}index.html`);
+  store.get("ayp-guide-v13").delete(`${scope}index.html`);
   response = await request(scope, { mode: "navigate" });
   assert.equal(response.status, 503, "missing offline shell gets a clear failure");
-  console.log("Service worker：16 checks passed");
+  console.log("Service worker：18 checks passed");
 })().catch(error => { console.error(error); process.exitCode = 1; });

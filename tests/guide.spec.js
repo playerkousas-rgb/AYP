@@ -2,12 +2,29 @@
 const { test, expect } = require("@playwright/test");
 
 test.beforeEach(async ({ page }) => {
+  // Simulate an APP STORE launch. A real https Referer is dropped when the test
+  // server is plain http, so document.referrer is set directly; direct entry is
+  // covered by tests/store-gate-test.js.
+  await page.addInitScript(() => {
+    Object.defineProperty(Document.prototype, "referrer", { get: () => "https://scoutappstore.vercel.app/" });
+  });
   await page.goto(process.env.TEST_BASE_URL || "http://localhost:8000/index.html");
 });
 
 test("標題同基準日顯示", async ({ page }) => {
   await expect(page).toHaveTitle(/AYP 童軍接駁指南/);
   await expect(page.locator("#baseline-foot")).toContainText("2026");
+});
+
+test("SG18 回跳主站連結有 slug 並於列印隱藏", async ({ page }) => {
+  const link = page.locator("#storeSupportTop");
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute("href", "https://scoutappstore.vercel.app/?app=ayp");
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(link).toHaveAttribute("rel", "noopener");
+  await page.emulateMedia({ media: "print" });
+  await expect(link).toBeHidden();
+  await page.emulateMedia({ media: "screen" });
 });
 
 test("正常流程：行動卡可以剔", async ({ page }) => {
@@ -68,10 +85,12 @@ test("官方來源有總會通告一覽連結", async ({ page }) => {
   await expect(page.locator("#sources a[href*='circulars-forms/circulars']")).toHaveCount(1);
 });
 
-test("手機排版：窄螢幕無橫向溢出", async ({ page }) => {
-  await page.setViewportSize({ width: 360, height: 800 });
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-  expect(overflow).toBe(false);
+test("手機排版：360／430px 窄螢幕無橫向溢出", async ({ page }) => {
+  for (const width of [360, 430]) {
+    await page.setViewportSize({ width, height: 800 });
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    expect(overflow).toBe(false);
+  }
 });
 
 
@@ -83,7 +102,9 @@ test("首次使用精靈、導覽焦點及待辦跨重載保留", async ({ page 
   await checked.check();
   await expect(page.locator("#wz-result [data-todo]").first()).toBeFocused();
   await page.reload();
-  await page.click("#topbar [data-tt='quick']");
+  // Reload keeps the current view (#quick) instead of jumping back to the overview.
+  await expect(page).toHaveURL(/#quick$/);
+  await expect(page.locator("body")).toHaveAttribute("data-view", "quick");
   await page.click("[data-wz-role='scout']");
   await page.click("[data-wz-status='doing']");
   await expect(page.locator("#wz-result [data-todo]").first()).toBeChecked();
@@ -178,7 +199,7 @@ test("私隱清除會移除進度與考驗人員資料", async ({ page }) => {
 });
 
 test("手機、平板、桌面與英文介面無橫向溢出", async ({ page }) => {
-  for (const width of [390, 768, 1440]) {
+  for (const width of [360, 390, 430, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const selector of ["#topbar [data-tt='quick']", "#home-nav", "#bottombar [data-tv='bt-forms']", "#bottombar [data-tv='bt-conv']"]) {
       await page.click(selector);
@@ -188,4 +209,29 @@ test("手機、平板、桌面與英文介面無橫向溢出", async ({ page }) 
   await page.setViewportSize({ width: 390, height: 900 });
   await page.click("#fab-lang");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("返回鍵回到上一頁，直接連結開啟指定頁面", async ({ page }) => {
+  await page.click("#bottombar [data-tv='bt-forms']");
+  await page.click("#topbar [data-tt='f1']");
+  await page.goBack();
+  await expect(page.locator("body")).toHaveAttribute("data-view", "bt-forms");
+  await expect(page).toHaveURL(/#bt-forms$/);
+  await page.goto((process.env.TEST_BASE_URL || "http://localhost:8000/index.html").replace(/#.*$/, "") + "?direct=1#bt-sync");
+  await expect(page.locator("body")).toHaveAttribute("data-view", "bt-sync");
+});
+
+test("匯出備份後可匯入還原", async ({ page }) => {
+  page.on("dialog", dialog => dialog.accept());
+  await page.click("#home-nav");
+  await page.locator("#calc-h-service").fill("11");
+  await page.locator("#calc-h-service").blur();
+  const [download] = await Promise.all([page.waitForEvent("download"), page.click("#privacy-export")]);
+  expect(download.suggestedFilename()).toMatch(/^ayp-guide-backup-\d{4}-\d{2}-\d{2}\.json$/);
+  const file = await download.path();
+  await page.click("#privacy-clear");
+  await expect(page.locator("#calc-h-service")).toHaveValue("0");
+  await page.locator("#privacy-import-file").setInputFiles(file);
+  await expect(page.locator("#privacy-result")).toContainText("已匯入備份");
+  await expect(page.locator("#calc-h-service")).toHaveValue("11");
 });

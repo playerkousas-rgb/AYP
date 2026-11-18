@@ -51,6 +51,7 @@
     f1: '<path d="M4 12h15m-5-5 5 5-5 5"/><path d="M5 5v14"/>',
     f2: '<path d="M10 13.5 14 9.5M8.5 16.5l-1 1a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M15.5 7.5l1-1a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0"/>',
     f3: '<path d="M4 19h5v-5h5V9h5V4M15 4h4v4"/>',
+    home: '<path d="M4 11.5 12 5l8 6.5"/><path d="M6.5 10v9h11v-9"/><path d="M10 19v-5h4v5"/>',
     f5: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
     "bt-sync": '<rect x="5" y="4" width="14" height="16" rx="2"/><path d="m8 9 1.5 1.5L12 8m2 2h2m-8 5h8"/>',
     "bt-conv": '<path d="M4 8h13m-3-3 3 3-3 3M20 16H7m3-3-3 3 3 3"/>',
@@ -137,7 +138,7 @@
 
     setText("app-title", app.name);
     setText("app-tag", app.tagline);
-    setText("home-nav", LANG === "en" ? "Overview" : "總覽");
+    setText("quick-skip", LANG === "en" ? "Know what you need? Go straight to the overview →" : "已清楚自己情況？直接看總覽 →");
     setText("skip-link", LANG === "en" ? "Skip to content" : "跳至主要內容");
     setText("header-note", LANG === "en" ? "Unofficial companion guide" : "非官方輔助指南");
     setText("overview-title", LANG === "en" ? "From getting started to moving forward." : "由起步到銜接，陪你一步一步走。");
@@ -151,9 +152,11 @@
       : "揀選你嘅童軍身份同 AYP 情況，整理適合你嘅下一步。 ");
     setText("privacy-title", LANG === "en" ? "Your data on this device" : "你在此裝置的資料");
     setText("privacy-note", LANG === "en"
-      ? "Your checklists, dates and assessor details are stored in this browser, not synced to AYP. Clearing browser data removes them. Avoid personal information on shared devices. If enabled by the host, Vercel Web Analytics may collect visit statistics."
-      : "待辦、日期及考驗人員資料儲存在此瀏覽器，並不會同步至 AYP。清除瀏覽資料後便會消失；公用裝置請避免輸入個人資料。部署環境如有啟用 Vercel Web Analytics，可能收集瀏覽統計。");
+      ? "Your checklists, dates and assessor details are stored in this browser, not synced to AYP. Clearing browser data removes them, so export a backup before changing device or clearing data. Avoid personal information on shared devices. If enabled by the host, Vercel Web Analytics may collect visit statistics."
+      : "待辦、日期及考驗人員資料儲存在此瀏覽器，並不會同步至 AYP。清除瀏覽資料後便會消失，換機或清除前請先匯出備份；公用裝置請避免輸入個人資料。部署環境如有啟用 Vercel Web Analytics，可能收集瀏覽統計。");
     setText("privacy-clear", LANG === "en" ? "Clear saved guide data" : "清除此裝置的指南資料");
+    setText("privacy-export", LANG === "en" ? "Export backup" : "匯出備份");
+    setText("privacy-import", LANG === "en" ? "Import backup" : "匯入備份");
     updateStorageWarning();
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", app.description);
@@ -228,7 +231,6 @@
     const secName = k => FS[k].name;
     step.innerHTML = `
       <div class="ti">
-        <div class="warn backdate">${t.backdateWarn}</div>
         <div class="ti-tools">
           <div class="ti-lev">
             <b>${esc(t.pickLevel)}</b>
@@ -470,9 +472,12 @@
   function renderTopBar() {
     const c = $("#topbar"); if (!c) return;
     const TT = L().TOP_TABS;
-    c.innerHTML = TT.map(q =>
+    // 總覽 is the first tab so the header only keeps Like/Save and the language switch.
+    c.innerHTML = `<button class="tb-btn tb-home" id="home-nav" type="button"><span class="tb-ico">${iconFor("home")}</span><span class="tb-lbl">${LANG === "en" ? "Overview" : "總覽"}</span></button>` + TT.map(q =>
       `<button class="tb-btn" data-tt="${esc(q.target)}"><span class="tb-ico">${iconFor(q.target)}</span><span class="tb-lbl">${esc(q.label)}</span></button>`
     ).join("");
+    const home = $("#home-nav", c);
+    if (home) home.addEventListener("click", () => showView("normal"));
     $$("[data-tt]", c).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.tt;
       showView((document.body.dataset.view || "normal") === key ? "normal" : key);
@@ -500,8 +505,25 @@
      APP 式整版 view 切換：home ＋ 4 工具
      ════════════════════════════════════════════ */
   const VIEWS = ["normal", "quick", "f1", "f2", "f3", "f5", "bt-sync", "bt-conv", "bt-forms", "bt-oa", "bt-faq"];
-  function showView(key, shouldFocus = true) {
+  // Each view has a URL hash (overview = no hash) so the browser/phone Back
+  // button returns to the previous view and views can be linked directly.
+  // Unknown hashes (e.g. the #main-content skip link) are ignored.
+  function viewFromHash() {
+    let h = "";
+    try { h = decodeURIComponent((window.location.hash || "").slice(1)); } catch (e) { return null; }
+    if (!h) return "normal";
+    return h !== "normal" && VIEWS.indexOf(h) !== -1 ? h : null;
+  }
+  function recordView(view, replace) {
+    try {
+      if (viewFromHash() === view) return;
+      const url = view === "normal" ? window.location.pathname + window.location.search : "#" + view;
+      window.history[replace ? "replaceState" : "pushState"]({ aypView: view }, "", url);
+    } catch (e) { /* History API unavailable: views still work without Back support. */ }
+  }
+  function showView(key, shouldFocus = true, fromHistory = false) {
     document.body.dataset.view = (VIEWS.indexOf(key) !== -1) ? key : "normal";
+    if (!fromHistory) recordView(document.body.dataset.view, false);
     syncViewUI();
     const announcement = $("#view-announcer");
     if (announcement) {
@@ -527,14 +549,16 @@
       a.setAttribute("aria-current", active ? "page" : "false");
     });
     const home = $("#home-nav");
-    if (home) home.setAttribute("aria-current", cur === "normal" ? "page" : "false");
+    if (home) {
+      home.classList.toggle("active", cur === "normal");
+      home.setAttribute("aria-current", cur === "normal" ? "page" : "false");
+    }
   }
   function bindViews() {
     $$("[data-tv-home]").forEach(b => b.addEventListener("click", () => showView("normal")));
-    const home = $("#home-nav");
-    if (home) home.addEventListener("click", () => showView("normal"));
     const clear = $("#privacy-clear");
     if (clear) clear.addEventListener("click", clearGuideData);
+    bindBackup();
   }
   function clearGuideData() {
     const msg = LANG === "en"
@@ -542,6 +566,15 @@
       : "清除此裝置已儲存的待辦、計算器進度及考驗人員資料？語言設定會保留。";
     if (!window.confirm(msg)) return;
     const results = [OPEN_KEY, TODO_KEY, CALC_KEY, SYNC_CHK_KEY, EA_LOG_KEY, UUL_CHK_KEY].map(storeRemove);
+    resetSessionState();
+    renderAll();
+    if (results.every(Boolean)) privacyMessage("已清除已儲存的指南資料。", "Saved guide data cleared.");
+    else privacyMessage("已清除本次使用資料，但無法清除瀏覽器儲存。請到瀏覽器設定刪除此網站資料。",
+      "This session was cleared, but browser storage could not be cleared. Please remove site data in browser settings.", true);
+    focusControl("#privacy-clear");
+  }
+  // Page-only state (wizard answers, filters, drafts) that is not persisted.
+  function resetSessionState() {
     wzRole = null; wzStatus = null;
     inLevel = "bronze";
     inDone = { service: false, skill: false, physical: false, expedition: false, residential: false };
@@ -549,13 +582,138 @@
     convSearchQuery = ""; convBranchIdx = "all"; convSecFilter = "all";
     formSearchQuery = ""; formCatFilter = "all";
     cmtSecId = "service"; cmtLvKey = "bronze"; cmtActName = ""; cmtHours = ""; cmtWeeks = "";
-    renderAll();
-    const result = $("#privacy-result");
-    if (result) result.textContent = results.every(Boolean)
-      ? (LANG === "en" ? "Saved guide data cleared." : "已清除已儲存的指南資料。")
-      : (LANG === "en" ? "This session was cleared, but browser storage could not be cleared. Please remove site data in browser settings." : "已清除本次使用資料，但無法清除瀏覽器儲存。請到瀏覽器設定刪除此網站資料。");
-    focusControl("#privacy-clear");
   }
+
+  /* ═══════════ 備份：匯出／匯入（只讀寫現有 key，不新增任何儲存 key） ═══════════ */
+  const BACKUP_APP = "ayp-scout-guide";
+  const BACKUP_FORMAT = 1;
+  const BACKUP_MAX_BYTES = 1000000;
+  function backupKeys() { return [LANG_KEY, OPEN_KEY, TODO_KEY, CALC_KEY, SYNC_CHK_KEY, EA_LOG_KEY, UUL_CHK_KEY]; }
+  function privacyMessage(zh, en, isError) {
+    const result = $("#privacy-result");
+    if (!result) return;
+    result.textContent = LANG === "en" ? en : zh;
+    result.classList.toggle("privacy-error", !!isError);
+  }
+  function exportGuideData() {
+    const data = {};
+    backupKeys().forEach(k => {
+      const v = storeRead(k);
+      if (typeof v === "string" && v !== "") data[k] = v;
+    });
+    if (!Object.keys(data).some(k => k !== LANG_KEY)) {
+      privacyMessage("此裝置暫時沒有可備份的待辦、進度或考驗人員資料。", "There is no saved checklist, progress or assessor data to back up yet.");
+      focusControl("#privacy-export");
+      return;
+    }
+    const payload = { app: BACKUP_APP, format: BACKUP_FORMAT, exportedAt: new Date().toISOString(), data };
+    let ok = false;
+    try {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ayp-guide-backup-${todayString()}.json`;
+      a.hidden = true;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 30000);
+      ok = true;
+    } catch (e) { /* Reported below. */ }
+    if (ok) privacyMessage(
+      "已建立備份檔。檔案可能包含考驗人員等個人資料，請妥善保存，不要公開分享。",
+      "Backup file created. It may contain personal details such as assessor information; keep it private.");
+    else privacyMessage(
+      "此瀏覽器未能下載備份檔，請改用其他瀏覽器再試。",
+      "This browser could not download the backup file. Please try another browser.", true);
+    focusControl("#privacy-export");
+  }
+  // Returns { data, exportedAt } or null; unknown keys are ignored, invalid values reject the file.
+  function parseBackup(text) {
+    let obj;
+    try { obj = JSON.parse(text); } catch (e) { return null; }
+    if (!obj || typeof obj !== "object" || obj.app !== BACKUP_APP || obj.format !== BACKUP_FORMAT) return null;
+    if (!obj.data || typeof obj.data !== "object" || Array.isArray(obj.data)) return null;
+    const allowed = backupKeys();
+    const data = {};
+    for (const k of Object.keys(obj.data)) {
+      if (allowed.indexOf(k) === -1) continue;
+      const v = obj.data[k];
+      if (typeof v !== "string") return null;
+      if (k === LANG_KEY) {
+        if (!LOCALES[v]) return null;
+      } else {
+        let parsed;
+        try { parsed = JSON.parse(v); } catch (e) { return null; }
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+      }
+      data[k] = v;
+    }
+    const exportedAt = typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}/.test(obj.exportedAt) ? obj.exportedAt.slice(0, 10) : "";
+    return { data, exportedAt };
+  }
+  function readFileText(file) {
+    if (file && typeof file.text === "function") return file.text();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(file);
+    });
+  }
+  async function importGuideData(file) {
+    if (!file) return;
+    if (file.size > BACKUP_MAX_BYTES) {
+      privacyMessage("檔案太大，並不是此指南的備份檔。", "The file is too large to be a backup from this guide.", true);
+      return;
+    }
+    let text = "";
+    try { text = await readFileText(file); } catch (e) { text = ""; }
+    const backup = parseBackup(text);
+    if (!backup) {
+      privacyMessage("未能讀取：請選擇由此指南「匯出備份」建立的 .json 檔。現有資料沒有改動。",
+        "Could not read this file. Choose a .json file created by Export backup in this guide. Your current data was not changed.", true);
+      return;
+    }
+    const when = backup.exportedAt ? (LANG === "en" ? ` from ${backup.exportedAt}` : `（${backup.exportedAt}）`) : "";
+    const msg = LANG === "en"
+      ? `Replace the checklists, calculator progress and assessor details on this device with the backup${when}?`
+      : `以備份${when}取代此裝置現有的待辦、計算器進度及考驗人員資料？`;
+    if (!window.confirm(msg)) {
+      privacyMessage("已取消匯入，現有資料沒有改動。", "Import cancelled. Your current data was not changed.");
+      return;
+    }
+    backupKeys().forEach(k => {
+      if (Object.prototype.hasOwnProperty.call(backup.data, k)) storeWrite(k, backup.data[k]);
+      else if (k !== LANG_KEY) storeRemove(k);
+    });
+    const nextLang = backup.data[LANG_KEY];
+    if (nextLang && LOCALES[nextLang] && nextLang !== LANG) {
+      LANG = nextLang;
+      document.documentElement.lang = L().htmlLang;
+    }
+    resetSessionState();
+    renderAll();
+    if (storageAvailable) privacyMessage("已匯入備份。", "Backup imported.");
+    else privacyMessage("已載入備份，但瀏覽器未能儲存；資料只會保留至此頁關閉。",
+      "Backup loaded, but the browser could not save it. It will last only while this page is open.", true);
+    focusControl("#privacy-import");
+  }
+  function bindBackup() {
+    const exportBtn = $("#privacy-export");
+    if (exportBtn) exportBtn.addEventListener("click", exportGuideData);
+    const importBtn = $("#privacy-import");
+    const fileInput = $("#privacy-import-file");
+    if (importBtn && fileInput) {
+      importBtn.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        importGuideData(file).finally(() => { fileInput.value = ""; });
+      });
+    }
+  }
+
   function openDetail(key) {
     const d = document.querySelector(`.part[data-key="${key}"]`);
     if (!d) return;
@@ -1450,6 +1608,23 @@
     const l2 = $("#copyright-data"); if (l2) l2.textContent = C.dataLine;
     const l3 = $("#copyright-edu"); if (l3) l3.textContent = C.eduLine;
   }
+  function renderStoreSupportTop() {
+    const a = $("#storeSupportTop");
+    if (!a) return;
+    const gate = window.ScoutStoreGate;
+    if (!gate || typeof gate.getAppStoreUrl !== "function") { a.hidden = true; return; }
+    let href = "";
+    try { href = gate.getAppStoreUrl("ayp"); } catch (e) { a.hidden = true; return; }
+    if (!href) { a.hidden = true; return; }
+    const isEn = LANG === "en";
+    a.href = href;
+    a.textContent = isEn ? "❤️ Like / Save" : "❤️ 讚好／收藏";
+    a.setAttribute("aria-label", isEn
+      ? "Like / Save: open SCOUT APP STORE to like or save this app (opens in a new tab)"
+      : "讚好／收藏：前往主站讚好或收藏此程式（開新分頁）");
+    a.title = isEn ? "Like or save this app on SCOUT APP STORE" : "前往主站讚好或收藏此程式";
+    a.hidden = false;
+  }
   function bindFloatBtns() {
     const top = $("#fab-top");
     if (top) {
@@ -1517,6 +1692,7 @@
     renderBeginner();
     renderTldr();
     renderCopyright();
+    renderStoreSupportTop();
     renderTransferIn();
     renderTransferInSteps();
     renderConvertSync();
@@ -1539,10 +1715,21 @@
     renderAll();
     bindFloatBtns();
     bindViews();
-    // 第一次進APP自動進入精靈了解需要
-    if (isFirstVisit()) {
-      showView("quick", false);
-      markVisited();
+    try { if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual"; } catch (e) {}
+    window.addEventListener("popstate", () => {
+      const view = viewFromHash();
+      if (view && view !== (document.body.dataset.view || "normal")) showView(view, true, true);
+    });
+    const linked = viewFromHash();
+    const firstVisit = isFirstVisit();
+    if (linked && linked !== "normal") {
+      // Direct link to a view (e.g. #bt-forms) wins over the first-visit wizard.
+      showView(linked, false, true);
+    } else if (firstVisit) {
+      // 第一次進APP自動進入精靈了解需要
+      showView("quick", false, true);
+      recordView("quick", true);
     }
+    if (firstVisit) markVisited();
   });
 })();

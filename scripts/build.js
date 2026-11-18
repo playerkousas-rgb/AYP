@@ -10,7 +10,7 @@ const crypto = require("crypto");
 
 const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
-const CORE = ["index.html", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
+const CORE = ["index.html", "store_gate_v1.0.js", "app.js", "data.js", "sw.js", "manifest.webmanifest", "analytics.js"];
 const assets = fs.readdirSync(path.join(ROOT, "assets")).filter((f) => !f.startsWith("."));
 const DEPLOY = [...CORE, ...assets.map((f) => "assets/" + f)];
 
@@ -55,7 +55,7 @@ for (const f of [...DEPLOY].sort()) {
   total += s;
   console.log(`  ${(s / 1024).toFixed(1).padStart(8)} KB  ${f}`);
 }
-console.log(`  ─────────────────────\n  ${(total / 1024).toFixed(1).padStart(8)} KB  總和（上限 390.6KB）`);
+console.log(`  ─────────────────────\n  ${(total / 1024).toFixed(1).padStart(8)} KB  總和（App 400KB＋閘門 45KB；共 445,000 B）`);
 
 if (bad) { console.log("\n✘ build 校驗失敗：" + bad + " 項"); process.exit(1); }
 console.log("\n✔ build 完成：dist/ 與來源逐檔一致，無多餘檔案。\n");
