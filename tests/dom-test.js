@@ -58,7 +58,7 @@ ok("extra-list-2 有卡", window.document.querySelectorAll("#extra-list-2 .part"
 // 🚫 不可追溯（No Backdating）警告
 ok("轉入頁頂有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("f1-backdate").textContent));
 ok("銜接頁頂有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("f2-backdate").textContent));
-ok("轉入計數機內有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("ti-inner").textContent));
+ok("轉入頁只顯示一次不可追溯警告（不在計數機內重複）", window.document.querySelectorAll("#f1 .warn.backdate").length === 1);
 ok("同步方案工具有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("bt-sync-body").textContent));
 ok("單項銜接表工具有不可追溯警告", /不可追溯|No Backdating/i.test(window.document.getElementById("bt-conv-body").textContent));
 ok("單項銜接表強調須評核員核實", /評核員|Assessor/.test(window.document.getElementById("bt-conv-body").textContent));
@@ -92,14 +92,19 @@ ok("TLDR 5 段有內容", window.document.querySelectorAll("[data-tldr]").length
   Array.from(window.document.querySelectorAll("[data-tldr]")).every(el => el.textContent.length > 10));
 ok("版權 Scout System", /Scout System/.test(window.document.getElementById("copyright-line").textContent));
 ok("版權只出現一次 Scout System", (window.document.getElementById("copyright-line").textContent.match(/Scout System/g) || []).length === 1);
+ok("SG18 回跳掣無 helper 時保持隱藏", has("storeSupportTop") && window.document.getElementById("storeSupportTop").hidden);
+ok("SG18 回跳掣有明確 hidden CSS", /\.support-btn\[hidden\]\{display:none!important\}/.test(html));
+ok("SG18 回跳掣於列印時隱藏", /@media print\{[^}]*#storeSupportTop/.test(html));
 ok("置底列＋返頂掣存在", has("bottombar") && has("fab-top"));
 ok("fab-lang 喺 header 入面（頂部）", !!window.document.querySelector("header #fab-lang"));
 ok("fab-lang 唔喺底部浮動掣區", !window.document.querySelector("#fab-top ~ #fab-lang, #fab-wizard ~ #fab-lang"));
 
 // 📱 APP：置頂 5 情景＋置底 5 工具，預設正常流程
-ok("置頂 5 格情景", window.document.querySelectorAll("#topbar .tb-btn").length === 5);
+ok("置頂 6 格（總覽＋5 個情景）", window.document.querySelectorAll("#topbar .tb-btn").length === 6);
+ok("總覽係置頂第一格，header 冇重複總覽掣", window.document.querySelector("#topbar .tb-btn:first-child").id === "home-nav" && !window.document.querySelector("header #home-nav"));
+ok("精靈有「直接看總覽」掣", /直接看總覽/.test(window.document.getElementById("quick-skip").textContent) && window.document.getElementById("quick-skip").hasAttribute("data-tv-home"));
 ok("置底 5 格工具", window.document.querySelectorAll("#bottombar .bb-btn").length === 5);
-ok("置頂 5 格圖示上文字下（與置底對齊）", window.document.querySelectorAll("#topbar .tb-btn .tb-ico").length === 5);
+ok("置頂 6 格都有圖示", window.document.querySelectorAll("#topbar .tb-btn .tb-ico").length === 6);
 ok("置底 5 格圖示上文字下", window.document.querySelectorAll("#bottombar .bb-btn .bb-ico").length === 5);
 ok("首次進入自動進精靈", window.document.body.dataset.view === "quick");
 ok("精靈再撳一次返正常流程", (() => {

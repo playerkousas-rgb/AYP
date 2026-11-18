@@ -10,7 +10,7 @@ const source = fs.readFileSync(path.join(root, "data.js"), "utf8") + "\n;" + fs.
 const tick = () => new Promise(resolve => setTimeout(resolve, 10));
 let passed = 0;
 
-async function boot({ data = {}, storage } = {}) {
+async function boot({ data = {}, storage, storeGate } = {}) {
   const dom = new JSDOM(html, { runScripts: "outside-only", pretendToBeVisual: true, url: "https://guide.example/" });
   const w = dom.window;
   await new Promise(resolve => w.addEventListener("load", resolve, { once: true }));
@@ -24,6 +24,7 @@ async function boot({ data = {}, storage } = {}) {
   w.confirm = () => true;
   if (storage) Object.defineProperty(w, "localStorage", { configurable: true, value: storage });
   else Object.entries(data).forEach(([k, v]) => w.localStorage.setItem(k, v));
+  if (storeGate) w.ScoutStoreGate = storeGate;
   const errors = [];
   w.addEventListener("error", e => errors.push(e.message));
   w.eval(source);
@@ -336,6 +337,158 @@ function test(name, fn) {
   });
   test("blocked storage does not cause script errors", () => assert.deepEqual(blocked.errors, []));
   blocked.dom.window.close();
+
+  const skip = await boot();
+  test("first visit opens the wizard with a visible way to skip it", () => {
+    assert.equal(skip.w.document.body.dataset.view, "quick");
+    assert.equal(skip.w.location.hash, "#quick");
+  });
+  $(skip.w, "#quick-skip").click();
+  test("skip button goes straight to the overview", () => {
+    assert.equal(skip.w.document.body.dataset.view, "normal");
+    assert.equal(skip.w.location.hash, "");
+    assert.equal(skip.w.document.activeElement.id, "overview-title");
+    assert.ok($(skip.w, "#home-nav").classList.contains("active"));
+  });
+  $(skip.w, "#fab-lang").click();
+  $(skip.w, "#topbar [data-tt='f2']").click();
+  $(skip.w, "#home-nav").click();
+  test("Overview tab still works after the language switch re-renders the bar", () => {
+    assert.equal(skip.w.document.body.dataset.view, "normal");
+    assert.equal($(skip.w, "#home-nav").textContent.trim(), "Overview");
+    assert.match($(skip.w, "#quick-skip").textContent, /Go straight to the overview/);
+  });
+  test("skip flow has no script errors", () => assert.deepEqual(skip.errors, []));
+  skip.dom.window.close();
+
+  // Browser Back button and direct links use the URL hash.
+  const nav = await boot({ data: { "ayp-guide-visited-v1": "1" } });
+  $(nav.w, "#bottombar [data-tv='bt-forms']").click();
+  test("opening a view records it in browser history", () => {
+    assert.equal(nav.w.location.hash, "#bt-forms");
+    assert.equal(nav.w.document.body.dataset.view, "bt-forms");
+  });
+  $(nav.w, "#topbar [data-tt='f1']").click();
+  const goBack = w => new Promise(resolve => {
+    w.addEventListener("popstate", () => setTimeout(resolve, 0), { once: true });
+    w.history.back();
+  });
+  await goBack(nav.w);
+  test("Back returns to the previous view instead of leaving the app", () => {
+    assert.equal(nav.w.document.body.dataset.view, "bt-forms");
+  });
+  await goBack(nav.w);
+  test("Back from the first view returns to the overview", () => {
+    assert.equal(nav.w.document.body.dataset.view, "normal");
+    assert.equal(nav.w.location.hash, "");
+  });
+  await new Promise(resolve => {
+    nav.w.addEventListener("hashchange", () => setTimeout(resolve, 0), { once: true });
+    nav.w.location.hash = "#main-content";
+  });
+  test("skip link hash does not change the current view", () => {
+    assert.equal(nav.w.document.body.dataset.view, "normal");
+  });
+  test("history navigation has no script errors", () => assert.deepEqual(nav.errors, []));
+  nav.dom.window.close();
+
+  const deep = await (async () => {
+    const dom = new JSDOM(html, { runScripts: "outside-only", pretendToBeVisual: true, url: "https://guide.example/#bt-sync" });
+    const w = dom.window;
+    await new Promise(resolve => w.addEventListener("load", resolve, { once: true }));
+    w.scrollTo = () => {};
+    w.eval(source);
+    w.document.dispatchEvent(new w.Event("DOMContentLoaded", { bubbles: true }));
+    await tick();
+    return { dom, w };
+  })();
+  test("a direct link opens that view, even on the first visit", () => {
+    assert.equal(deep.w.document.body.dataset.view, "bt-sync");
+    assert.equal(deep.w.localStorage.getItem("ayp-guide-visited-v1"), "1");
+  });
+  deep.dom.window.close();
+
+  // Backup export / import only uses the existing storage keys.
+  const savedCalc = JSON.stringify({ path: "bronze", mainSec: "service", startDate: "2026-01-05", sec: { service: { h: 9, w: 3 } } });
+  const backupSession = await boot({ data: {
+    "ayp-guide-visited-v1": "1",
+    "ayp-calc-v1": savedCalc,
+    "ayp-ea-log-v1": JSON.stringify({ assessorName: "Backup assessor" })
+  } });
+  const bw = backupSession.w;
+  let exportedBlob = null, downloadName = "";
+  bw.URL.createObjectURL = blob => { exportedBlob = blob; return "blob:https://guide.example/backup"; };
+  bw.URL.revokeObjectURL = () => {};
+  bw.HTMLAnchorElement.prototype.click = function () { downloadName = this.download; };
+  $(bw, "#privacy-export").click();
+  const exported = JSON.parse(await exportedBlob.text());
+  test("export creates a JSON backup of the saved guide data", () => {
+    assert.match(downloadName, /^ayp-guide-backup-2026-11-04\.json$/);
+    assert.equal(exported.app, "ayp-scout-guide");
+    assert.equal(exported.format, 1);
+    assert.equal(exported.data["ayp-calc-v1"], savedCalc);
+    assert.match(exported.data["ayp-ea-log-v1"], /Backup assessor/);
+    assert.equal(exported.data["ayp-guide-visited-v1"], undefined, "visit flags are not exported");
+    assert.match($(bw, "#privacy-result").textContent, /個人資料/);
+  });
+  const keysBefore = Object.keys(bw.localStorage).sort();
+
+  const chooseFile = async (text, name = "backup.json") => {
+    const fileInput = $(bw, "#privacy-import-file");
+    const file = new bw.File([text], name, { type: "application/json" });
+    Object.defineProperty(fileInput, "files", { configurable: true, value: [file] });
+    const result = $(bw, "#privacy-result");
+    result.textContent = "";
+    fileInput.dispatchEvent(new bw.Event("change", { bubbles: true }));
+    for (let i = 0; i < 200 && !result.textContent; i++) await tick();
+  };
+  await chooseFile("{ not json");
+  test("an invalid file is rejected without changing saved data", () => {
+    assert.equal(bw.localStorage.getItem("ayp-calc-v1"), savedCalc);
+    assert.match($(bw, "#privacy-result").textContent, /未能讀取/);
+    assert.ok($(bw, "#privacy-result").classList.contains("privacy-error"));
+  });
+  await chooseFile(JSON.stringify({ app: "ayp-scout-guide", format: 1, data: { "ayp-calc-v1": "[1,2]" } }));
+  test("a backup with malformed values is rejected", () => {
+    assert.equal(bw.localStorage.getItem("ayp-calc-v1"), savedCalc);
+  });
+
+  const importedCalc = JSON.stringify({ path: "bronze", mainSec: "service", startDate: "2026-02-02", sec: { service: { h: 17, w: 6 } } });
+  await chooseFile(JSON.stringify({
+    app: "ayp-scout-guide", format: 1, exportedAt: "2026-10-01T00:00:00.000Z",
+    data: { "ayp-calc-v1": importedCalc, "ayp-guide-lang-v1": "en", "unknown-key": "{}" }
+  }));
+  test("import replaces saved data, restores language and ignores unknown keys", () => {
+    assert.equal(bw.localStorage.getItem("ayp-calc-v1"), importedCalc);
+    assert.equal(bw.localStorage.getItem("ayp-ea-log-v1"), null, "keys missing from the backup are cleared");
+    assert.equal(bw.localStorage.getItem("unknown-key"), null);
+    assert.equal(bw.document.documentElement.lang, "en");
+    assert.equal($(bw, "#calc-h-service").value, "17");
+    assert.equal($(bw, "#privacy-result").textContent, "Backup imported.");
+    const extra = Object.keys(bw.localStorage).filter(k => !keysBefore.includes(k) && k !== "ayp-guide-lang-v1");
+    assert.deepEqual(extra, [], "import does not create new storage keys");
+  });
+  test("backup flows have no script errors", () => assert.deepEqual(backupSession.errors, []));
+  backupSession.dom.window.close();
+
+  const support = await boot({
+    data: { "ayp-guide-visited-v1": "1" },
+    storeGate: { getAppStoreUrl: slug => `https://scoutappstore.vercel.app/?app=${encodeURIComponent(slug)}` }
+  });
+  const supportLink = $(support.w, "#storeSupportTop");
+  test("SG18 support link uses the registered helper and starts in Chinese", () => {
+    assert.equal(supportLink.hidden, false);
+    assert.equal(supportLink.href, "https://scoutappstore.vercel.app/?app=ayp");
+    assert.equal(supportLink.textContent, "❤️ 讚好／收藏");
+    assert.equal(supportLink.target, "_blank");
+    assert.equal(supportLink.rel, "noopener");
+  });
+  $(support.w, "#fab-lang").click();
+  test("SG18 support link follows the app language switch", () => {
+    assert.equal(supportLink.textContent, "❤️ Like / Save");
+    assert.match(supportLink.getAttribute("aria-label"), /opens in a new tab/i);
+  });
+  support.dom.window.close();
 
   console.log(`Interaction regressions：${passed} checks passed`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,9 +1,10 @@
 /* Service Worker — AYP 童軍接駁指南（離線可用） */
 /* 應用程式或快取資產更新時遞增版本，讓既有用戶取得新內容。 */
-const CACHE = "ayp-guide-v12";
+const CACHE = "ayp-guide-v13";
 const ASSETS = [
   "./",
   "./index.html",
+  "./store_gate_v1.0.js",
   "./data.js",
   "./app.js",
   "./analytics.js",
